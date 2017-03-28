@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class SetPrintLife : MonoBehaviour {
+public class SetPrintLifeOLD : MonoBehaviour {
 	private GameManeger GM; //GameManerger script 
 	private string PrintLife = null;//print life text in gamescene string Later it change image ofr sprite 
 

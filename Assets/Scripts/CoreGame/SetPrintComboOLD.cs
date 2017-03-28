@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class SetPrintCombo : MonoBehaviour {
+public class SetPrintComboOLD : MonoBehaviour {
 	private GameManeger GM; //GameManerger script 
 	private string PrintCombo = null;//print combo text in gamescene string
 
