@@ -10,7 +10,7 @@ public class EnermySystem : MonoBehaviour {
 	public Vector3 EnermyPosition;
 
 	void Start () {
-		EnermyPosition = GetComponent<RectTransform>().localPosition;
+		EnermyPosition = GetComponent<Transform>().localPosition;
 	}
 
 	public void SetCombination(int combostate)
@@ -22,21 +22,14 @@ public class EnermySystem : MonoBehaviour {
 	void MoveEnemy()//Enemy move down
 	{
 		EnermyPosition.y -= EnermyDownSpeed;
-		GetComponent<RectTransform> ().localPosition = new Vector3 (EnermyPosition.x, EnermyPosition.y ,EnermyPosition.z);
+		GetComponent<Transform> ().localPosition = new Vector3 (EnermyPosition.x, EnermyPosition.y ,EnermyPosition.z);
 	}
 
 	public void DestoryEnemy()//Destory this Enemy
 	{
 		Destroy (gameObject);
 	}
-
-	void DestroyEnemyByLine()//Enermy reach the attack line
-	{
-		if (EnermyPosition.y - GetComponent<RectTransform> ().rect.height/2 <= -100) {//reach red line 
-			Destroy(gameObject);
-		}
-	}
-
+    
 	void Update () {
 		//test destory
 		if (Input.GetKey (KeyCode.S)) {//Destory Enemy Success
@@ -44,6 +37,5 @@ public class EnermySystem : MonoBehaviour {
 		}
 
 		MoveEnemy ();
-		DestroyEnemyByLine();//Enermy reach the attack line
 	}
 }

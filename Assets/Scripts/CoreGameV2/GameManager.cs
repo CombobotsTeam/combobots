@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
     public int Gold = 0;
 
     // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
-    List<GameObject> EnemiesOnScreen = new List<GameObject>();
+    public List<GameObject> EnemiesOnScreen = new List<GameObject>();
 
     // Contain the current combination of button pressed
     CombinationHandler Combination;
@@ -33,15 +33,28 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Update () {
-
-        /*Debug.Log("There are (is) " + Combination.GetCurrentCombination().Count + " buttons pressed");
-        Debug.Log(Combination.GetCurrentCombination());
-        foreach (CombinationHandler.Button button in Combination.GetCurrentCombination())
+        if (Combination.GetCurrentCombination().Count > 0)
         {
-            Debug.Log(button.ToString());
-        }*/
-       
-	}
+            bool combinationExist = false;
+            foreach (GameObject enemy in EnemiesOnScreen)
+            {
+                BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
+                if (Combination.CompareCombination(e.Combination))
+                {
+                    combinationExist = true;
+                    if (Combination.isSameCombination(e.Combination))
+                    {
+                        e.Die();
+                        break;
+                    }
+                }
+            }
+            if (!combinationExist)
+            {
+                Combination.Reset();
+            }
+        }
+    }
 
     public List<GameObject> GetEnemiesOnScreen()
     {
@@ -90,5 +103,10 @@ public class GameManager : MonoBehaviour {
     public void ButtonPressed(CombinationHandler.Button button)
     {
         Combination.AddButtonToCombination(button);
+    }
+
+    public void NotifyDie(GameObject enemy)
+    {
+        EnemiesOnScreen.Remove(enemy);
     }
 }
