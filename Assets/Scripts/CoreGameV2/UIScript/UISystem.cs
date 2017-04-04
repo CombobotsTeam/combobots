@@ -8,40 +8,41 @@ public class UISystem : MonoBehaviour {
 	private float sW = Screen.width;
 	private float sH = Screen.height;
 	//position
-	public Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);//value of setting position
-	public bool top = false;
+	private Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);//value of setting position
+
+    public bool top = false;
 	public bool bottom = false;
 	public bool left = false;
 	public bool right = false;
 	public bool widthcenter = false;
-	public int percentofwidthpercent = 0;
-	public int percentofheightpercent = 0;
+	public int PercentWidthPosition = 0;
+	public int PercentHeightPosition = 0;
 	//size
-	public bool widthfullSCreen = false;
-	public bool heigthfullScreen = false;
-	public int percentwidth = 0;
-	public int percentheight = 0;
-	public Vector2 Size = new Vector2(0.0f,0.0f);
+	public bool WidthFullScreen = false;
+	public bool HeigthFullScreen = false;
+	public int WidthPercentage = 0;
+	public int HeightPercentage = 0;
+	private Vector2 Size = new Vector2(0.0f,0.0f);
 
 	void Start (){
-		if (widthfullSCreen)
+		if (WidthFullScreen)
 			Size.x = sW;//get screen width
 		else
-			Size.x = sW * percentwidth / 100;
-		if (heigthfullScreen)
+			Size.x = sW * WidthPercentage / 100;
+		if (HeigthFullScreen)
 			Size.y =sH;//get screen height
 		else
-			Size.y = sH * percentheight / 100;
+			Size.y = sH * HeightPercentage / 100;
 		GetComponent<RectTransform> ().sizeDelta = Size;
 
 		if (top)
-			Position.y = sH - Size.y - ( sH * percentofheightpercent / 100);
+			Position.y = sH - Size.y - ( sH * PercentHeightPosition / 100);
 		if (bottom)
-			Position.y = 0 + (sH * percentofheightpercent / 100);
+			Position.y = 0 + (sH * PercentHeightPosition / 100);
 		if (left)
-			Position.x = 0 + (sW * percentofwidthpercent /100);
+			Position.x = 0 + (sW * PercentWidthPosition / 100);
 		if (right)
-			Position.x = sW - Size.x- (sW * percentofwidthpercent /100);
+			Position.x = sW - Size.x- (sW * PercentWidthPosition / 100);
 		if(widthcenter)
 			Position.x = (sW -Size.x)/2;
 		GetComponent<RectTransform> ().position = Position; 
