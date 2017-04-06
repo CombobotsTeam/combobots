@@ -18,10 +18,11 @@ public class ButtonUI : MonoBehaviour {
 		GetComponent<RectTransform> ().sizeDelta = new Vector2(Screen.width / 4, Screen.height * percentofsizeheight / 100);
 
 		if (top)
-			Position.y = Screen.height - ( Screen.height * percentofsizeheight / 100);
-		if (bottom)
-			Position.y = 0;
-		Position.x = Screen.width / 4 * (int)button.Type;
-		GetComponent<RectTransform> ().position = Position; 
+			Position.y = Screen.height - ( Screen.height * percentofsizeheight / 100) - Screen.height / 2;
+        if (bottom)
+            Position.y = 0 - Screen.height / 2;
+
+        Position.x = Screen.width / 4 * (int)button.Type - Screen.width / 2;
+		GetComponent<RectTransform> ().localPosition = Position; 
 	}
 }

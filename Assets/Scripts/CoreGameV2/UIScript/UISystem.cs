@@ -35,16 +35,26 @@ public class UISystem : MonoBehaviour {
 			Size.y = sH * HeightPercentage / 100;
 		GetComponent<RectTransform> ().sizeDelta = Size;
 
+        Debug.Log("Size.y " + Size.y);
+        Debug.Log("Screen Height " + sH);
 		if (top)
-			Position.y = sH - Size.y - ( sH * PercentHeightPosition / 100);
+			Position.y = sH - Size.y - ( sH * PercentHeightPosition / 100) - sH / 2;
 		if (bottom)
-			Position.y = 0 + (sH * PercentHeightPosition / 100);
+			Position.y = 0 + (sH * PercentHeightPosition / 100) - sH / 2;
 		if (left)
-			Position.x = 0 + (sW * PercentWidthPosition / 100);
+			Position.x = 0 + (sW * PercentWidthPosition / 100) - sW / 2;
 		if (right)
-			Position.x = sW - Size.x- (sW * PercentWidthPosition / 100);
+			Position.x = sW - Size.x- (sW * PercentWidthPosition / 100) - sW / 2;
 		if(widthcenter)
-			Position.x = (sW -Size.x)/2;
-		GetComponent<RectTransform> ().position = Position; 
-	}
+			Position.x = (sW -Size.x)/2 - sW / 2;
+
+        Debug.Log("Position . y " + Position.y);
+		GetComponent<RectTransform> ().localPosition = Position;
+        Debug.Log("Position " + GetComponent<RectTransform>().localPosition);
+    }
+
+    private void Update()
+    {
+        Start();
+    }
 }
