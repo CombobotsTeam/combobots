@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class MainMenuUI : MonoBehaviour
+public class SoloMenuUI : MonoBehaviour
 {
 
     // ########################################
@@ -15,9 +15,9 @@ public class MainMenuUI : MonoBehaviour
     public Canvas m_Canvas;
 
     // GUIAnimFREE objects of Title text
-    public GUIAnimFREE m_SoloButton;
-    public GUIAnimFREE m_MultiButton;
-    public GUIAnimFREE m_SettingsButton;
+    public GUIAnimFREE m_StoryButton;
+    public GUIAnimFREE m_ArcadeButton;
+    public GUIAnimFREE m_SurvivalButton;
 
     #endregion // Variables
 
@@ -34,12 +34,7 @@ public class MainMenuUI : MonoBehaviour
 
     void Start()
     {
-
-        // MoveIn m_Title1 and m_Title2
         StartCoroutine(MoveMainButtonObjects());
-
-        // Disable all scene switch buttons
-        //GUIAnimSystemFREE.Instance.SetGraphicRaycasterEnable(m_Canvas, false);
     }
 
     void Update()
@@ -57,25 +52,22 @@ public class MainMenuUI : MonoBehaviour
     // MoveIn
     IEnumerator MoveMainButtonObjects()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.01f);
 
-        m_SoloButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
-        m_MultiButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
-        m_SettingsButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
-
-        // MoveIn m_Dialog
-        //StartCoroutine(ShowDialog());
+        m_StoryButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
+        m_ArcadeButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
+        m_SurvivalButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
     }
 
     // MoveOut m_Title1 and m_Title2
     IEnumerator HideMainButtonObjects()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.05f);
 
         // MoveOut
-        m_SoloButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
-        m_MultiButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
-        m_SettingsButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
+        m_StoryButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
+        m_ArcadeButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
+        m_SurvivalButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
     }
 
     #endregion // MoveIn/MoveOut
@@ -119,24 +111,24 @@ public class MainMenuUI : MonoBehaviour
     // ########################################
 
     #region ActionsButton
-    public void On_ButtonSolo()
+    public void On_ButtonStory()
     {
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        GUIAnimSystemFREE.Instance.LoadLevel("SoloMenu", 1.1f);
+        //GUIAnimSystemFREE.Instance.LoadLevel("SoloMenu", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
-    public void On_ButtonMulti()
+    public void On_ButtonArcade()
     {
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        GUIAnimSystemFREE.Instance.LoadLevel("MultiMenu", 1.1f);
+        //GUIAnimSystemFREE.Instance.LoadLevel("MultiMenu", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
-    public void On_ButtonSettings()
+    public void On_ButtonSurvival()
     {
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        GUIAnimSystemFREE.Instance.LoadLevel("MultiMenu", 1.1f);
+        //GUIAnimSystemFREE.Instance.LoadLevel("MultiMenu", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
