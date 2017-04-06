@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
 
     // Contain the current combination of button pressed
     CombinationHandler Combination;
+	WaveManager WaveManager;
 
 	void Awake () {
         //Check if instance already exists
@@ -29,7 +30,8 @@ public class GameManager : MonoBehaviour {
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
 
-        Combination = GetComponent<CombinationHandler>();	
+        Combination = GetComponent<CombinationHandler>();
+		WaveManager = GetComponent<WaveManager>();	
 	}
 
 	void Update () {
