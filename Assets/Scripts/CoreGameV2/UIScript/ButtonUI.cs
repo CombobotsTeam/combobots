@@ -14,7 +14,6 @@ public class ButtonUI : MonoBehaviour {
 
 	void Start () {
         button = GetComponent<ButtonScript>();
-
 		GetComponent<RectTransform> ().sizeDelta = new Vector2(Screen.width / 4, Screen.height * percentofsizeheight / 100);
 
 		if (top)
