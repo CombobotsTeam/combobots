@@ -20,7 +20,12 @@ public class GameManager : MonoBehaviour {
     CombinationHandler Combination;
 	WaveManager WaveManager;
 
-	void Awake () {
+    private void Start()
+    {
+        WaveManager.launch();
+    }
+
+    void Awake () {
         //Check if instance already exists
         if (instance == null)
             //if not, set instance to this

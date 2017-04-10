@@ -8,7 +8,7 @@ public class WaveManager : MonoBehaviour {
 	public bool 				RandomWave;
 	public int 					EnemyMax;					// Maximum number of enemies display
 
-	List< List<BasicEnnemy> >	WaveLeft;	
+	List< List<BasicEnnemy> >	WaveLeft = new List< List<BasicEnnemy> >();	
 	List<BasicEnnemy>			EnemiesForCurrentWave;
 
 	float 						TimeLeft;					// Min time between each enemy summon
@@ -37,12 +37,11 @@ public class WaveManager : MonoBehaviour {
 				List<BasicEnnemy> tmpEnemyList = new List<BasicEnnemy>();
 				foreach (BasicEnnemy enemy in wave)
 					tmpEnemyList.Add (enemy);
-
 				WaveLeft.Add (tmpEnemyList);
-			}
+            }
 
-			// SET EnemiesForCurrentWave
-			EnemiesForCurrentWave = WaveLeft [0];
+            // SET EnemiesForCurrentWave
+            EnemiesForCurrentWave = WaveLeft [0];
 			WaveLeft.RemoveAt (0);
 		}
 
@@ -138,4 +137,9 @@ public class WaveManager : MonoBehaviour {
 			yield return null;
 		}
 	}
+
+    public void launch()
+    {
+        StartCoroutine("StartWaveManager");
+    }
 }
