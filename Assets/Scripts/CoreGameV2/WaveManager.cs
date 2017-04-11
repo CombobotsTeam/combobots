@@ -14,7 +14,7 @@ public class WaveManager : MonoBehaviour {
 	float 						TimeLeft;					// Min time between each enemy summon
 	float						NbrEnemiesOnScreen = 0;		// Actual number of enemies 
 
-	List<Vector2>				SpawnerPositionList;
+	List<Vector3>				SpawnerPositionList;
 
 	// Update is called once per frame
 	void Update () {}
@@ -50,10 +50,14 @@ public class WaveManager : MonoBehaviour {
 			TimeLeft = EnemiesForCurrentWave [1].SpawnCooldown;
 
 		// Set Spawner position
-		SpawnerPositionList = new List<Vector2>();
-		SpawnerPositionList.Add (new Vector2 (0, 0));
-
-	}
+		SpawnerPositionList = new List<Vector3>();
+        RectTransform Pos = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
+        Vector3 tmpPos = Pos.localPosition;
+        
+        tmpPos.y += Pos.sizeDelta.y * Pos.localScale.y / 2 - GameObject.Find("Canvas/TopBackground").GetComponent<UISystem>().HeightPercentage * Pos.sizeDelta.y / 100 * Pos.localScale.y;
+        SpawnerPositionList.Add (tmpPos);
+ 	}
 
 	void Summon()
 	{
@@ -73,7 +77,9 @@ public class WaveManager : MonoBehaviour {
 			Transform BasicEnemy = EnemiesForCurrentWave [0].transform;
 			int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
 
-			Instantiate(BasicEnemy, SpawnerPositionList[randomIndex], Quaternion.identity);
+            Vector3 pos = SpawnerPositionList[randomIndex];
+            //pos.y -= BasicEnemy.GetComponent<BoxCollider>().size.y * BasicEnemy.GetComponent<Transform>().localScale.y / 2;
+            Instantiate(BasicEnemy, pos, Quaternion.identity);
 			NbrEnemiesOnScreen++;
 
 			if (EnemiesForCurrentWave.Count >= 2)

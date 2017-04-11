@@ -10,13 +10,22 @@ public class BasicEnnemy : MonoBehaviour {
     public bool IsMoving = true;
     public int NbrGold = 0;
     public Vector3 Position;
-    public float SpawnCooldown = 1.0f;
+    public float SpawnCooldown = 1000.0f;
     GameManager Gm;
 
     void Start()
     {
-        Position = GetComponent<Transform>().position;
+        Position = GetComponent<Transform>().localPosition;
         Gm = GameManager.instance;
+        GameObject buttonBlue = GameObject.Find("Canvas/BlueButton");
+        Vector3 BluePosition = Position;
+        //BluePosition.y += GetComponent<BoxCollider>().size.y / 2 + 1;
+        Debug.Log(Position);
+        buttonBlue.GetComponent<ButtonScript>().enabled = false;
+        buttonBlue.GetComponent<ButtonUI>().enabled = false;
+        GameObject Combination = Instantiate(buttonBlue, Position, Quaternion.identity);
+        Combination.layer = gameObject.layer;
+        Combination.transform.SetParent(gameObject.transform);
     }
 
     // Use this for initialization
