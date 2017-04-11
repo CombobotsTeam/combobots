@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour {
 
     public void NotifyDie(GameObject enemy)
     {
+        WaveManager.EnemyDie(enemy);
         EnemiesOnScreen.Remove(enemy);
     }
 }

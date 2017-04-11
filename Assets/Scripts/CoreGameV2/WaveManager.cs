@@ -79,8 +79,13 @@ public class WaveManager : MonoBehaviour {
 
             Vector3 pos = SpawnerPositionList[randomIndex];
             //pos.y -= BasicEnemy.GetComponent<BoxCollider>().size.y * BasicEnemy.GetComponent<Transform>().localScale.y / 2;
-            Instantiate(BasicEnemy, pos, Quaternion.identity);
+            BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
+            CombinationGenerator c = new CombinationGenerator();
+            c.FixedSize = enemy.Combination.Count;
+            enemy.Combination = c.GetListButton();
+            enemy.Setup();
 			NbrEnemiesOnScreen++;
+            GameManager.instance.EnemiesOnScreen.Add(enemy.gameObject);
 
 			if (EnemiesForCurrentWave.Count >= 2)
 				TimeLeft = EnemiesForCurrentWave [1].SpawnCooldown;
