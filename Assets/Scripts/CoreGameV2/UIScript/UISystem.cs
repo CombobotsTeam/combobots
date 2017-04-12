@@ -23,6 +23,7 @@ public class UISystem : MonoBehaviour {
 	public int WidthPercentage = 0;
 	public int HeightPercentage = 0;
 	private Vector2 Size = new Vector2(0.0f,0.0f);
+    private bool _isInit = false;
 
 	void Start (){
 		if (WidthFullScreen)
@@ -35,8 +36,6 @@ public class UISystem : MonoBehaviour {
 			Size.y = sH * HeightPercentage / 100;
 		GetComponent<RectTransform> ().sizeDelta = Size;
 
-        Debug.Log("Size.y " + Size.y);
-        Debug.Log("Screen Height " + sH);
 		if (top)
 			Position.y = sH - Size.y - ( sH * PercentHeightPosition / 100) - sH / 2;
 		if (bottom)
@@ -48,13 +47,15 @@ public class UISystem : MonoBehaviour {
 		if(widthcenter)
 			Position.x = (sW -Size.x)/2 - sW / 2;
 
-        Debug.Log("Position . y " + Position.y);
 		GetComponent<RectTransform> ().localPosition = Position;
-        Debug.Log("Position " + GetComponent<RectTransform>().localPosition);
     }
 
     private void Update()
     {
-        Start();
+        if (!_isInit)
+        {
+            Start();
+            _isInit = false;
+        }
     }
 }
