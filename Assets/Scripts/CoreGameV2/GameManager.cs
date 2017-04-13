@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
 	public int Life = 0;//life of player
 	public int ComboCount = 0;//player's combo count
     public int Gold = 0;
+    bool launch = true;
 
     // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
     public List<GameObject> EnemiesOnScreen = new List<GameObject>();
@@ -20,7 +21,11 @@ public class GameManager : MonoBehaviour {
     CombinationHandler Combination;
 	WaveManager WaveManager;
 
-	void Awake () {
+    private void Start()
+    {
+    }
+
+    void Awake () {
         //Check if instance already exists
         if (instance == null)
             //if not, set instance to this
@@ -31,10 +36,16 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
 
         Combination = GetComponent<CombinationHandler>();
-		WaveManager = GetComponent<WaveManager>();	
-	}
+		WaveManager = GetComponent<WaveManager>();
+    }
 
-	void Update () {
+	void Update ()
+    {
+        if (launch)
+        {
+            WaveManager.launch();
+            launch = false;
+        }
         if (Combination.GetCurrentCombination().Count > 0)
         {
             bool combinationExist = false;
@@ -47,6 +58,7 @@ public class GameManager : MonoBehaviour {
                     if (Combination.isSameCombination(e.Combination))
                     {
                         e.Die();
+                        Combination.Reset();
                         break;
                     }
                 }
@@ -109,6 +121,7 @@ public class GameManager : MonoBehaviour {
 
     public void NotifyDie(GameObject enemy)
     {
+        WaveManager.EnemyDie(enemy);
         EnemiesOnScreen.Remove(enemy);
     }
 }

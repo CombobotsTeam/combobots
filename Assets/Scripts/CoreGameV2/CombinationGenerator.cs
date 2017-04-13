@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CombinationGenerator : MonoBehaviour {
+public class CombinationGenerator {
 
     public int MinLenght = 1;
     public int MaxLenght = 9;

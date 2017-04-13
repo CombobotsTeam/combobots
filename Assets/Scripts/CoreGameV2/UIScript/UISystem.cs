@@ -35,7 +35,6 @@ public class UISystem : MonoBehaviour {
 		else
 			Size.y = sH * HeightPercentage / 100;
 		GetComponent<RectTransform> ().sizeDelta = Size;
-
 		if (top)
 			Position.y = sH - Size.y - ( sH * PercentHeightPosition / 100) - sH / 2;
 		if (bottom)
