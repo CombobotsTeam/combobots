@@ -10,10 +10,10 @@ public class ButtonUI : MonoBehaviour {
 	public int percentofsizeheight = 25;
 
 	private Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);//value of setting position
-    private VSButtonScript button;
+    private ButtonScript button;
 
 	void Start () {
-        button = GetComponent<VSButtonScript>();
+        button = GetComponent<ButtonScript>();
 
 		GetComponent<RectTransform> ().sizeDelta = new Vector2(Screen.width / 4, Screen.height * percentofsizeheight / 100);
 

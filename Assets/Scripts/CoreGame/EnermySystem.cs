@@ -27,20 +27,24 @@ public class EnermySystem : MonoBehaviour {
 
 	public void DestoryEnemy()//Destory this Enemy
 	{
+
 		Destroy (gameObject);
 	}
 
 	void DestroyEnemyByLine()//Enermy reach the attack line
 	{
-		if (EnermyPosition.y - GetComponent<RectTransform> ().rect.height/2 <= -100) {//reach red line 
-			Destroy(gameObject);
+		if (EnermyPosition.y - GetComponent<RectTransform> ().rect.height/2 <= -100) {//reach red line
+			Debug.Log ("GameOver");
+			Destroy (gameObject);
+			Application.LoadLevel (0);
 		}
 	}
 
 	void Update () {
 		//test destory
-		if (Input.GetKey (KeyCode.S)) {//Destory Enemy Success
+		if (Input.GetKey (KeyCode.Q)) {//Destory Enemy Success
 			DestoryEnemy ();
+			Debug.Log ("Delete by script Get KeyCode Q");
 		}
 
 		MoveEnemy ();

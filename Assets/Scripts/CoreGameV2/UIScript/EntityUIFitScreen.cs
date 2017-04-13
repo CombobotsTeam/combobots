@@ -24,28 +24,28 @@ public class EntityUIFitScreen : MonoBehaviour {
 
         float sizeBackgroundX = rt.rect.size.x;
         float sizeBackgroundY = rt.rect.size.y;
-        debug = "Size Background : " + sizeBackgroundX + " " + sizeBackgroundY + "\n";
-        Debug.Log("Size Background : " + sizeBackgroundX + " " + sizeBackgroundY);
+       /* debug = "Size Background : " + sizeBackgroundX + " " + sizeBackgroundY + "\n";
+        Debug.Log("Size Background : " + sizeBackgroundX + " " + sizeBackgroundY);*/
 
         float sizeSpriteX = sr.sprite.bounds.size.x;
         float sizeSpriteY = sr.sprite.bounds.size.y;
-        debug += "Size Sprite : " + sizeSpriteX + " " + sizeSpriteY + "\n";
-        Debug.Log("Size Sprite : " + sizeSpriteX + " " + sizeSpriteY);
+        /*debug += "Size Sprite : " + sizeSpriteX + " " + sizeSpriteY + "\n";
+        Debug.Log("Size Sprite : " + sizeSpriteX + " " + sizeSpriteY);*/
 
         float PercenTageSpriteX = sizeSpriteX * 100.0f / sizeBackgroundX;
         float PercenTageSpriteY = sizeSpriteY * 100.0f / sizeBackgroundY;
-        debug += "Percentage Sprite : " + PercenTageSpriteX + " " + PercenTageSpriteY + "\n";
-        Debug.Log("Percentage Sprite : " + PercenTageSpriteX + " " + PercenTageSpriteY);
+        /*debug += "Percentage Sprite : " + PercenTageSpriteX + " " + PercenTageSpriteY + "\n";
+        Debug.Log("Percentage Sprite : " + PercenTageSpriteX + " " + PercenTageSpriteY);*/
 
         float scaleX = PercentageButtonFit / PercenTageSpriteX;//Mathf.Floor(PercentageButtonFit / PercenTageSpriteX * 10.0f) / 10.0f;
         float scaleY = PercentageButtonFit / PercenTageSpriteY;//Mathf.Floor(PercentageButtonFit / PercenTageSpriteY * 10.0f) / 10.0f;
-        Debug.Log("Scale : " + scaleX + " " + scaleY);
-        debug += "Scale : " + scaleX + " " + scaleY + "\n";
+        /*Debug.Log("Scale : " + scaleX + " " + scaleY);
+        debug += "Scale : " + scaleX + " " + scaleY + "\n";*/
 
         // Make the scale uniform
         if (scaleX < scaleY) scaleY = scaleX;
         else if (scaleY < scaleX) scaleX = scaleY;
-        Debug.Log("Uni Scale : " + scaleX + " " + scaleY);
+        //Debug.Log("Uni Scale : " + scaleX + " " + scaleY);
 
         transform.localScale = new Vector3(scaleX, scaleY, 1.0f);
         transform.localPosition = new Vector3(sizeBackgroundX / 2.0f, sizeBackgroundY / 2.0f, 1.0f);
@@ -57,6 +57,6 @@ public class EntityUIFitScreen : MonoBehaviour {
 	void Update () {
         if (!_isInit)
             ChangeSize();
-        Debug.Log(transform.localScale);
+        //Debug.Log(transform.localScale);
     }
 }

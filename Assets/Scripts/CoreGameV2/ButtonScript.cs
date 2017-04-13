@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class ButtonScript : MonoBehaviour {
+public class ButtonScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+{
 
     public CombinationHandler.Button Type;
 
@@ -19,9 +22,18 @@ public class ButtonScript : MonoBehaviour {
 	
     public void ButtonPressed()
     {
+
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
         Debug.Log("ButtonPressed");
         GM.ButtonPressed(Type);
         animator.SetTrigger("Pressed");
         audioSource.Play();
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
     }
 }
