@@ -11,10 +11,12 @@ public class WaveManager : MonoBehaviour {
 	List< List<BasicEnnemy> >	WaveLeft = new List< List<BasicEnnemy> >();	
 	List<BasicEnnemy>			EnemiesForCurrentWave;
 
-	float 						TimeLeft;					// Min time between each enemy summon
+	float 						TimeLeft = 0;					// Min time between each enemy summon
 	float						NbrEnemiesOnScreen = 0;		// Actual number of enemies 
 
 	List<Vector3>				SpawnerPositionList;
+
+    bool canSummon = true;
 
 	// Update is called once per frame
 	void Update () {}
@@ -46,8 +48,8 @@ public class WaveManager : MonoBehaviour {
 		}
 
 		// SET TimeLeft
-		if (EnemiesForCurrentWave.Count >= 2)
-			TimeLeft = EnemiesForCurrentWave [1].SpawnCooldown;
+		/*if (EnemiesForCurrentWave.Count >= 2)
+			TimeLeft = EnemiesForCurrentWave [1].SpawnCooldown;*/
 
 		// Set Spawner position
 		SpawnerPositionList = new List<Vector3>();
@@ -62,13 +64,16 @@ public class WaveManager : MonoBehaviour {
 	void Summon()
 	{
 		// New wave
-		if (EnemiesForCurrentWave.Count <= 0)
+		if (EnemiesForCurrentWave.Count <= 0 && NbrEnemiesOnScreen == 0)
 		{
 			if (WaveLeft.Count > 0)
 			{
-				EnemiesForCurrentWave = WaveLeft [0];
+                TimeLeft = 5;
+                EnemiesForCurrentWave = WaveLeft [0];
 				WaveLeft.RemoveAt (0);
-			}
+                StartCoroutine("SummonLater", TimeLeft);
+                return;
+            }
 		}
 
 		// The wave continue
@@ -98,7 +103,8 @@ public class WaveManager : MonoBehaviour {
 	{
 		float TimeUntilSummon = delay;
 
-		NbrEnemiesOnScreen++;
+        canSummon = false;
+        NbrEnemiesOnScreen++;
 
 		while (TimeUntilSummon > 0)
 		{
@@ -108,6 +114,7 @@ public class WaveManager : MonoBehaviour {
 
 		NbrEnemiesOnScreen--;
 
+        canSummon = true;
 		Summon ();
 	}
 
@@ -141,7 +148,8 @@ public class WaveManager : MonoBehaviour {
 				}
 
 				else {
-					StartCoroutine ("SummonLater", TimeLeft);
+                    if (canSummon)
+    					StartCoroutine ("SummonLater", TimeLeft);
 				}
 			}
 

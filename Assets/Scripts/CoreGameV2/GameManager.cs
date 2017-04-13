@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour {
                     if (Combination.isSameCombination(e.Combination))
                     {
                         e.Die();
+                        Combination.Reset();
                         break;
                     }
                 }

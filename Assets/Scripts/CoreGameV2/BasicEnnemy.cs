@@ -75,6 +75,7 @@ public class BasicEnnemy : MonoBehaviour {
                     return;
             }
             GameObject button = Instantiate(buttonRef, Position, Quaternion.identity);
+            button.GetComponent<SpriteRenderer>().enabled = true;
             Vector3 buttonPosition = Position;
             buttonPosition.y += GetComponent<BoxCollider>().size.y * 0.75f;
             float sizeRef = button.GetComponent<RectTransform>().sizeDelta.x * Combination.Count;
