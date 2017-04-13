@@ -2,25 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonScript : MonoBehaviour {
+public class VSButtonScript : MonoBehaviour {
 
-    public CombinationHandler.Button Type;
+    public VSCombinationHandler.Button Type;
 
     AudioSource audioSource;
-    GameManager GM;
+    VSGameManager GM;
     Animator animator;
 
-	// Use this for initialization
-	void Start () {
-        GM = GameManager.instance;
+    // Use this for initialization
+    void Start()
+    {
+        GM = VSGameManager.instance;
         animator = transform.GetComponentInChildren<Animator>();
         audioSource = GetComponent<AudioSource>();
-	}
-	
+    }
+
     public void ButtonPressed()
     {
-        Debug.Log("ButtonPressed");
-        GM.ButtonPressed(Type);
+        if (this.tag == "Player1")
+            GM.ButtonPressed(Type, 1);
+
+        if (this.tag == "Player2")
+            GM.ButtonPressed(Type, 2);
+
         animator.SetTrigger("Pressed");
         audioSource.Play();
     }
