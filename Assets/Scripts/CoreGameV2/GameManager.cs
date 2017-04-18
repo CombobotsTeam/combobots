@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
     // Contain the current combination of button pressed
     CombinationHandler Combination;
 	WaveManager WaveManager;
+    BasicEnnemy lockEnemy;
 
     private void Start()
     {
@@ -46,7 +47,7 @@ public class GameManager : MonoBehaviour {
             WaveManager.launch();
             launch = false;
         }
-        if (Combination.GetCurrentCombination().Count > 0)
+        /*if (Combination.GetCurrentCombination().Count > 0)
         {
             bool combinationExist = false;
             foreach (GameObject enemy in EnemiesOnScreen)
@@ -67,6 +68,36 @@ public class GameManager : MonoBehaviour {
             {
                 Combination.Reset();
             }
+        }*/ ///KEEP IT FOR THE BOSS
+            if (Combination.GetCurrentCombination().Count > 0 && EnemiesOnScreen.Count > 0)
+        {
+            BasicEnnemy enemy;
+            if (lockEnemy)
+            {
+                enemy = lockEnemy;
+            }
+            else
+            {
+                GameObject firstEnemy = EnemiesOnScreen[0];
+                foreach (GameObject e in EnemiesOnScreen)
+                {
+                    if (e.GetComponent<Transform>().position.y < firstEnemy.GetComponent<Transform>().position.y)
+                        firstEnemy = e;
+                }
+                enemy = firstEnemy.GetComponent<BasicEnnemy>();
+            }
+                if (Combination.CompareCombination(enemy.Combination))
+                {
+                    lockEnemy = enemy;
+                    if (Combination.isSameCombination(enemy.Combination))
+                    {
+                        enemy.Die();
+                    }
+                }
+                else
+                {
+                    Combination.Reset();
+                }
         }
     }
 
