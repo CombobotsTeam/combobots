@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour {
 
-	public List<GameObject> 	Waves;						// GameObject must be an empty GameObject with BasicEnemies as children
+	private List<GameObject> 	Waves;						// GameObject must be an empty GameObject with BasicEnemies as children
 	public bool 				RandomWave;
 	public int 					EnemyMax;					// Maximum number of enemies display
 
-	List< List<BasicEnnemy> >	WaveLeft = new List< List<BasicEnnemy> >();	
+    public int nbrOfSpawn = 5;
+
+    private ConfigurationGame config;
+    private CombinationGenerator combinationGenerator;
+
+
+    List< List<BasicEnnemy> >	WaveLeft = new List< List<BasicEnnemy> >();	
 	List<BasicEnnemy>			EnemiesForCurrentWave;
 
 	float 						TimeLeft = 0;					// Min time between each enemy summon
@@ -24,6 +30,7 @@ public class WaveManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+        config = ConfigurationGame.instance;
 		// Generate random waves
 		if (RandomWave)
 			GenerateRandomWave (); // Not implement yet
@@ -31,7 +38,7 @@ public class WaveManager : MonoBehaviour {
 		// Use waves 
 		else
 		{
-			// SET WaveLeft
+            Waves = config.GenerateWaves();
 			foreach (GameObject waveObj in Waves) 
 			{
 				BasicEnnemy[] wave = waveObj.GetComponentsInChildren<BasicEnnemy> ();
@@ -50,15 +57,6 @@ public class WaveManager : MonoBehaviour {
 		// SET TimeLeft
 		/*if (EnemiesForCurrentWave.Count >= 2)
 			TimeLeft = EnemiesForCurrentWave [1].SpawnCooldown;*/
-
-		// Set Spawner position
-		SpawnerPositionList = new List<Vector3>();
-        RectTransform Pos = GameObject.Find("Canvas").GetComponent<RectTransform>();
-        RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
-        Vector3 tmpPos = Pos.localPosition;
-        
-        tmpPos.y += Pos.sizeDelta.y * Pos.localScale.y / 2 - GameObject.Find("Canvas/TopBackground").GetComponent<UISystem>().HeightPercentage * Pos.sizeDelta.y / 100 * Pos.localScale.y;
-        SpawnerPositionList.Add (tmpPos);
  	}
 
 	void Summon()
@@ -81,13 +79,18 @@ public class WaveManager : MonoBehaviour {
 		{
 			Transform BasicEnemy = EnemiesForCurrentWave [0].transform;
 			int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
-
             Vector3 pos = SpawnerPositionList[randomIndex];
+
+            float ysize = BasicEnemy.GetComponent<BoxCollider>().size.y;
+            float ycenter = BasicEnemy.GetComponent<BoxCollider>().center.y;
+            float yscale = BasicEnemy.GetComponent<Transform>().localScale.y;
+            pos.y -= (ysize * (yscale / 2)) + (ycenter * yscale);
+
+            Debug.Log("Positon Y for the launche " + pos.y);
             //pos.y -= BasicEnemy.GetComponent<BoxCollider>().size.y * BasicEnemy.GetComponent<Transform>().localScale.y / 2;
             BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
-            CombinationGenerator c = new CombinationGenerator();
-            c.FixedSize = enemy.Combination.Count;
-            enemy.Combination = c.GetListButton();
+            combinationGenerator.FixedSize = enemy.Combination.Count;
+            enemy.Combination = combinationGenerator.GetListButton();
             enemy.Setup();
 			NbrEnemiesOnScreen++;
             GameManager.instance.EnemiesOnScreen.Add(enemy.gameObject);
@@ -159,6 +162,30 @@ public class WaveManager : MonoBehaviour {
 
     public void launch()
     {
+        // Set Spawner position
+        SpawnerPositionList = new List<Vector3>();
+        RectTransform Pos = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
+
+        Vector3 tmpPos = Pos.localPosition;
+
+        // Y AXIS
+        tmpPos.y = TopPos.position.y;
+
+        // X AXIS
+        Vector2 topRightCorner = new Vector2(1, 1);
+        Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
+        edgeVector *= 2;
+
+        float width = edgeVector.x;
+        for (int i = 0; i <= nbrOfSpawn; i++)
+        {
+            tmpPos.x = TopPos.position.x + ((width / (nbrOfSpawn + 1)) * (i + 1));
+            SpawnerPositionList.Add(tmpPos);
+        }
+
+        for (int i = 0; i < SpawnerPositionList.Count; i++)
+        Debug.Log("Spawner Position " + SpawnerPositionList[i]);
         StartCoroutine("StartWaveManager");
     }
 }

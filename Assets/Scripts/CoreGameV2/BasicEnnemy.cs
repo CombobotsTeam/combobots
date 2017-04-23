@@ -5,7 +5,7 @@ using UnityEngine;
 public class BasicEnnemy : MonoBehaviour {
 
 
-    public GameObject[] buttonRef;
+    //public GameObject[] buttonRef;
 
     [HideInInspector]
     public List<CombinationHandler.Button> Combination = new List<CombinationHandler.Button>();
@@ -23,13 +23,11 @@ public class BasicEnnemy : MonoBehaviour {
     private BoxCollider boxCollider;
 
     private void Awake()
-    {
-        for (int i = 0; i < buttonRef.Length; i++)
-        {
-            if (!buttonRef[i].GetComponent<ButtonScript>())
-                Debug.LogError("INVALID BUTTON PREF (BASIC ENEMY.CS)");
-            ObjectToInstantiate[buttonRef[i].GetComponent<ButtonScript>().Type] = buttonRef[i];
-        }
+    { 
+        ObjectToInstantiate[CombinationHandler.Button.BLUE] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/BlueButton");
+        ObjectToInstantiate[CombinationHandler.Button.YELLOW] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/YellowButton");
+        ObjectToInstantiate[CombinationHandler.Button.GREEN] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/GreenButton");
+        ObjectToInstantiate[CombinationHandler.Button.RED] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/RedButton");
         boxCollider = GetComponent<BoxCollider>();
         Position = GetComponent<Transform>().position;
     }
@@ -39,7 +37,6 @@ public class BasicEnnemy : MonoBehaviour {
         Gm = GameManager.instance;  
     }
 
-    // Use this for initialization
     void Start (List<CombinationHandler.Button> combination, int nbrGold, Vector3 position) {
         Combination = combination;
         NbrGold = nbrGold;
@@ -92,6 +89,6 @@ public class BasicEnnemy : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        Move();
+        //Move();
 	}
 }
