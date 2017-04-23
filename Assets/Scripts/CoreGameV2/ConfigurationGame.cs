@@ -9,7 +9,10 @@ public class ConfigurationEnemy
     public int CombinationSize = 3;
     public float Speed = 1.0f;
     public int Gold = 0;
-    public float SpawnCooldDown = 2.0f;
+    public float SpawnCoolDown = 2.0f;
+
+    [HideInInspector]
+    public GameObject prefab = null;
 }
 
 [System.Serializable]
@@ -40,48 +43,49 @@ public class ConfigurationGame : MonoBehaviour {
             Destroy(gameObject);
     }
 
-    public GameObject GenerateEnemy(string type = "Robot01", int CombinationSize = 3, float Speed = 1, int Gold = 0, float SpawnCoolDown = 1)
+    public GameObject GenerateEnemy(string type = "Robot01")//, int CombinationSize = 3, float Speed = 1, int Gold = 0, float SpawnCoolDown = 1)
     {
         GameObject toInstantiate = Resources.Load<GameObject>(PathToEnemiesPrefab + type);
 
         if (!toInstantiate)
             Debug.LogError("Impossible to instantiate " + type + " (Path: " + PathToEnemiesPrefab + type + ")");
 
-        BasicEnnemy component = toInstantiate.GetComponent<BasicEnnemy>();
+       /* BasicEnnemy component = toInstantiate.GetComponent<BasicEnnemy>();
         component.CombinationSize = CombinationSize;
         component.Speed = Speed;
         component.NbrGold = Gold;
-        component.SpawnCooldown = SpawnCoolDown;
+        component.SpawnCooldown = SpawnCoolDown;*/
 
         return toInstantiate;
     }
 
-    public List<GameObject> GenerateWaves()
+    public List<BasicWaveClass> GenerateWaves()
     {
-        List<GameObject> WaveResult = new List<GameObject>();
+        List<BasicWaveClass> WaveResult = new List<BasicWaveClass>();
 
         for (int i = 0; i < Waves.Count; i++)
         {
-            GameObject Wave = new GameObject("Wave" + i);
-            Wave.AddComponent<BasicWave>();
+            //GameObject Wave = new GameObject("Wave" + i);
+            //Wave.AddComponent<BasicWave>();
 
-            BasicWave WaveComponent = Wave.GetComponent<BasicWave>();
+            BasicWaveClass WaveComponent = new BasicWaveClass();
             WaveComponent.TextDisplay = Waves[i].TextDisplay;
             WaveComponent.TimeBetweenWave = Waves[i].TimeBetweenWave;
 
+            GameObject entity = null;
             for (int j = 0; j < Waves[i].Entities.Count; j++)
             {
-                GameObject entity = GenerateEnemy(
-                    Waves[i].Entities[j].name, 
-                    Waves[i].Entities[j].CombinationSize, 
+                entity = GenerateEnemy(Waves[i].Entities[j].name);
+                   /* Waves[i].Entities[j].CombinationSize, 
                     Waves[i].Entities[j].Speed, 
                     Waves[i].Entities[j].Gold, 
-                    Waves[i].Entities[j].SpawnCooldDown
-                    );
-                WaveComponent.entities.Add(entity);
+                    Waves[i].Entities[j].SpawnCoolDown
+                    );*/
+                Waves[i].Entities[j].prefab = entity;
+                WaveComponent.entities.Add(Waves[i].Entities[j]);
             }
 
-            WaveResult.Add(Wave);
+            WaveResult.Add(WaveComponent);
         }
 
         return WaveResult;

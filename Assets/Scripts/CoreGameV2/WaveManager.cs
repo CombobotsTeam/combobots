@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour {
 
-	private List<GameObject> 	Waves;						// GameObject must be an empty GameObject with BasicEnemies as children
+    public List<GameObject> Waves = new List<GameObject>(); // GameObject must be an empty GameObject with BasicEnemies as children
 	public bool 				RandomWave;
 	public int 					EnemyMax;					// Maximum number of enemies display
 
     public int nbrOfSpawn = 5;
 
     private ConfigurationGame config;
-    private CombinationGenerator combinationGenerator;
+    private CombinationGenerator combinationGenerator = new CombinationGenerator();
 
 
-    List< List<BasicEnnemy> >	WaveLeft = new List< List<BasicEnnemy> >();	
-	List<BasicEnnemy>			EnemiesForCurrentWave;
+    List< List<ConfigurationEnemy> >	WaveLeft = new List< List<ConfigurationEnemy> >();	
+	List<ConfigurationEnemy>			EnemiesForCurrentWave;
 
 	float 						TimeLeft = 0;					// Min time between each enemy summon
 	float						NbrEnemiesOnScreen = 0;		// Actual number of enemies 
@@ -38,15 +38,28 @@ public class WaveManager : MonoBehaviour {
 		// Use waves 
 		else
 		{
-            Waves = config.GenerateWaves();
-			foreach (GameObject waveObj in Waves) 
-			{
-				BasicEnnemy[] wave = waveObj.GetComponentsInChildren<BasicEnnemy> ();
+            int count = 0;
+            GameObject waveTMP = null;
+            List<BasicWaveClass> t = config.GenerateWaves();
+             foreach (BasicWaveClass waveComponent in t)
+             {
+                waveTMP = new GameObject("Wave" + count);
+                waveTMP.AddComponent<BasicWave>();
+                waveTMP.GetComponent<BasicWave>().data = waveComponent;
+                count++;
+                Waves.Add(waveTMP);
+             }
+            foreach (GameObject waveObj in Waves)
+            {
+                //BasicEnnemy[] wave = waveObj.GetComponentsInChildren<BasicEnnemy> ();
+                BasicWave wave = waveObj.GetComponent<BasicWave>();
 
-				List<BasicEnnemy> tmpEnemyList = new List<BasicEnnemy>();
-				foreach (BasicEnnemy enemy in wave)
-					tmpEnemyList.Add (enemy);
-				WaveLeft.Add (tmpEnemyList);
+                List<ConfigurationEnemy> tmpEnemyList = new List<ConfigurationEnemy>();
+                foreach (ConfigurationEnemy enemy in wave.data.entities)
+                    if (enemy.prefab.gameObject.GetComponent<BasicEnnemy>())
+                        tmpEnemyList.Add(enemy);
+
+                WaveLeft.Add(tmpEnemyList);
             }
 
             // SET EnemiesForCurrentWave
@@ -77,7 +90,7 @@ public class WaveManager : MonoBehaviour {
 		// The wave continue
 		if (EnemiesForCurrentWave.Count >= 1)
 		{
-			Transform BasicEnemy = EnemiesForCurrentWave [0].transform;
+			Transform BasicEnemy = EnemiesForCurrentWave [0].prefab.transform;
 			int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
             Vector3 pos = SpawnerPositionList[randomIndex];
 
@@ -86,17 +99,22 @@ public class WaveManager : MonoBehaviour {
             float yscale = BasicEnemy.GetComponent<Transform>().localScale.y;
             pos.y -= (ysize * (yscale / 2)) + (ycenter * yscale);
 
-            Debug.Log("Positon Y for the launche " + pos.y);
-            //pos.y -= BasicEnemy.GetComponent<BoxCollider>().size.y * BasicEnemy.GetComponent<Transform>().localScale.y / 2;
+
             BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
-            combinationGenerator.FixedSize = enemy.Combination.Count;
+
+            if (!enemy)
+                Debug.LogError("[WaveManager]Can't instanciate the enemy !");
+
+            enemy.UpdateWithConfig(EnemiesForCurrentWave[0]);
+
+            combinationGenerator.FixedSize = enemy.CombinationSize;
             enemy.Combination = combinationGenerator.GetListButton();
             enemy.Setup();
 			NbrEnemiesOnScreen++;
             GameManager.instance.EnemiesOnScreen.Add(enemy.gameObject);
 
 			if (EnemiesForCurrentWave.Count >= 2)
-				TimeLeft = EnemiesForCurrentWave [1].SpawnCooldown;
+				TimeLeft = EnemiesForCurrentWave [1].SpawnCoolDown;
 
 			EnemiesForCurrentWave.RemoveAt(0);
 		}
@@ -185,7 +203,7 @@ public class WaveManager : MonoBehaviour {
         }
 
         for (int i = 0; i < SpawnerPositionList.Count; i++)
-        Debug.Log("Spawner Position " + SpawnerPositionList[i]);
+        //Debug.Log("Spawner Position " + SpawnerPositionList[i]);
         StartCoroutine("StartWaveManager");
     }
 }

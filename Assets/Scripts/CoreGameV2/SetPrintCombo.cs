@@ -14,7 +14,7 @@ public class SetPrintCombo : MonoBehaviour
 
     void GetPlayerCombo()//Get player's combo function 
     {
-        PrintCombo = "Combo : " + GM.ComboCount.ToString();//get player's combocount from gamemaneger And set 
+        PrintCombo = "ComboX" + GM.ComboCount.ToString();//get player's combocount from gamemaneger And set 
         GetComponent<Text>().text = PrintCombo;//change print text 
     }
 

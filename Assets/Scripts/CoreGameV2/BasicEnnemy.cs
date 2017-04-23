@@ -21,6 +21,7 @@ public class BasicEnnemy : MonoBehaviour {
     GameManager Gm;
     private Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
     private BoxCollider boxCollider;
+    private List<GameObject> ButtonsEnemy = new List<GameObject>();
 
     private void Awake()
     { 
@@ -70,25 +71,56 @@ public class BasicEnnemy : MonoBehaviour {
 
     public void Setup()
     {
-        int count = 0;
+        int count = 1;
         foreach (CombinationHandler.Button b in Combination)
         {
             GameObject button = Instantiate(ObjectToInstantiate[b], Position, Quaternion.identity);
 
             button.GetComponent<SpriteRenderer>().enabled = true;
             Vector3 buttonPosition = Position;
-            buttonPosition.y += boxCollider.size.y * 0.75f;
-            float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x;
-            float sizeRef = buttonSizeX  * CombinationSize;
-            buttonPosition.x = sizeRef * count / CombinationSize - sizeRef / 2 + buttonSizeX / 2;
-            button.transform.SetParent(gameObject.transform);
+            buttonPosition.y += boxCollider.size.y * 0.9f;
+            float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
+            float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
+            positionButtonCompare += buttonSizeX * count;
+            if (CombinationSize % 2 != 0)
+                positionButtonCompare -= buttonSizeX * 0.5f;
+            buttonPosition.x += positionButtonCompare;
             button.transform.position = buttonPosition;
+            button.transform.SetParent(gameObject.transform);
             count += 1;
+
+            ButtonsEnemy.Add(button);
         }
     }
 
     // Update is called once per frame
     void Update () {
-        //Move();
+        Move();
 	}
+
+    public void UpdateWithConfig(ConfigurationEnemy setting)
+    {
+        CombinationSize = setting.CombinationSize;
+        Speed = setting.Speed;
+        NbrGold = setting.Gold;
+        SpawnCooldown = setting.SpawnCoolDown;
+    }
+
+    public void FeedBackCombination(CombinationHandler CombinationPlayer, bool reset = false)
+    {
+        if (!reset)
+        {
+            int count = 0;
+            foreach (CombinationHandler.Button currentButton in CombinationPlayer.GetCurrentCombination())
+            {
+                ButtonsEnemy[count].GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+                count++;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < ButtonsEnemy.Count; i++)
+                ButtonsEnemy[i].GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+        }
+    }
 }

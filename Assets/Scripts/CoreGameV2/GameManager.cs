@@ -21,10 +21,6 @@ public class GameManager : MonoBehaviour {
     CombinationHandler Combination;
 	WaveManager WaveManager;
 
-    private void Start()
-    {
-    }
-
     void Awake () {
         //Check if instance already exists
         if (instance == null)
@@ -55,6 +51,7 @@ public class GameManager : MonoBehaviour {
                 if (Combination.CompareCombination(e.Combination))
                 {
                     combinationExist = true;
+                    e.FeedBackCombination(Combination);
                     if (Combination.isSameCombination(e.Combination))
                     {
                         e.Die();
@@ -62,6 +59,8 @@ public class GameManager : MonoBehaviour {
                         break;
                     }
                 }
+                if (!combinationExist)
+                    e.FeedBackCombination(Combination, true);
             }
             if (!combinationExist)
             {

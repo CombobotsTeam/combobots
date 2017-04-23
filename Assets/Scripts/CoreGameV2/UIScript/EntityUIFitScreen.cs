@@ -20,7 +20,7 @@ public class EntityUIFitScreen : MonoBehaviour {
 
     void ChangeSize()
     {
-        string debug;
+        //string debug;
 
         float sizeBackgroundX = rt.rect.size.x;
         float sizeBackgroundY = rt.rect.size.y;

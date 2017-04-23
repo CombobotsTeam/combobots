@@ -15,13 +15,16 @@ public class UISystem : MonoBehaviour {
 	public bool left = false;
 	public bool right = false;
 	public bool widthcenter = false;
-	public int PercentWidthPosition = 0;
-	public int PercentHeightPosition = 0;
+	public float PercentWidthPosition = 0;
+	public float PercentHeightPosition = 0;
 	//size
 	public bool WidthFullScreen = false;
 	public bool HeigthFullScreen = false;
-	public int WidthPercentage = 0;
-	public int HeightPercentage = 0;
+	public float WidthPercentage = 0;
+	public float HeightPercentage = 0;
+
+    public bool KeepSameRatio = false;
+
 	private Vector2 Size = new Vector2(0.0f,0.0f);
     private bool _isInit = false;
 
@@ -34,6 +37,12 @@ public class UISystem : MonoBehaviour {
 			Size.y =sH;//get screen height
 		else
 			Size.y = sH * HeightPercentage / 100;
+
+        if (KeepSameRatio && Size.x < Size.y)
+            Size.y = Size.x;
+        else if (KeepSameRatio && Size.x > Size.y)
+            Size.x = Size.y;
+
 		GetComponent<RectTransform> ().sizeDelta = Size;
 		if (top)
 			Position.y = sH - Size.y - ( sH * PercentHeightPosition / 100) - sH / 2;
