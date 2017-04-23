@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaveManager : MonoBehaviour
-{
+public class WaveManager : MonoBehaviour {
 
 	public List<GameObject> 	Waves;						// GameObject must be an empty GameObject with BasicEnemies as children
 	public bool 				RandomWave;
 	public int 					EnemyMax;					// Maximum number of enemies display
-	public int					nbrOfSpawn = 5;
 
 	List< List<BasicEnnemy> >	WaveLeft = new List< List<BasicEnnemy> >();	
 	List<BasicEnnemy>			EnemiesForCurrentWave;
@@ -53,7 +51,14 @@ public class WaveManager : MonoBehaviour
 		/*if (EnemiesForCurrentWave.Count >= 2)
 			TimeLeft = EnemiesForCurrentWave [1].SpawnCooldown;*/
 
-
+		// Set Spawner position
+		SpawnerPositionList = new List<Vector3>();
+        RectTransform Pos = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
+        Vector3 tmpPos = Pos.localPosition;
+        
+        tmpPos.y += Pos.sizeDelta.y * Pos.localScale.y / 2 - GameObject.Find("Canvas/TopBackground").GetComponent<UISystem>().HeightPercentage * Pos.sizeDelta.y / 100 * Pos.localScale.y;
+        SpawnerPositionList.Add (tmpPos);
  	}
 
 	void Summon()
@@ -76,17 +81,8 @@ public class WaveManager : MonoBehaviour
 		{
 			Transform BasicEnemy = EnemiesForCurrentWave [0].transform;
 			int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
-			//Debug.Log ("count : " + SpawnerPositionList.Count);
 
             Vector3 pos = SpawnerPositionList[randomIndex];
-
-			float ysize = BasicEnemy.GetComponent<BoxCollider> ().size.y;
-			float ycenter = BasicEnemy.GetComponent<BoxCollider> ().center.y;
-			float yscale = BasicEnemy.GetComponent<Transform>().localScale.y;
-			pos.y -= (ysize * (yscale / 2))+ (ycenter * yscale);
-
-			Debug.Log ("test : " + BasicEnemy.GetComponent<BoxCollider> ().center.y);
-
             //pos.y -= BasicEnemy.GetComponent<BoxCollider>().size.y * BasicEnemy.GetComponent<Transform>().localScale.y / 2;
             BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
             CombinationGenerator c = new CombinationGenerator();
@@ -163,28 +159,6 @@ public class WaveManager : MonoBehaviour
 
     public void launch()
     {
-		// Set Spawner position
-		SpawnerPositionList = new List<Vector3>();
-		RectTransform Pos = GameObject.Find("Canvas").GetComponent<RectTransform>();
-		RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
-
-		Vector3 tmpPos = Pos.localPosition;
-
-		// Y AXIS
-		tmpPos.y = TopPos.position.y;
-
-		// X AXIS
-		Vector2 topRightCorner = new Vector2(1, 1);
-		Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
-		edgeVector *= 2;
-
-		float width = edgeVector.x;
-
-		for (int i = 0; i <= nbrOfSpawn; i++) {
-			tmpPos.x = TopPos.position.x + ((width / (nbrOfSpawn + 1)) * (i + 1));
-			SpawnerPositionList.Add (tmpPos);
-		}
-
         StartCoroutine("StartWaveManager");
     }
 }

@@ -4,19 +4,39 @@ using UnityEngine;
 
 public class BasicEnnemy : MonoBehaviour {
 
-    public List<CombinationHandler.Button> Combination = new List<CombinationHandler.Button> { CombinationHandler.Button.BLUE };
+
+    public GameObject[] buttonRef;
+
+    [HideInInspector]
+    public List<CombinationHandler.Button> Combination = new List<CombinationHandler.Button>();
+    public int CombinationSize = 3;
     public int Life = 3;
     public float Speed = 0.1f;
     public bool IsMoving = true;
     public int NbrGold = 0;
+    [HideInInspector]
     public Vector3 Position;
     public float SpawnCooldown = 1000.0f;
+
     GameManager Gm;
+    private Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
+    private BoxCollider boxCollider;
+
+    private void Awake()
+    {
+        for (int i = 0; i < buttonRef.Length; i++)
+        {
+            if (!buttonRef[i].GetComponent<ButtonScript>())
+                Debug.LogError("INVALID BUTTON PREF (BASIC ENEMY.CS)");
+            ObjectToInstantiate[buttonRef[i].GetComponent<ButtonScript>().Type] = buttonRef[i];
+        }
+        boxCollider = GetComponent<BoxCollider>();
+        Position = GetComponent<Transform>().position;
+    }
 
     void Start()
     {
-        Position = GetComponent<Transform>().position;
-        Gm = GameManager.instance;
+        Gm = GameManager.instance;  
     }
 
     // Use this for initialization
@@ -56,32 +76,16 @@ public class BasicEnnemy : MonoBehaviour {
         int count = 0;
         foreach (CombinationHandler.Button b in Combination)
         {
-            GameObject buttonRef;
-            switch (b)
-            {
-                case CombinationHandler.Button.BLUE:
-                    buttonRef = GameObject.Find("RobotBlueButton");
-                    break;
-                case CombinationHandler.Button.GREEN:
-                    buttonRef = GameObject.Find("RobotGreenButton");
-                    break;
-                case CombinationHandler.Button.RED:
-                    buttonRef = GameObject.Find("RobotRedButton");
-                    break;
-                case CombinationHandler.Button.YELLOW:
-                    buttonRef = GameObject.Find("RobotYellowButton");
-                    break;
-                default:
-                    return;
-            }
-            GameObject button = Instantiate(buttonRef, Position, Quaternion.identity);
+            GameObject button = Instantiate(ObjectToInstantiate[b], Position, Quaternion.identity);
+
             button.GetComponent<SpriteRenderer>().enabled = true;
             Vector3 buttonPosition = Position;
-            buttonPosition.y += GetComponent<BoxCollider>().size.y * 0.75f;
-            float sizeRef = button.GetComponent<RectTransform>().sizeDelta.x * Combination.Count;
-            buttonPosition.x = sizeRef * count / Combination.Count - sizeRef / 2 + button.GetComponent<RectTransform>().sizeDelta.x / 2;
+            buttonPosition.y += boxCollider.size.y * 0.75f;
+            float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x;
+            float sizeRef = buttonSizeX  * CombinationSize;
+            buttonPosition.x = sizeRef * count / CombinationSize - sizeRef / 2 + buttonSizeX / 2;
             button.transform.SetParent(gameObject.transform);
-            button.GetComponent<RectTransform>().localPosition = buttonPosition;
+            button.transform.position = buttonPosition;
             count += 1;
         }
     }

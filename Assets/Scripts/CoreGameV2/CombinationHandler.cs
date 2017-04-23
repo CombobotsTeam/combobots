@@ -25,7 +25,7 @@ public class CombinationHandler : MonoBehaviour {
         int i = 0;
         foreach (Button CombinationHandler in CurrentCombination)
         {
-            if (i >= button.Count)
+            if (i > button.Count)
                 return false;
             if (CombinationHandler != button[i])
                 return false;
