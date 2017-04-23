@@ -6,17 +6,21 @@ public class SetPrintScore : MonoBehaviour
 {
     private GameManager GM;//Get GameManeger from main camera's GameManeger script
     private string PrintScore = null;//print score text in gamescene string
+    private Text UIText;
 
     void Start()
     {
         GM = GameManager.instance;
-        //Camera.main.GetComponent<GameManager> ();//Get GameManeger script from main camera's GameManeger script
+        UIText = GetComponent<Text>();
     }
 
     void GetPlayerScore()//Get player's score function 
-    {
-        PrintScore = GM.Score.ToString();//get player's score from gamemaneger
-        GetComponent<Text>().text = PrintScore;//change print text 
+    { 
+        if (PrintScore != GM.Score.ToString())
+        {
+            PrintScore = GM.Score.ToString();//get player's score from gamemaneger
+            UIText.text = PrintScore;//change print text 
+        }
     }
 
     void Update()

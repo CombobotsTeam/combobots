@@ -55,12 +55,19 @@ public class GameManager : MonoBehaviour {
                     if (Combination.isSameCombination(e.Combination))
                     {
                         e.Die();
+                        Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
+                        ComboCount++;
+                        if (e.NbrGold > 0)
+                            Gold += e.NbrGold;
                         Combination.Reset();
                         break;
                     }
                 }
                 if (!combinationExist)
+                {
                     e.FeedBackCombination(Combination, true);
+                    ComboCount = 0;
+                }
             }
             if (!combinationExist)
             {
