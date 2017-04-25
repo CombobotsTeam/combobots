@@ -10,9 +10,10 @@ public class GameManager : MonoBehaviour {
 
     public int Score = 0;//score of player
 	public int Life = 0;//life of player
-	public int ComboCount = 0;//player's combo count
+	public int ComboCount = 1;//player's combo count
     public int Gold = 0;
     bool launch = true;
+    GameObject lockEnnemy = null;
 
     // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
     public List<GameObject> EnemiesOnScreen = new List<GameObject>();
@@ -44,34 +45,36 @@ public class GameManager : MonoBehaviour {
         }
         if (Combination.GetCurrentCombination().Count > 0)
         {
-            bool combinationExist = false;
-            foreach (GameObject enemy in EnemiesOnScreen)
+            if (lockEnnemy == null)
             {
-                BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
+                foreach (GameObject enemy in EnemiesOnScreen)
+                {
+                    if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
+                        lockEnnemy = enemy;
+                }
+            }
+            if (lockEnnemy != null)
+            {
+                BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
                 if (Combination.CompareCombination(e.Combination))
                 {
-                    combinationExist = true;
                     e.FeedBackCombination(Combination);
                     if (Combination.isSameCombination(e.Combination))
                     {
                         e.Die();
-                        Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
+                        Score += 10 * ComboCount;
                         ComboCount++;
                         if (e.NbrGold > 0)
                             Gold += e.NbrGold;
                         Combination.Reset();
-                        break;
                     }
                 }
-                if (!combinationExist)
+                else
                 {
                     e.FeedBackCombination(Combination, true);
-                    ComboCount = 0;
+                    ResetComboPoint();
+                    Combination.Reset();
                 }
-            }
-            if (!combinationExist)
-            {
-                Combination.Reset();
             }
         }
     }
@@ -87,17 +90,17 @@ public class GameManager : MonoBehaviour {
 		Score += addscore;
 	}
 
-    //player's combocount up (example 0 => 1)
+    //player's combocount up (example 1 => 2)
     public void AddComboPoint(int comboPoint)
 	{
         ComboCount += comboPoint;
 	}
 
-    //set player's combocount zero(example 3 => 0)
+    //set player's combocount zero(example 3 => 1)
     //player fail the combo, make combo count zero
     public void ResetComboPoint()
 	{
-		ComboCount = 0;
+		ComboCount = 1;
 	}
 
     //player's life up(example life 2 => 3)
@@ -127,6 +130,8 @@ public class GameManager : MonoBehaviour {
 
     public void NotifyDie(GameObject enemy)
     {
+        if (lockEnnemy == enemy)
+            lockEnnemy = null;
         WaveManager.EnemyDie(enemy);
         EnemiesOnScreen.Remove(enemy);
     }
