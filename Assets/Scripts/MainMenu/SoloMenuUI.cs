@@ -121,7 +121,7 @@ public class SoloMenuUI : MonoBehaviour
     public void On_ButtonArcade()
     {
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        //GUIAnimSystemFREE.Instance.LoadLevel("MultiMenu", 1.1f);
+        GUIAnimSystemFREE.Instance.LoadLevel("prototype", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
