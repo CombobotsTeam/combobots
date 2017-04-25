@@ -22,6 +22,7 @@ public class BasicEnnemy : MonoBehaviour {
     private Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
     private BoxCollider boxCollider;
     private List<GameObject> ButtonsEnemy = new List<GameObject>();
+	private GameObject EnemyLifeObj;
 
     private void Awake()
     { 
@@ -29,6 +30,7 @@ public class BasicEnnemy : MonoBehaviour {
         ObjectToInstantiate[CombinationHandler.Button.YELLOW] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/YellowButton");
         ObjectToInstantiate[CombinationHandler.Button.GREEN] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/GreenButton");
         ObjectToInstantiate[CombinationHandler.Button.RED] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/RedButton");
+		EnemyLifeObj = Resources.Load<GameObject>("Prefabs/EnemyLife");
         boxCollider = GetComponent<BoxCollider>();
         Position = GetComponent<Transform>().position;
     }
@@ -57,6 +59,16 @@ public class BasicEnnemy : MonoBehaviour {
         Destroy(gameObject);
     }
 
+	public void DecreaseLifePoint(int lp)
+	{
+		Life -= lp;
+		EnemyLifeObj.GetComponent<TextMesh> ().text = Life.ToString();
+
+		if (Life <= 0) {
+			Die ();
+		}
+	}
+
     private void Move()
     {
         Position.y -= Speed;
@@ -68,6 +80,32 @@ public class BasicEnnemy : MonoBehaviour {
         if (collision.gameObject.tag == "EndObject")
             Attack();
     }
+
+	public void ResetCombination()
+	{
+		ButtonsEnemy.Clear ();
+
+		int count = 1;
+		foreach (CombinationHandler.Button b in Combination)
+		{
+			GameObject button = Instantiate(ObjectToInstantiate[b], Position, Quaternion.identity);
+
+			button.GetComponent<SpriteRenderer>().enabled = true;
+			Vector3 buttonPosition = Position;
+			buttonPosition.y += boxCollider.size.y * 0.9f;
+			float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
+			float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
+			positionButtonCompare += buttonSizeX * count;
+			if (CombinationSize % 2 != 0)
+				positionButtonCompare -= buttonSizeX * 0.5f;
+			buttonPosition.x += positionButtonCompare;
+			button.transform.position = buttonPosition;
+			button.transform.SetParent(gameObject.transform);
+			count += 1;
+
+			ButtonsEnemy.Add(button);
+		}
+	}
 
     public void Setup()
     {
@@ -91,6 +129,31 @@ public class BasicEnnemy : MonoBehaviour {
 
             ButtonsEnemy.Add(button);
         }
+
+		// Setup Enemy life
+		float ysize = GetComponent<BoxCollider>().size.y;
+		float ycenter = GetComponent<BoxCollider>().center.y;
+		float yscale = GetComponent<Transform>().localScale.y;
+
+		float xsize = GetComponent<BoxCollider>().size.x;
+		float xcenter = GetComponent<BoxCollider>().center.x;
+		float xscale = GetComponent<Transform>().localScale.x;
+
+		Vector3 lifePos = Position;
+
+		lifePos.x += (xsize * (xscale / 2)) + (xcenter * xscale);
+		lifePos.y += (ysize * (yscale / 2)) + (ycenter * yscale);
+
+		EnemyLifeObj = Instantiate(EnemyLifeObj, lifePos, Quaternion.identity);
+		EnemyLifeObj.transform.SetParent(gameObject.transform);
+
+		// Change render order
+		Renderer liferend = EnemyLifeObj.GetComponent<MeshRenderer>();
+		liferend.sortingLayerName = "Entity";
+		liferend.sortingOrder = 100;
+
+		EnemyLifeObj.GetComponent<TextMesh> ().text = Life.ToString();
+
     }
 
     // Update is called once per frame

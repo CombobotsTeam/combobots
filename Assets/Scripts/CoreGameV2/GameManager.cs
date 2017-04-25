@@ -54,12 +54,15 @@ public class GameManager : MonoBehaviour {
                     e.FeedBackCombination(Combination);
                     if (Combination.isSameCombination(e.Combination))
                     {
-                        e.Die();
+                        e.DecreaseLifePoint(1);
                         Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
                         ComboCount++;
                         if (e.NbrGold > 0)
                             Gold += e.NbrGold;
                         Combination.Reset();
+						if (e) {
+							e.ResetCombination();
+						}
                         break;
                     }
                 }
