@@ -108,6 +108,18 @@ public class BlackPawnMinon : BasicEnnemy
         }
     }
 
+    public override void DecreaseLifePoint(int lp)
+    {
+        Position = RotatePosition;
+        r.Color = new Color(1, 1, 1);
+        if (startAttack >= 0 || attack == true)
+            boss.notifyAttack();
+        startAttack = -1;
+        Speed = 0;
+        attack = false;
+        base.DecreaseLifePoint(lp);
+    }
+
     protected override void Attack()
     {
         Position = RotatePosition;

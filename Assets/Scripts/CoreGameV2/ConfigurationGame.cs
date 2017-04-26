@@ -8,7 +8,7 @@ public class ConfigurationEnemy
 
     public enum Type
     {
-        BasicEnnemy,
+        BasicEnemy,
         Boss,
     }
 
@@ -17,7 +17,8 @@ public class ConfigurationEnemy
     public float Speed = 1.0f;
     public int Gold = 0;
     public float SpawnCoolDown = 2.0f;
-    public Type t;
+    public int Life = 2;
+    public Type t = Type.BasicEnemy;
 
     [HideInInspector]
     public GameObject prefab = null;

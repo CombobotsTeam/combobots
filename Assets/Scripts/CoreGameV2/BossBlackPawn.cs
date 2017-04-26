@@ -11,6 +11,7 @@ public class BossBlackPawn : BasicEnnemy
     public float stopPosition = 0;
     protected bool haveStop = false;
     protected float oldSpeed;
+    CombinationGenerator combinationGenerator = new CombinationGenerator();
 
     protected new void Start()
     {
@@ -18,10 +19,13 @@ public class BossBlackPawn : BasicEnnemy
         RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
         RectTransform BottomPos = GameObject.Find("Canvas/ButtonBackground").GetComponent<RectTransform>();
         stopPosition = TopPos.position.y + BottomPos.position.y / 2 - boxCollider.size.y * 0.9f;
+        if (Gm.WaveManager.EnemyMax < 5)
+            Gm.WaveManager.EnemyMax = 5;
         foreach (GameObject b in ButtonsEnemy)
         {
             b.SetActive(false);
         }
+        EnemyLifeObj.SetActive(false);
     }
 
     public override List<CombinationHandler.Button> getCombination()
@@ -42,6 +46,7 @@ public class BossBlackPawn : BasicEnnemy
         m.name = "PawnMinion";
         m.Gold = 0;
         m.CombinationSize = 4;
+        m.Life = 4;
         m.prefab = ConfigurationGame.instance.GenerateEnemy("PawnMinion");
         Gm.WaveManager.Spawn(m);
     }
@@ -79,6 +84,15 @@ public class BossBlackPawn : BasicEnnemy
         yield return null;
     }
 
+    public override void DecreaseLifePoint(int lp)
+    {
+        CombinationSize -= 1;
+        combinationGenerator.FixedSize = CombinationSize;
+        Combination = combinationGenerator.GetListButton();
+        ResetCombination();
+        base.DecreaseLifePoint(lp);
+    }
+
     public void notifyAttack()
     {
         StartCoroutine("chooseAttack", 3);
@@ -100,11 +114,12 @@ public class BossBlackPawn : BasicEnnemy
         }
         if (minions.Count == 0)
         {
-            Speed = oldSpeed / 3;
+            Speed = oldSpeed / 10;
             foreach (GameObject b in ButtonsEnemy)
             {
                 b.SetActive(true);
             }
+            EnemyLifeObj.SetActive(true);
         }
     }
 }
