@@ -5,11 +5,20 @@ using UnityEngine;
 [System.Serializable]
 public class ConfigurationEnemy
 {
+
+    public enum Type
+    {
+        BasicEnemy,
+        Boss,
+    }
+
     public string name = "Enemy01";
     public int CombinationSize = 3;
     public float Speed = 1.0f;
     public int Gold = 0;
     public float SpawnCoolDown = 2.0f;
+    public int Life = 2;
+    public Type t = Type.BasicEnemy;
 
     [HideInInspector]
     public GameObject prefab = null;

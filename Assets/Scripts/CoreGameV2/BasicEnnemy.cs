@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class BasicEnnemy : MonoBehaviour {
 
-
     //public GameObject[] buttonRef;
 
     [HideInInspector]
     public List<CombinationHandler.Button> Combination = new List<CombinationHandler.Button>();
     public int CombinationSize = 3;
-    public int Life = 3;
+    public int Life = 2;
     public float Speed = 0.1f;
     public bool IsMoving = true;
     public int NbrGold = 0;
     [HideInInspector]
     public Vector3 Position;
     public float SpawnCooldown = 1000.0f;
+    
+    protected GameManager Gm;
+    protected Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
+    protected BoxCollider boxCollider;
+    protected List<GameObject> ButtonsEnemy = new List<GameObject>();
+	protected GameObject EnemyLifeObj;
 
-    GameManager Gm;
-    private Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
-    private BoxCollider boxCollider;
-    private List<GameObject> ButtonsEnemy = new List<GameObject>();
-	private GameObject EnemyLifeObj;
-
-    private void Awake()
+    protected void Awake()
     { 
         ObjectToInstantiate[CombinationHandler.Button.BLUE] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/BlueButton");
         ObjectToInstantiate[CombinationHandler.Button.YELLOW] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/YellowButton");
@@ -35,7 +34,12 @@ public class BasicEnnemy : MonoBehaviour {
         Position = GetComponent<Transform>().position;
     }
 
-    void Start()
+    public virtual List<CombinationHandler.Button> getCombination()
+    {
+        return Combination;
+    }
+
+    protected void Start()
     {
         Gm = GameManager.instance;  
     }
@@ -47,19 +51,19 @@ public class BasicEnnemy : MonoBehaviour {
         Gm = GameManager.instance;
     }
 
-    private void Attack()
+    protected virtual void Attack()
     {
         Gm.NotifyDie(gameObject);
         Destroy(gameObject);
     }
 
-    public void Die()
+    public virtual void Die()
     {
         Gm.NotifyDie(gameObject);
         Destroy(gameObject);
     }
-
-	public void DecreaseLifePoint(int lp)
+    
+	public virtual void DecreaseLifePoint(int lp)
 	{
 		Life -= lp;
 		EnemyLifeObj.GetComponent<TextMesh> ().text = Life.ToString();
@@ -69,13 +73,13 @@ public class BasicEnnemy : MonoBehaviour {
 		}
 	}
 
-    private void Move()
+    protected virtual void Move()
     {
         Position.y -= Speed;
         GetComponent<Transform>().position = new Vector3(Position.x, Position.y, Position.z);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "EndObject")
             Attack();
@@ -83,6 +87,10 @@ public class BasicEnnemy : MonoBehaviour {
 
 	public void ResetCombination()
 	{
+        foreach (GameObject b in ButtonsEnemy)
+        {
+            Destroy(b);
+        }
 		ButtonsEnemy.Clear ();
 
 		int count = 1;
@@ -95,9 +103,7 @@ public class BasicEnnemy : MonoBehaviour {
 			buttonPosition.y += boxCollider.size.y * 0.9f;
 			float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
 			float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
-			positionButtonCompare += buttonSizeX * count;
-			if (CombinationSize % 2 != 0)
-				positionButtonCompare -= buttonSizeX * 0.5f;
+			positionButtonCompare += buttonSizeX * count - buttonSizeX * 0.5f;
 			buttonPosition.x += positionButtonCompare;
 			button.transform.position = buttonPosition;
 			button.transform.SetParent(gameObject.transform);
@@ -155,7 +161,7 @@ public class BasicEnnemy : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    protected virtual void Update () {
         Move();
 	}
 
@@ -165,6 +171,7 @@ public class BasicEnnemy : MonoBehaviour {
         Speed = setting.Speed;
         NbrGold = setting.Gold;
         SpawnCooldown = setting.SpawnCoolDown;
+        Life = setting.Life;
     }
 
     public void FeedBackCombination(CombinationHandler CombinationPlayer, bool reset = false)

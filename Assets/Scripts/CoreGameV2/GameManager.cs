@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     // Instance to turn GameManager into Singleton
     public static GameManager instance = null;
 
+    public bool isBoss = false;
     public int Score = 0;//score of player
-	public int Life = 0;//life of player
-	public int ComboCount = 1;//player's combo count
+    public int Life = 0;//life of player
+    public int ComboCount = 1;//player's combo count
     public int Gold = 0;
     bool launch = true;
     GameObject lockEnnemy = null;
@@ -20,9 +22,11 @@ public class GameManager : MonoBehaviour {
 
     // Contain the current combination of button pressed
     CombinationHandler Combination;
-	WaveManager WaveManager;
+    [HideInInspector]
+    public WaveManager WaveManager;
 
-    void Awake () {
+    void Awake()
+    {
         //Check if instance already exists
         if (instance == null)
             //if not, set instance to this
@@ -33,10 +37,10 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
 
         Combination = GetComponent<CombinationHandler>();
-		WaveManager = GetComponent<WaveManager>();
+        WaveManager = GetComponent<WaveManager>();
     }
 
-	void Update ()
+    void Update()
     {
         if (launch)
         {
@@ -45,37 +49,69 @@ public class GameManager : MonoBehaviour {
         }
         if (Combination.GetCurrentCombination().Count > 0)
         {
-            if (lockEnnemy == null)
+            if (!isBoss)
             {
-                foreach (GameObject enemy in EnemiesOnScreen)
+                if (lockEnnemy == null)
                 {
-                    if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
-                        lockEnnemy = enemy;
-                }
-            }
-            if (lockEnnemy != null)
-            {
-                BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
-                if (Combination.CompareCombination(e.Combination))
-                {
-                    e.FeedBackCombination(Combination);
-                    if (Combination.isSameCombination(e.Combination))
+                    foreach (GameObject enemy in EnemiesOnScreen)
                     {
-						e.DecreaseLifePoint(1);
-                        Score += 10 * ComboCount;
-                        ComboCount++;
-                        if (e.NbrGold > 0)
-                            Gold += e.NbrGold;
-                        Combination.Reset();
-						if (e) {
-							e.ResetCombination();
-						}
+                        if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
+                            lockEnnemy = enemy;
                     }
                 }
-                else
+                if (lockEnnemy != null)
                 {
-                    e.FeedBackCombination(Combination, true);
-                    ResetComboPoint();
+                    BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
+                    if (Combination.CompareCombination(e.Combination))
+                    {
+                        e.FeedBackCombination(Combination);
+                        if (Combination.isSameCombination(e.Combination))
+                        {
+                            e.DecreaseLifePoint(1);
+                            Score += 10 * ComboCount;
+                            ComboCount++;
+                            Combination.Reset();
+                            e.FeedBackCombination(Combination, true);
+                        }
+                    }
+                    else
+                    {
+                        e.FeedBackCombination(Combination, true);
+                        ResetComboPoint();
+                        Combination.Reset();
+                    }
+                }
+            }
+            else
+            {
+                bool combinationExist = false;
+                foreach (GameObject enemy in EnemiesOnScreen)
+                {
+                    BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
+                    if (e.getCombination().Count == 0)
+                        continue;
+                    if (Combination.CompareCombination(e.Combination))
+                    {
+                        combinationExist = true;
+                        e.FeedBackCombination(Combination);
+                        if (Combination.isSameCombination(e.Combination))
+                        {
+                            e.DecreaseLifePoint(1);
+                            Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
+                            ComboCount++;
+                            e.FeedBackCombination(Combination, true);
+                            Combination.Reset();
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        e.FeedBackCombination(Combination, true);
+                    }
+                }
+                if (!combinationExist)
+                {
+                    ComboCount = 0;
                     Combination.Reset();
                 }
             }
@@ -89,35 +125,35 @@ public class GameManager : MonoBehaviour {
 
     //add player's score that i want score(example player score is 0 and AddScore(10) => player score is 10)
     public void AddScore(int addscore)
-	{
-		Score += addscore;
-	}
+    {
+        Score += addscore;
+    }
 
     //player's combocount up (example 1 => 2)
     public void AddComboPoint(int comboPoint)
-	{
+    {
         ComboCount += comboPoint;
-	}
+    }
 
     //set player's combocount zero(example 3 => 1)
     //player fail the combo, make combo count zero
     public void ResetComboPoint()
-	{
-		ComboCount = 1;
-	}
+    {
+        ComboCount = 1;
+    }
 
     //player's life up(example life 2 => 3)
     public void AddLife(int additionalLife)
-	{
+    {
         Life += additionalLife;
-	}
+    }
 
     //player's Life down(example life 3 => 2)
     public void RemoveLife(int lifeToRemove)
-	{
+    {
         Life -= lifeToRemove;
         if (Life < 0) Life = 0;
-	}
+    }
 
     // Will add the amount of Gold
     public void AddGold(int amount)
@@ -133,6 +169,10 @@ public class GameManager : MonoBehaviour {
 
     public void NotifyDie(GameObject enemy)
     {
+        BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
+        if (e.NbrGold > 0)
+            Gold += e.NbrGold;
+
         if (lockEnnemy == enemy)
             lockEnnemy = null;
         WaveManager.EnemyDie(enemy);

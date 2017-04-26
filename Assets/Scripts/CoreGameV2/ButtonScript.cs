@@ -27,7 +27,6 @@ public class ButtonScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("ButtonPressed");
         GM.ButtonPressed(Type);
         animator.SetTrigger("Pressed");
         audioSource.Play();
