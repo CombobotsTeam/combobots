@@ -103,9 +103,7 @@ public class BasicEnnemy : MonoBehaviour {
 			buttonPosition.y += boxCollider.size.y * 0.9f;
 			float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
 			float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
-			positionButtonCompare += buttonSizeX * count;
-			if (CombinationSize % 2 != 0)
-				positionButtonCompare -= buttonSizeX * 0.5f;
+			positionButtonCompare += buttonSizeX * count - buttonSizeX * 0.5f;
 			buttonPosition.x += positionButtonCompare;
 			button.transform.position = buttonPosition;
 			button.transform.SetParent(gameObject.transform);

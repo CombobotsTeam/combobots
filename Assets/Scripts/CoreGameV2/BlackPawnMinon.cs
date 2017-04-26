@@ -51,7 +51,7 @@ public class BlackPawnMinon : BasicEnnemy
 
     public void launchAttack()
     {
-        r.Color = new Color(1, 0, 0);
+        r.Color = new Color(0, 0, 0);
         startAttack = 0;
     }
 
