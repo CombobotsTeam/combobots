@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BasicEnnemy : MonoBehaviour {
 
-
     //public GameObject[] buttonRef;
 
     [HideInInspector]
@@ -18,12 +17,12 @@ public class BasicEnnemy : MonoBehaviour {
     public Vector3 Position;
     public float SpawnCooldown = 1000.0f;
 
-    GameManager Gm;
-    private Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
-    private BoxCollider boxCollider;
-    private List<GameObject> ButtonsEnemy = new List<GameObject>();
+    protected GameManager Gm;
+    protected Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
+    protected BoxCollider boxCollider;
+    protected List<GameObject> ButtonsEnemy = new List<GameObject>();
 
-    private void Awake()
+    protected void Awake()
     { 
         ObjectToInstantiate[CombinationHandler.Button.BLUE] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/BlueButton");
         ObjectToInstantiate[CombinationHandler.Button.YELLOW] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/YellowButton");
@@ -33,7 +32,12 @@ public class BasicEnnemy : MonoBehaviour {
         Position = GetComponent<Transform>().position;
     }
 
-    void Start()
+    public virtual List<CombinationHandler.Button> getCombination()
+    {
+        return Combination;
+    }
+
+    protected void Start()
     {
         Gm = GameManager.instance;  
     }
@@ -45,25 +49,25 @@ public class BasicEnnemy : MonoBehaviour {
         Gm = GameManager.instance;
     }
 
-    private void Attack()
+    protected virtual void Attack()
     {
         Gm.NotifyDie(gameObject);
         Destroy(gameObject);
     }
 
-    public void Die()
+    public virtual void Die()
     {
         Gm.NotifyDie(gameObject);
         Destroy(gameObject);
     }
 
-    private void Move()
+    protected virtual void Move()
     {
         Position.y -= Speed;
         GetComponent<Transform>().position = new Vector3(Position.x, Position.y, Position.z);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "EndObject")
             Attack();
@@ -92,7 +96,7 @@ public class BasicEnnemy : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    protected virtual void Update () {
         Move();
 	}
 

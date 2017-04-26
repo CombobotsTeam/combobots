@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class BasicWaveClass {
 
-
     [HideInInspector]
     public List<ConfigurationEnemy> entities = new List<ConfigurationEnemy>();
 

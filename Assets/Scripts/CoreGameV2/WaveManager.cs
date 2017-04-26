@@ -91,7 +91,16 @@ public class WaveManager : MonoBehaviour {
 		if (EnemiesForCurrentWave.Count >= 1)
 		{
 			Transform BasicEnemy = EnemiesForCurrentWave [0].prefab.transform;
-			int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
+            int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
+            if (EnemiesForCurrentWave[0].t == ConfigurationEnemy.Type.Boss)
+            {
+                GameManager.instance.isBoss = true;
+                randomIndex = SpawnerPositionList.Count / 2 - ((SpawnerPositionList.Count % 2 == 0) ? 1 : 0);
+            }
+            else
+            {
+                GameManager.instance.isBoss = false;
+            }
             Vector3 pos = SpawnerPositionList[randomIndex];
 
             float ysize = BasicEnemy.GetComponent<BoxCollider>().size.y;
@@ -151,6 +160,11 @@ public class WaveManager : MonoBehaviour {
 
 		NbrEnemiesOnScreen--;
 	}
+
+    public void Spawn(ConfigurationEnemy enemy)
+    {
+        EnemiesForCurrentWave.Add(enemy);
+    }
 
 	// The GameManager must start this coroutine
 	IEnumerator StartWaveManager()

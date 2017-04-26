@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     // Instance to turn GameManager into Singleton
     public static GameManager instance = null;
 
+    public bool isBoss = false;
     public int Score = 0;//score of player
 	public int Life = 0;//life of player
 	public int ComboCount = 1;//player's combo count
@@ -20,7 +21,8 @@ public class GameManager : MonoBehaviour {
 
     // Contain the current combination of button pressed
     CombinationHandler Combination;
-	WaveManager WaveManager;
+    [HideInInspector]
+    public WaveManager WaveManager;
 
     void Awake () {
         //Check if instance already exists
@@ -45,34 +47,71 @@ public class GameManager : MonoBehaviour {
         }
         if (Combination.GetCurrentCombination().Count > 0)
         {
-            if (lockEnnemy == null)
+            if (!isBoss)
             {
+                if (lockEnnemy == null)
+                         {
+                             foreach (GameObject enemy in EnemiesOnScreen)
+                             {
+                                 if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
+                                     lockEnnemy = enemy;
+                             }
+                         }
+                         if (lockEnnemy != null)
+                         {
+                             BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
+                             if (Combination.CompareCombination(e.Combination))
+                             {
+                                 e.FeedBackCombination(Combination);
+                                 if (Combination.isSameCombination(e.Combination))
+                                 {
+                                     e.Die();
+                                     Score += 10 * ComboCount;
+                                     ComboCount++;
+                                     if (e.NbrGold > 0)
+                                         Gold += e.NbrGold;
+                                     Combination.Reset();
+                                 }
+                             }
+                             else
+                             {
+                                 e.FeedBackCombination(Combination, true);
+                                 ResetComboPoint();
+                                 Combination.Reset();
+                             }
+                         }
+            }
+            else
+            {
+                bool combinationExist = false;
                 foreach (GameObject enemy in EnemiesOnScreen)
                 {
-                    if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
-                        lockEnnemy = enemy;
-                }
-            }
-            if (lockEnnemy != null)
-            {
-                BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
-                if (Combination.CompareCombination(e.Combination))
-                {
-                    e.FeedBackCombination(Combination);
-                    if (Combination.isSameCombination(e.Combination))
+                    BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
+                    if (e.getCombination().Count == 0)
+                        continue;
+                    if (Combination.CompareCombination(e.Combination))
                     {
-                        e.Die();
-                        Score += 10 * ComboCount;
-                        ComboCount++;
-                        if (e.NbrGold > 0)
-                            Gold += e.NbrGold;
-                        Combination.Reset();
+                        combinationExist = true;
+                        e.FeedBackCombination(Combination);
+                        if (Combination.isSameCombination(e.Combination))
+                        {
+                            e.Die();
+                            Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
+                            ComboCount++;
+                            if (e.NbrGold > 0)
+                                Gold += e.NbrGold;
+                            Combination.Reset();
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        e.FeedBackCombination(Combination, true);
                     }
                 }
-                else
+                if (!combinationExist)
                 {
-                    e.FeedBackCombination(Combination, true);
-                    ResetComboPoint();
+                    ComboCount = 0;
                     Combination.Reset();
                 }
             }
