@@ -7,7 +7,9 @@ using UnityEngine;
 
 public class BossBlackPawn : BasicEnnemy
 {
+    [HideInInspector]
     public List<BlackPawnMinon> minions;
+    [HideInInspector]
     public float stopPosition = 0;
     protected bool haveStop = false;
     protected float oldSpeed;
@@ -86,7 +88,6 @@ public class BossBlackPawn : BasicEnnemy
 
     public override void DecreaseLifePoint(int lp)
     {
-        CombinationSize -= 1;
         combinationGenerator.FixedSize = CombinationSize;
         Combination = combinationGenerator.GetListButton();
         ResetCombination();
