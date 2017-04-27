@@ -48,12 +48,12 @@ public class VSCombinationHandler : MonoBehaviour {
 
     public bool CompareCombinationPlayer2(List<Button> button)
     {
-        int i = 0;
+        int i = 1;
         foreach (Button CombinationHandler in CurrentCombinationPlayer2)
         {
             if (i > button.Count)
                 return false;
-            if (CombinationHandler != button[i])
+            if (CombinationHandler != button[button.Count - i])
                 return false;
             i++;
         }

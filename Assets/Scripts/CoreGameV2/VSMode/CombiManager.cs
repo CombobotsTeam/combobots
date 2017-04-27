@@ -6,7 +6,13 @@ public class CombiManager : MonoBehaviour {
     public int Size = 5;
 
     private List<VSCombinationHandler.Button> CurrentCombination = new List<VSCombinationHandler.Button>();
-    public enum Button { RED = 0, GREEN = 1, BLUE = 2, YELLOW = 3 };
+
+
+    public Sprite green;
+    public Sprite blue;
+    public Sprite red;
+    public Sprite yellow;
+
     // Use this for initialization
     void Start () {
     }
