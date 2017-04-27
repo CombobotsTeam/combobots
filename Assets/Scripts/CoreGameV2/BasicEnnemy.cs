@@ -93,20 +93,43 @@ public class BasicEnnemy : MonoBehaviour {
         }
 		ButtonsEnemy.Clear ();
 
+		float ysize = GetComponent<BoxCollider>().size.y;
+		float ycenter = GetComponent<BoxCollider>().center.y;
+		float yscale = GetComponent<Transform>().localScale.y;
+
+		float xsize = GetComponent<BoxCollider>().size.x;
+		float xcenter = GetComponent<BoxCollider>().center.x;
+		float xscale = GetComponent<Transform>().localScale.x;
+
 		int count = 1;
+		Vector3 buttonPos;
 		foreach (CombinationHandler.Button b in Combination)
 		{
-			GameObject button = Instantiate(ObjectToInstantiate[b], Position, Quaternion.identity);
+			buttonPos = Position;
 
+			GameObject button = Instantiate(ObjectToInstantiate[b], Position, Quaternion.identity);
 			button.GetComponent<SpriteRenderer>().enabled = true;
-			Vector3 buttonPosition = Position;
-			buttonPosition.y += boxCollider.size.y * 0.9f;
-			float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
-			float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
-			positionButtonCompare += buttonSizeX * count - buttonSizeX * 0.5f;
-			buttonPosition.x += positionButtonCompare;
-			button.transform.position = buttonPosition;
+
+			float ybuttonsize = button.GetComponent<SpriteRenderer>().sprite.bounds.size.y * button.transform.localScale.y;
+			float xbuttonsize = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x;
+
+			buttonPos.x -= (xsize * (xscale / 2)) + (xcenter * xscale) + (xbuttonsize / 2);
+			buttonPos.y -= (ysize * (yscale / 2)) + (ycenter * yscale) - (ybuttonsize / 2);
+			buttonPos.y += ((count -1) * ybuttonsize) * 0.75f;
+
+			// Code to align button on the top
+
+			/*Vector3 buttonPosition = Position;
+            buttonPosition.y += boxCollider.size.y * 0.9f;
+
+            float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
+            float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
+            positionButtonCompare += buttonSizeX * count - buttonSizeX * 0.5f;
+            buttonPosition.x += positionButtonCompare;*/
+
+			button.transform.position = buttonPos;
 			button.transform.SetParent(gameObject.transform);
+
 			count += 1;
 
 			ButtonsEnemy.Add(button);
@@ -115,26 +138,6 @@ public class BasicEnnemy : MonoBehaviour {
 
     public void Setup()
     {
-        int count = 1;
-        foreach (CombinationHandler.Button b in Combination)
-        {
-            GameObject button = Instantiate(ObjectToInstantiate[b], Position, Quaternion.identity);
-
-            button.GetComponent<SpriteRenderer>().enabled = true;
-            Vector3 buttonPosition = Position;
-            buttonPosition.y += boxCollider.size.y * 0.9f;
-            float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
-            float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
-            positionButtonCompare += buttonSizeX * count - buttonSizeX * 0.5f;
-            buttonPosition.x += positionButtonCompare;
-            button.transform.position = buttonPosition;
-            button.transform.SetParent(gameObject.transform);
-            count += 1;
-
-            ButtonsEnemy.Add(button);
-        }
-
-		// Setup Enemy life
 		float ysize = GetComponent<BoxCollider>().size.y;
 		float ycenter = GetComponent<BoxCollider>().center.y;
 		float yscale = GetComponent<Transform>().localScale.y;
@@ -142,6 +145,42 @@ public class BasicEnnemy : MonoBehaviour {
 		float xsize = GetComponent<BoxCollider>().size.x;
 		float xcenter = GetComponent<BoxCollider>().center.x;
 		float xscale = GetComponent<Transform>().localScale.x;
+
+        int count = 1;
+		Vector3 buttonPos;
+        foreach (CombinationHandler.Button b in Combination)
+        {
+			buttonPos = Position;
+
+            GameObject button = Instantiate(ObjectToInstantiate[b], Position, Quaternion.identity);
+            button.GetComponent<SpriteRenderer>().enabled = true;
+
+			float ybuttonsize = button.GetComponent<SpriteRenderer>().sprite.bounds.size.y * button.transform.localScale.y;
+			float xbuttonsize = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x;
+				
+			buttonPos.x -= (xsize * (xscale / 2)) + (xcenter * xscale) + (xbuttonsize / 2);
+			buttonPos.y -= (ysize * (yscale / 2)) + (ycenter * yscale) - (ybuttonsize / 2);
+			buttonPos.y += ((count -1) * ybuttonsize) * 0.75f;
+
+			// Code to align button on the top
+
+            /*Vector3 buttonPosition = Position;
+            buttonPosition.y += boxCollider.size.y * 0.9f;
+
+            float buttonSizeX = button.GetComponent<SpriteRenderer>().sprite.bounds.size.x * button.transform.localScale.x * 0.65f;
+            float positionButtonCompare = - (float)CombinationSize * (float)buttonSizeX * 0.5f; 
+            positionButtonCompare += buttonSizeX * count - buttonSizeX * 0.5f;
+            buttonPosition.x += positionButtonCompare;*/
+
+            button.transform.position = buttonPos;
+            button.transform.SetParent(gameObject.transform);
+
+            count += 1;
+
+            ButtonsEnemy.Add(button);
+        }
+
+		// Setup Enemy life
 
 		Vector3 lifePos = Position;
 
