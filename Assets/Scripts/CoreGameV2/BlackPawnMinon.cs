@@ -25,9 +25,9 @@ public class BlackPawnMinon : BasicEnnemy
         base.Start();
         r = gameObject.GetComponent<EntityRenderer>();
         Speed = 0;
-        RectTransform Width = GameObject.Find("Canvas/BackgroundImage").GetComponent<RectTransform>();
+      //  RectTransform Width = GameObject.Find("Canvas/BackgroundImage").GetComponent<RectTransform>();
         RectTransform Canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
-        totalSize = Width.sizeDelta.x * Canvas.localScale.x;
+        totalSize = Screen.width * Canvas.localScale.x;
         updateRotateConst();
         float d = 0;
         for (int i = 0; i * verticalSpeed < 180; i++)

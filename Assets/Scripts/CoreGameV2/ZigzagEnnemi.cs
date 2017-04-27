@@ -13,7 +13,6 @@ namespace Assets.Scripts.CoreGameV2
 
         protected override void Move()
         {
-            Debug.Log(verticalSpeed);
             angle += verticalSpeed;
             if (angle > 360)
                 angle -= 360;
