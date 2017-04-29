@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CombinationHandler : MonoBehaviour {
-    public enum Button { RED = 0, GREEN = 1, BLUE = 2, YELLOW = 3};
+    public enum Button { RED = 0, GREEN = 1, BLUE = 2, YELLOW = 3, POWER_UP = 4};
 
     List<Button> CurrentCombination = new List<Button>();
 

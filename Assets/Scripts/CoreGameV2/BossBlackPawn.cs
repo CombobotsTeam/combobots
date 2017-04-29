@@ -55,14 +55,17 @@ public class BossBlackPawn : BasicEnnemy
 
     protected override void Move()
     {
-        if (!haveStop && (Position.y < stopPosition + Speed && Position.y > stopPosition - Speed))
+        if (IsMoving)
         {
-            oldSpeed = Speed;
-            Speed = 0;
-            haveStop = true;
-            Spawn();
+            if (!haveStop && (Position.y < stopPosition + Speed && Position.y > stopPosition - Speed))
+            {
+                oldSpeed = Speed;
+                Speed = 0;
+                haveStop = true;
+                Spawn();
+            }
+            base.Move();
         }
-        base.Move();
     }
 
     protected IEnumerator chooseAttack(float delay)

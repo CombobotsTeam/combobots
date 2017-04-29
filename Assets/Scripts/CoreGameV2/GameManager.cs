@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     // Instance to turn GameManager into Singleton
     public static GameManager instance = null;
 
+    public PawnPowerUp powerUp;
     public bool isBoss = false;
     public int Score = 0;//score of player
     public int Life = 0;//life of player
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
 
         Combination = GetComponent<CombinationHandler>();
         WaveManager = GetComponent<WaveManager>();
+        powerUp = GetComponent<PawnPowerUp>();
     }
 
     void Update()
@@ -164,7 +166,13 @@ public class GameManager : MonoBehaviour
     // Get the type of button pressed and update the Combination Handler
     public void ButtonPressed(CombinationHandler.Button button)
     {
-        Combination.AddButtonToCombination(button);
+        if (button != CombinationHandler.Button.POWER_UP)
+        {
+            Combination.AddButtonToCombination(button);
+            powerUp.ChargePowerUp(5);
+        }
+        else
+            powerUp.activate();
     }
 
     public void NotifyDie(GameObject enemy)

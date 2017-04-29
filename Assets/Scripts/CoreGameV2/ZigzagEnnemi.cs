@@ -13,11 +13,14 @@ namespace Assets.Scripts.CoreGameV2
 
         protected override void Move()
         {
-            angle += verticalSpeed;
-            if (angle > 360)
-                angle -= 360;
-            Position.x += Mathf.Cos(angle * Mathf.Deg2Rad) * 0.2f;
-            base.Move();
+            if (IsMoving)
+            {
+                angle += verticalSpeed;
+                if (angle > 360)
+                    angle -= 360;
+                Position.x += Mathf.Cos(angle * Mathf.Deg2Rad) * 0.2f;
+                base.Move();
+            }
         }
     }
 }

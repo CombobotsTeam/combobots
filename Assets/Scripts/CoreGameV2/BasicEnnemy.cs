@@ -75,8 +75,11 @@ public class BasicEnnemy : MonoBehaviour {
 
     protected virtual void Move()
     {
-        Position.y -= Speed;
-        GetComponent<Transform>().position = new Vector3(Position.x, Position.y, Position.z);
+        if (IsMoving)
+        {
+            Position.y -= Speed;
+            GetComponent<Transform>().position = new Vector3(Position.x, Position.y, Position.z);
+        }
     }
 
     protected virtual void OnCollisionEnter(Collision collision)

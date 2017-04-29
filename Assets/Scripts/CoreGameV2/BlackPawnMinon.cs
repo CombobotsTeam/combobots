@@ -57,30 +57,33 @@ public class BlackPawnMinon : BasicEnnemy
 
     protected override void Move()
     {
-        if (rotate)
+        if (IsMoving)
         {
-            angle += verticalSpeed;
-            if (spawn && angle == 90)// BE Careful of the egality if you change the Vertical speed(1) before the spawn
+            if (rotate)
             {
-                spawn = false;
-                boss.Spawn();
+                angle += verticalSpeed;
+                if (spawn && angle == 90)// BE Careful of the egality if you change the Vertical speed(1) before the spawn
+                {
+                    spawn = false;
+                    boss.Spawn();
+                }
+                if (startAttack != -1)
+                    startAttack += verticalSpeed;
+                if (angle > 360)
+                    angle -= 360;
+                RotatePosition.y -= Mathf.Sin(Mathf.Deg2Rad * angle) * rotateConst;
+                RotatePosition.x -= Mathf.Cos(Mathf.Deg2Rad * angle) * rotateConst;
             }
-            if (startAttack != -1)
-                startAttack += verticalSpeed;
-            if (angle > 360)
-                angle -= 360;
-            RotatePosition.y -= Mathf.Sin(Mathf.Deg2Rad * angle) * rotateConst;
-            RotatePosition.x -= Mathf.Cos(Mathf.Deg2Rad * angle) * rotateConst;
+            else
+            {
+                Position.y = stopPosition;
+                rotate = true;
+                RotatePosition = Position;
+            }
+            if (!attack)
+                Position = RotatePosition;
+            base.Move();
         }
-        else
-        {
-            Position.y = stopPosition;
-            rotate = true;
-            RotatePosition = Position;
-        }
-        if (!attack)
-            Position = RotatePosition;
-        base.Move();
     }
 
     protected override void Update()
