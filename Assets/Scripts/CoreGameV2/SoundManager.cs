@@ -23,6 +23,8 @@ public class SoundManager : MonoBehaviour {
         else if (instance != this)
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a SoundManager.
             Destroy(gameObject);
+
+        DontDestroyOnLoad(this);
     }
 
     void Start()
@@ -72,9 +74,12 @@ public class SoundManager : MonoBehaviour {
             return;
         }
 
-        musicSource.clip = sounds[name];
-        musicSource.loop = true;
-        musicSource.Play();
+        if (musicSource.clip != sounds[name])
+        {
+            musicSource.clip = sounds[name];
+            musicSource.loop = true;
+            musicSource.Play();
+        }
     }
 
     void Update()

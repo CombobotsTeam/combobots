@@ -115,7 +115,7 @@ public class BossBlackPawn : BasicEnnemy
         minions.Remove(m);
         for (int i = 0; i < minions.Count; ++i)
         {
-            minions[i].addSpeed(1);
+            minions[i].addSpeed(0.4f);
         }
         if (minions.Count == 0)
         {

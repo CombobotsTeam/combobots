@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         soundManager = SoundManager.instance;
+        soundManager.PlayerMusic("MusicInGame");
     }
 
     void Update()
@@ -57,7 +58,7 @@ public class GameManager : MonoBehaviour
         {
             if (EnemiesOnScreen[i].GetComponent<BasicEnnemy>().Died == true)
             {
-                Destroy(EnemiesOnScreen[i], 1);
+                Destroy(EnemiesOnScreen[i], 0.8f);
                 EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
             }
             else

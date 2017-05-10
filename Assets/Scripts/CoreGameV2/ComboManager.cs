@@ -27,7 +27,6 @@ public class ComboManager : MonoBehaviour
     protected void failCombination(BasicEnnemy enemy)
     {
         enemy.FeedBackCombination(gm.Combination, true);
-        soundManager.Play("WrongCombo", false);
     }
 
     protected void successCombination(BasicEnnemy enemy)
@@ -82,6 +81,7 @@ public class ComboManager : MonoBehaviour
         }
         if (checkCombination(lockEnemy) == Result.Failed)
         {
+            soundManager.Play("WrongCombo", false);
             gm.Combination.Reset();
             gm.ResetComboPoint();
         }
@@ -117,6 +117,7 @@ public class ComboManager : MonoBehaviour
         }
         if (!isUsed)
         {
+            soundManager.Play("WrongCombo", false);
             gm.Combination.Reset();
             gm.ResetComboPoint();
         }
