@@ -28,6 +28,7 @@ public class BossBlackPawn : BasicEnnemy
             b.SetActive(false);
         }
         EnemyLifeObj.SetActive(false);
+        Gm.cm.BossMode = true;
     }
 
     public override List<CombinationHandler.Button> getCombination()
@@ -125,5 +126,11 @@ public class BossBlackPawn : BasicEnnemy
             }
             EnemyLifeObj.SetActive(true);
         }
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        Gm.cm.BossMode = false;
     }
 }

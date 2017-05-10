@@ -16,15 +16,15 @@ public class GameManager : MonoBehaviour
     public int ComboCount = 1;//player's combo count
     public int Gold = 0;
     bool launch = true;
-    GameObject lockEnnemy = null;
 
     // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
     public List<GameObject> EnemiesOnScreen = new List<GameObject>();
 
     // Contain the current combination of button pressed
-    CombinationHandler Combination;
+    public CombinationHandler Combination;
     [HideInInspector]
     public WaveManager WaveManager;
+    public ComboManager cm;
 
     void Awake()
     {
@@ -40,84 +40,97 @@ public class GameManager : MonoBehaviour
         Combination = GetComponent<CombinationHandler>();
         WaveManager = GetComponent<WaveManager>();
         powerUp = GetComponent<PawnPowerUp>();
+        cm = GetComponent<ComboManager>();
     }
 
     void Update()
     {
+        int i = 0;
+        while (i < EnemiesOnScreen.Count)
+        {
+            if (EnemiesOnScreen[i].GetComponent<BasicEnnemy>().Died == true)
+            {
+                Destroy(EnemiesOnScreen[i], 1);
+                EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
+            }
+            else
+                i++;
+        }
         if (launch)
         {
             WaveManager.launch();
             launch = false;
         }
-        if (Combination.GetCurrentCombination().Count > 0)
-        {
-            if (!isBoss)
-            {
-                if (lockEnnemy == null)
+        /*        if (Combination.GetCurrentCombination().Count > 0)
                 {
-                    foreach (GameObject enemy in EnemiesOnScreen)
+                    if (!isBoss)
                     {
-                        if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
-                            lockEnnemy = enemy;
-                    }
-                }
-                if (lockEnnemy != null)
-                {
-                    BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
-                    if (Combination.CompareCombination(e.Combination))
-                    {
-                        e.FeedBackCombination(Combination);
-                        if (Combination.isSameCombination(e.Combination))
+                        if (lockEnnemy == null)
                         {
-                            e.DecreaseLifePoint(1);
-                            Score += 10 * ComboCount;
-                            ComboCount++;
-                            Combination.Reset();
-                            e.FeedBackCombination(Combination, true);
+                            foreach (GameObject enemy in EnemiesOnScreen)
+                            {
+                                if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
+                                    lockEnnemy = enemy;
+                            }
+                        }
+                        if (lockEnnemy != null)
+                        {
+                            BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
+                            if (Combination.CompareCombination(e.Combination))
+                            {
+                                e.FeedBackCombination(Combination);
+                                if (Combination.isSameCombination(e.Combination))
+                                {
+                                    e.DecreaseLifePoint(1);
+                                    Score += 10 * ComboCount;
+                                    ComboCount++;
+                                    Combination.Reset();
+                                    e.FeedBackCombination(Combination, true);
+                                }
+                            }
+                            else
+                            {
+                                e.FeedBackCombination(Combination, true);
+                                ResetComboPoint();
+                                Combination.Reset();
+                            }
                         }
                     }
                     else
                     {
-                        e.FeedBackCombination(Combination, true);
-                        ResetComboPoint();
-                        Combination.Reset();
-                    }
-                }
-            }
-            else
-            {
-                bool combinationExist = false;
-                foreach (GameObject enemy in EnemiesOnScreen)
-                {
-                    BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
-                    if (e.getCombination().Count == 0)
-                        continue;
-                    if (Combination.CompareCombination(e.Combination))
-                    {
-                        combinationExist = true;
-                        e.FeedBackCombination(Combination);
-                        if (Combination.isSameCombination(e.Combination))
+                        bool combinationExist = false;
+                        foreach (GameObject enemy in EnemiesOnScreen)
                         {
-                            e.DecreaseLifePoint(1);
-                            Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
-                            ComboCount++;
-                            e.FeedBackCombination(Combination, true);
+                            BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
+                            if (e.getCombination().Count == 0)
+                                continue;
+                            if (Combination.CompareCombination(e.Combination))
+                            {
+                                combinationExist = true;
+                                e.FeedBackCombination(Combination);
+                                if (Combination.isSameCombination(e.Combination))
+                                {
+                                    e.DecreaseLifePoint(1);
+                                    Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
+                                    ComboCount++;
+                                    e.FeedBackCombination(Combination, true);
+                                    Combination.Reset();
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                e.FeedBackCombination(Combination, true);
+                            }
+                        }
+                        if (!combinationExist)
+                        {
+                            ComboCount = 0;
                             Combination.Reset();
-                            break;
                         }
                     }
-                    else
-                    {
-                        e.FeedBackCombination(Combination, true);
-                    }
-                }
-                if (!combinationExist)
-                {
-                    ComboCount = 0;
-                    Combination.Reset();
-                }
-            }
-        }
+                }*/
+        cm.checkCombo();
     }
 
     public List<GameObject> GetEnemiesOnScreen()
@@ -128,7 +141,7 @@ public class GameManager : MonoBehaviour
     //add player's score that i want score(example player score is 0 and AddScore(10) => player score is 10)
     public void AddScore(int addscore)
     {
-        Score += addscore;
+        Score += addscore * ComboCount;
     }
 
     //player's combocount up (example 1 => 2)
@@ -180,10 +193,10 @@ public class GameManager : MonoBehaviour
         BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
         if (e.NbrGold > 0)
             Gold += e.NbrGold;
+        e.Died = true;
 
-        if (lockEnnemy == enemy)
-            lockEnnemy = null;
+        if (e == cm.lockEnemy)
+            cm.lockEnemy = null;
         WaveManager.EnemyDie(enemy);
-        EnemiesOnScreen.Remove(enemy);
     }
 }

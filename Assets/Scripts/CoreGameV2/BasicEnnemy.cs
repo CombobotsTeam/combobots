@@ -16,6 +16,7 @@ public class BasicEnnemy : MonoBehaviour {
     [HideInInspector]
     public Vector3 Position;
     public float SpawnCooldown = 1000.0f;
+    public bool Died = false;
     
     protected GameManager Gm;
     protected Dictionary<CombinationHandler.Button, GameObject> ObjectToInstantiate = new Dictionary<CombinationHandler.Button, GameObject>();
@@ -53,14 +54,26 @@ public class BasicEnnemy : MonoBehaviour {
 
     protected virtual void Attack()
     {
+        foreach (GameObject b in ButtonsEnemy)
+        {
+            b.SetActive(false);
+        }
+        EnemyLifeObj.SetActive(false);
+        IsMoving = false;
+        GetComponent<Animator>().SetTrigger("Attack");
         Gm.NotifyDie(gameObject);
-        Destroy(gameObject);
     }
 
     public virtual void Die()
     {
+        foreach (GameObject b in ButtonsEnemy)
+        {
+            b.SetActive(false);
+        }
+        EnemyLifeObj.SetActive(false);
+        IsMoving = false;
+        GetComponent<Animator>().SetTrigger("Die");
         Gm.NotifyDie(gameObject);
-        Destroy(gameObject);
     }
     
 	public virtual void DecreaseLifePoint(int lp)

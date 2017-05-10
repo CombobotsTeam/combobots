@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour {
 
+    [HideInInspector]
     public List<GameObject> Waves = new List<GameObject>(); // GameObject must be an empty GameObject with BasicEnemies as children
 	public bool 				RandomWave;
 	public int 					EnemyMax;					// Maximum number of enemies display

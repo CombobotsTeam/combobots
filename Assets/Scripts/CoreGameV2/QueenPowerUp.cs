@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class PawnPowerUp : MonoBehaviour, IPowerUp
+class QueenPowerUp : MonoBehaviour, IPowerUp
 {
     public int Level = 0;
     public int Charge = 0;
@@ -23,25 +22,6 @@ public class PawnPowerUp : MonoBehaviour, IPowerUp
         Charge += charge;
     }
 
-    protected IEnumerator desactivate(float delay)
-    {
-        float TimeUntilSummon = delay;
-
-        while (TimeUntilSummon > 0)
-        {
-            TimeUntilSummon -= Time.deltaTime;
-            yield return null;
-        }
-
-        foreach (GameObject g in gm.EnemiesOnScreen)
-        {
-            BasicEnnemy e = g.GetComponent<BasicEnnemy>();
-            e.IsMoving = true;
-            if (Level >= 4)
-                e.Speed *= 0.75f;
-        }
-    }
-
     public void activate()
     {
         if (Charge < ChargeMax)
@@ -53,8 +33,10 @@ public class PawnPowerUp : MonoBehaviour, IPowerUp
         Charge = 0;
         foreach (GameObject g in gm.EnemiesOnScreen)
         {
-            g.GetComponent<BasicEnnemy>().IsMoving = false;
+            BasicEnnemy e = g.GetComponent<BasicEnnemy>();
+            e.Life -= Level > 1 ? 3 : 1;
+            if (e.Died)
+                gm.ComboCount += 1;
         }
-        StartCoroutine("desactivate", Level >= 2 ? 5: 3);
     }
 }

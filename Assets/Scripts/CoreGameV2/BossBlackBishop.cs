@@ -31,6 +31,7 @@ class BossBlackBishop : BasicEnnemy
             Gm.WaveManager.EnemyMax = 6;
         LifeMax = Life;
         UpdateSpawnPosition();
+        Gm.cm.BossMode = true;
     }
 
     public override List<CombinationHandler.Button> getCombination()
@@ -46,6 +47,7 @@ class BossBlackBishop : BasicEnnemy
         {
             if (Position.y < StopPosition + Speed && Position.y > StopPosition - Speed)
             {
+                GetComponent<Animator>().SetTrigger("Stand");
                 Speed = 0;
             }
             base.Move();
@@ -60,11 +62,11 @@ class BossBlackBishop : BasicEnnemy
         base.DecreaseLifePoint(lp);
         if (Life == LifeMax / 3)
             StartInvisible(1, 3);
-        if (Life == LifeMax / 3 * 2)
+        else if (Life == LifeMax / 3 * 2)
             StartInvisible(2, 1);
     }
 
-    protected void StartInvisible(int Size, int Life)
+    protected void StartInvisible(int Size, int RLife)
     {
         foreach (GameObject b in ButtonsEnemy)
         {
@@ -78,12 +80,14 @@ class BossBlackBishop : BasicEnnemy
         for (int i = 0; i < 5; ++i)
         {
             spawn += 1;
-            Spawn(Size, Life);
+            Spawn(Size, RLife);
         }
     }
 
-    protected void Spawn(int Size, int Life)
+    protected void Spawn(int Size, int RLife)
     {
+        if (Life <= 0)
+            return;
         ConfigurationEnemy m = new ConfigurationEnemy();
         m.Speed = 0.2f;
         m.t = ConfigurationEnemy.Type.Boss;
@@ -91,7 +95,7 @@ class BossBlackBishop : BasicEnnemy
         m.name = "Rocket";
         m.Gold = 0;
         m.CombinationSize = Size;
-        m.Life = Life;
+        m.Life = RLife;
         m.prefab = ConfigurationGame.instance.GenerateEnemy("Rocket");
         Gm.WaveManager.Spawn(m);
     }
@@ -105,9 +109,15 @@ class BossBlackBishop : BasicEnnemy
                 SpawnPosition[Rockets.Count - 1].y,
                 SpawnPosition[Rockets.Count - 1].z);
         if (Rockets.Count == 1 || Rockets[0].Position.x == SpawnPosition[6].x)
+        {
+            GetComponent<Animator>().SetTrigger("AttackLeft");
             return SpawnPosition[5];
+        }
         else
+        {
+            GetComponent<Animator>().SetTrigger("AttackRight");
             return SpawnPosition[6];
+        }
     }
 
     public void RocketDeath(Rocket R)
@@ -146,7 +156,7 @@ class BossBlackBishop : BasicEnnemy
         else
         {
             if (Rockets.Count + spawn < 2)
-                StartCoroutine("LaunchAttack", UnityEngine.Random.Range(0, 3));
+                StartCoroutine("LaunchAttack", UnityEngine.Random.Range(1, 3));
         }
     }
 
@@ -173,5 +183,6 @@ class BossBlackBishop : BasicEnnemy
         while (Rockets.Count > 0)
             Rockets[0].Explode();
         base.Die();
+        Gm.cm.BossMode = false;
     }
 }
