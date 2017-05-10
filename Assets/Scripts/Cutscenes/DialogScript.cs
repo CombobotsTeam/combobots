@@ -95,7 +95,7 @@ public class DialogScript : MonoBehaviour {
 	void Update (){
 		int nbTouches = Input.touchCount;
 
-		if (Input.GetMouseButtonDown (0)) {
+        if (Input.GetMouseButtonDown (0)) {
 			i++;
 			if (dialogs [i, 0] == "end") {
 				if (scenesInfos.currentScene == "Intro") {
