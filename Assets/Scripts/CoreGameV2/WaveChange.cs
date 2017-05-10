@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WaveChange : MonoBehaviour {
 
-    public Text t;
+    Text t;
     string newText;
 
 	// Use this for initialization
