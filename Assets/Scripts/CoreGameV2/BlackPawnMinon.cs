@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text;  
 using UnityEngine;
 
 public class BlackPawnMinon : BasicEnnemy
@@ -51,7 +51,7 @@ public class BlackPawnMinon : BasicEnnemy
 
     public void launchAttack()
     {
-        r.Color = new Color(0, 0, 0);
+        GetComponent<Animator>().SetTrigger("Prepare");
         startAttack = 0;
     }
 
@@ -116,7 +116,13 @@ public class BlackPawnMinon : BasicEnnemy
         Position = RotatePosition;
         r.Color = new Color(1, 1, 1);
         if (startAttack >= 0 || attack == true)
+        {
             boss.notifyAttack();
+        }
+        if (attack == true)
+            GetComponent<Animator>().SetTrigger("Spawn");
+        else
+            GetComponent<Animator>().SetTrigger("Damage");
         startAttack = -1;
         Speed = 0;
         attack = false;
@@ -126,7 +132,7 @@ public class BlackPawnMinon : BasicEnnemy
     protected override void Attack()
     {
         Position = RotatePosition;
-        r.Color = new Color(1, 1, 1);
+        GetComponent<Animator>().SetTrigger("Spawn");
         Speed = 0;
         attack = false;
         boss.notifyAttack();
@@ -136,8 +142,7 @@ public class BlackPawnMinon : BasicEnnemy
     {
         if (Speed > 0 || startAttack != -1)
             boss.notifyAttack();
-        Gm.NotifyDie(gameObject);
         boss.MinionDeath(this);
-        Destroy(gameObject);
+        base.Die();
     }
 }

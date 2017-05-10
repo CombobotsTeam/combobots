@@ -130,5 +130,7 @@ public class ComboManager : MonoBehaviour
                 checkComboNormal();
             }
         }
+        else if (gm.EnemiesOnScreen.Count > 0)
+            gm.Combination.Reset();
     }
 }
