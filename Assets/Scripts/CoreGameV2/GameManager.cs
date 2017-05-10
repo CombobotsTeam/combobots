@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     public WaveManager WaveManager;
     public ComboManager cm;
 
+    private SoundManager soundManager;
+
     void Awake()
     {
         //Check if instance already exists
@@ -41,6 +43,11 @@ public class GameManager : MonoBehaviour
         WaveManager = GetComponent<WaveManager>();
         powerUp = GetComponent<PawnPowerUp>();
         cm = GetComponent<ComboManager>();
+    }
+
+    void Start()
+    {
+        soundManager = SoundManager.instance;
     }
 
     void Update()
@@ -195,6 +202,7 @@ public class GameManager : MonoBehaviour
             Gold += e.NbrGold;
         e.Died = true;
 
+        soundManager.Play("DeathEnemy", false);
         if (e == cm.lockEnemy)
             cm.lockEnemy = null;
         WaveManager.EnemyDie(enemy);

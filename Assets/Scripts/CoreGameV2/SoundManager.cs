@@ -8,8 +8,10 @@ public class SoundManager : MonoBehaviour {
     public string PathToSounds = "Sounds/";
 
     private Dictionary<string, AudioClip> sounds = new Dictionary<string, AudioClip>();
-    private AudioSource audioSource;
+    private AudioSource[] audioSource = new AudioSource[4];
     private AudioSource musicSource;
+    private bool[] audioSourceAvailable = new bool[4];
+
 
     // Use this for initialization
     void Awake () {
@@ -26,7 +28,14 @@ public class SoundManager : MonoBehaviour {
     void Start()
     {
         Initialize();
-        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource[0] = gameObject.AddComponent<AudioSource>();
+        audioSource[1] = gameObject.AddComponent<AudioSource>();
+        audioSource[2] = gameObject.AddComponent<AudioSource>();
+        audioSource[3] = gameObject.AddComponent<AudioSource>();
+        audioSourceAvailable[0] = false;
+        audioSourceAvailable[1] = false;
+        audioSourceAvailable[2] = false;
+        audioSourceAvailable[3] = false;
         musicSource = gameObject.AddComponent<AudioSource>();
     }
 
@@ -68,6 +77,21 @@ public class SoundManager : MonoBehaviour {
         musicSource.Play();
     }
 
+    void Update()
+    {
+        for (int i = 0; i < audioSource.Length; i++)
+            if (!audioSource[i].isPlaying)
+                audioSourceAvailable[i] = false;
+    }
+
+    private int findAvailable()
+    {
+        for (int i = 0; i < audioSourceAvailable.Length; i++)
+            if (!audioSourceAvailable[i])
+                return i;
+        return 0;
+    }
+
     public void Play(string name, bool loop)
     {
         if (!sounds.ContainsKey(name))
@@ -75,10 +99,11 @@ public class SoundManager : MonoBehaviour {
             Debug.LogError("There is no sound with name \"" + name + "\"");
             return;
         }
-
-        audioSource.clip = sounds[name];
-        audioSource.loop = loop;
-        audioSource.Play();
+        int index = findAvailable();
+        audioSource[index].clip = sounds[name];
+        audioSource[index].loop = loop;
+        audioSource[index].Play();
+        audioSourceAvailable[index] = true;
     }
 
     public void StopMusic()
@@ -88,6 +113,7 @@ public class SoundManager : MonoBehaviour {
 
     public void Stop()
     {
-        audioSource.Stop();
+        for (int i = 0; i < audioSourceAvailable.Length; i++)
+        audioSource[i].Stop();
     }
 }

@@ -9,6 +9,8 @@ public class ComboManager : MonoBehaviour
     GameManager gm;
     public bool BossMode = false;
     public BasicEnnemy lockEnemy = null;
+
+    private SoundManager soundManager;
     protected enum Result
     {
         Failed,
@@ -19,16 +21,19 @@ public class ComboManager : MonoBehaviour
     private void Start()
     {
         gm = GameManager.instance;
+        soundManager = SoundManager.instance;
     }
 
     protected void failCombination(BasicEnnemy enemy)
     {
         enemy.FeedBackCombination(gm.Combination, true);
+        soundManager.Play("WrongCombo", false);
     }
 
     protected void successCombination(BasicEnnemy enemy)
     {
         enemy.DecreaseLifePoint(1);
+        soundManager.Play("RightCombo", false);
         gm.AddScore(10);
         gm.AddComboPoint(1);
         gm.Combination.Reset();
