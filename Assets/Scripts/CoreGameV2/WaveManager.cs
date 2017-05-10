@@ -15,13 +15,17 @@ public class WaveManager : MonoBehaviour {
     private CombinationGenerator combinationGenerator = new CombinationGenerator();
 
 
-    List< List<ConfigurationEnemy> >	WaveLeft = new List< List<ConfigurationEnemy> >();	
-	List<ConfigurationEnemy>			EnemiesForCurrentWave;
+    List<List<ConfigurationEnemy>> WaveLeft = new List<List<ConfigurationEnemy>>();
+    List<string> TransitionLeft = new List<string>();
+    List<float> TimeTransitionLeft = new List<float>();
+    List<ConfigurationEnemy>			EnemiesForCurrentWave;
 
 	float 						TimeLeft = 0;					// Min time between each enemy summon
 	float						NbrEnemiesOnScreen = 0;		// Actual number of enemies 
 
 	List<Vector3>				SpawnerPositionList;
+
+    public WaveChange wc = new WaveChange();
 
     bool canSummon = true;
 
@@ -62,13 +66,18 @@ public class WaveManager : MonoBehaviour {
                 foreach (ConfigurationEnemy enemy in wave.data.entities)
                     if (enemy.prefab.gameObject.GetComponent<BasicEnnemy>())
                         tmpEnemyList.Add(enemy);
-
+                TransitionLeft.Add(wave.data.TextDisplay);
+                TimeTransitionLeft.Add(wave.data.TimeBetweenWave);
                 WaveLeft.Add(tmpEnemyList);
             }
 
             // SET EnemiesForCurrentWave
             EnemiesForCurrentWave = WaveLeft [0];
-			WaveLeft.RemoveAt (0);
+            wc.changeWave(1, TransitionLeft[0]);
+            TransitionLeft.RemoveAt(0);
+            TimeLeft = TimeTransitionLeft[0];
+            TimeTransitionLeft.RemoveAt(0);
+            WaveLeft.RemoveAt (0);
 		}
 
 		// SET TimeLeft
@@ -81,11 +90,14 @@ public class WaveManager : MonoBehaviour {
 		// New wave
 		if (EnemiesForCurrentWave.Count <= 0 && NbrEnemiesOnScreen == 0)
 		{
-			if (WaveLeft.Count > 0)
-			{
-                TimeLeft = 1;
-                EnemiesForCurrentWave = WaveLeft [0];
-				WaveLeft.RemoveAt (0);
+            if (WaveLeft.Count > 0)
+            {
+                EnemiesForCurrentWave = WaveLeft[0];
+                TimeLeft = TimeTransitionLeft[0];
+                wc.changeWave(TimeTransitionLeft[0], TransitionLeft[0]);
+                TransitionLeft.RemoveAt(0);
+                TimeTransitionLeft.RemoveAt(0);
+                WaveLeft.RemoveAt (0);
                 StartCoroutine("SummonLater", TimeLeft);
                 return;
             }
