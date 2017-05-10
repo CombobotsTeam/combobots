@@ -64,6 +64,9 @@ public class BasicEnnemy : MonoBehaviour {
         }
         EnemyLifeObj.SetActive(false);
         IsMoving = false;
+
+        Gm.RemoveLife(1);
+
         GetComponent<Animator>().SetTrigger("Attack");
         Gm.NotifyDie(gameObject);
     }

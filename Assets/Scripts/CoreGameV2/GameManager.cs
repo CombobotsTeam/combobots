@@ -15,10 +15,16 @@ public class GameManager : MonoBehaviour
     public PawnPowerUp powerUp;
     public bool isBoss = false;
     public int Score = 0;//score of player
-    public int Life = 0;//life of player
+    public int Life = 3;//life of player
     public int ComboCount = 1;//player's combo count
     public int Gold = 0;
     bool launch = true;
+
+    private GameObject HeartEmpty;
+    private GameObject HeartFull;
+
+    private Dictionary<int, GameObject> heartList;
+    bool LateInit = true;
 
     // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
     public List<GameObject> EnemiesOnScreen = new List<GameObject>();
@@ -61,6 +67,13 @@ public class GameManager : MonoBehaviour
     {
         if (isPaused)
             return;
+
+        if (LateInit)
+        {
+            SetLife();
+            LateInit = false;
+        }
+
         int i = 0;
         while (i < EnemiesOnScreen.Count)
         {
@@ -149,6 +162,28 @@ public class GameManager : MonoBehaviour
         cm.checkCombo();
     }
 
+    void SetLife()
+    {
+        Debug.Log("setLife");
+        RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+
+        HeartFull = Resources.Load("Prefabs/Life/FullHeart") as GameObject;
+        HeartEmpty = Resources.Load("Prefabs/Life/DeadHeart") as GameObject;
+
+        Vector3 upperRightPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 1));
+        float xheartSize = HeartFull.GetComponent<SpriteRenderer>().sprite.bounds.size.x * HeartFull.transform.localScale.x;
+        float yheartSize = HeartFull.GetComponent<SpriteRenderer>().sprite.bounds.size.y * HeartFull.transform.localScale.y;
+
+        heartList = new Dictionary<int, GameObject>();
+
+        GameObject heart = Instantiate(HeartFull, new Vector3(upperRightPos.x - (xheartSize / 2), upperRightPos.y - (yheartSize / 2), 1), Quaternion.identity);
+        heartList.Add(1, heart);
+        heart = Instantiate(HeartFull, new Vector3(upperRightPos.x - (xheartSize / 2) - xheartSize, upperRightPos.y - (yheartSize / 2), 1), Quaternion.identity);
+        heartList.Add(2, heart);
+        heart = Instantiate(HeartFull, new Vector3(upperRightPos.x - (xheartSize / 2) - (xheartSize * 2), upperRightPos.y - (yheartSize / 2), 1), Quaternion.identity);
+        heartList.Add(3, heart);
+    }
+
     public List<GameObject> GetEnemiesOnScreen()
     {
         return EnemiesOnScreen;
@@ -182,8 +217,15 @@ public class GameManager : MonoBehaviour
     //player's Life down(example life 3 => 2)
     public void RemoveLife(int lifeToRemove)
     {
+        GameObject oldHeart = heartList[Life];
+        GameObject heart = Instantiate(HeartEmpty, oldHeart.transform.position, Quaternion.identity);
+        heartList[Life] = heart;
+        Destroy(oldHeart);
+
         Life -= lifeToRemove;
-        if (Life < 0) Life = 0;
+
+        if (Life < 0)
+            Life = 0;
         if (Life == 0) LoadDefeat();
     }
 
@@ -223,6 +265,7 @@ public class GameManager : MonoBehaviour
         isPaused = true;
         EndMessage.text = "Victory !";
         EndMessage.enabled = true;
+        StartCoroutine("GoMenu");
     }
 
     public void LoadDefeat()
@@ -230,5 +273,12 @@ public class GameManager : MonoBehaviour
         isPaused = true;
         EndMessage.text = "Defeat...";
         EndMessage.enabled = true;
+        StartCoroutine("GoMenu");
+    }
+
+    IEnumerator GoMenu()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("MainMenu");
     }
 }
