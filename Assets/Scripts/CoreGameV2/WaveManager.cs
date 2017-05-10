@@ -26,7 +26,10 @@ public class WaveManager : MonoBehaviour {
     bool canSummon = true;
 
 	// Update is called once per frame
-	void Update () {}
+	void Update () {
+        if (WaveLeft.Count == 0 && EnemiesForCurrentWave.Count == 0 && NbrEnemiesOnScreen == 0)
+            GameManager.instance.LoadVictory();
+    }
 
 	// Use this for initialization
 	void Start ()

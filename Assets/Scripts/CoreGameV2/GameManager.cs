@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class GameManager : MonoBehaviour
 
     private SoundManager soundManager;
 
+    public Text EndMessage;
+
     void Awake()
     {
         //Check if instance already exists
@@ -51,6 +54,7 @@ public class GameManager : MonoBehaviour
     {
         soundManager = SoundManager.instance;
         soundManager.PlayerMusic("MusicInGame");
+        EndMessage.enabled = false;
     }
 
     void Update()
@@ -180,6 +184,7 @@ public class GameManager : MonoBehaviour
     {
         Life -= lifeToRemove;
         if (Life < 0) Life = 0;
+        if (Life == 0) LoadDefeat();
     }
 
     // Will add the amount of Gold
@@ -211,5 +216,19 @@ public class GameManager : MonoBehaviour
         if (e == cm.lockEnemy)
             cm.lockEnemy = null;
         WaveManager.EnemyDie(enemy);
+    }
+
+    public void LoadVictory()
+    {
+        isPaused = true;
+        EndMessage.text = "Victory !";
+        EndMessage.enabled = true;
+    }
+
+    public void LoadDefeat()
+    {
+        isPaused = true;
+        EndMessage.text = "Defeat...";
+        EndMessage.enabled = true;
     }
 }
