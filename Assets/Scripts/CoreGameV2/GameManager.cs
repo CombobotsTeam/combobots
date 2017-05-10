@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     // Instance to turn GameManager into Singleton
     public static GameManager instance = null;
 
+    public bool isPaused = false;
+
     public PawnPowerUp powerUp;
     public bool isBoss = false;
     public int Score = 0;//score of player
@@ -53,6 +55,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (isPaused)
+            return;
         int i = 0;
         while (i < EnemiesOnScreen.Count)
         {

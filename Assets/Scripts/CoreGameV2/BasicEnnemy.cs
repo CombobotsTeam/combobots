@@ -221,6 +221,8 @@ public class BasicEnnemy : MonoBehaviour {
 
     // Update is called once per frame
     protected virtual void Update () {
+        if (Gm.isPaused)
+            return;
         Move();
 	}
 
