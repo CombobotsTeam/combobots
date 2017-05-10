@@ -24,6 +24,9 @@ public class BasicEnnemy : MonoBehaviour {
     protected List<GameObject> ButtonsEnemy = new List<GameObject>();
 	protected GameObject EnemyLifeObj;
 
+    protected int CurrentCombo = 0;
+    public GameObject ParticleSystem;
+
     protected void Awake()
     { 
         ObjectToInstantiate[CombinationHandler.Button.BLUE] = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/BlueButton");
@@ -33,6 +36,7 @@ public class BasicEnnemy : MonoBehaviour {
 		EnemyLifeObj = Resources.Load<GameObject>("Prefabs/EnemyLife");
         boxCollider = GetComponent<BoxCollider>();
         Position = GetComponent<Transform>().position;
+        ParticleSystem = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/ParticleSystem");
     }
 
     public virtual List<CombinationHandler.Button> getCombination()
@@ -60,6 +64,9 @@ public class BasicEnnemy : MonoBehaviour {
         }
         EnemyLifeObj.SetActive(false);
         IsMoving = false;
+
+        Gm.RemoveLife(1);
+
         GetComponent<Animator>().SetTrigger("Attack");
         Gm.NotifyDie(gameObject);
     }
@@ -80,8 +87,8 @@ public class BasicEnnemy : MonoBehaviour {
 	{
 		Life -= lp;
 		EnemyLifeObj.GetComponent<TextMesh> ().text = Life.ToString();
-
-		if (Life <= 0) {
+        DoParticle();
+        if (Life <= 0) {
 			Die ();
 		}
 	}
@@ -217,6 +224,8 @@ public class BasicEnnemy : MonoBehaviour {
 
     // Update is called once per frame
     protected virtual void Update () {
+        if (Gm.isPaused)
+            return;
         Move();
 	}
 
@@ -236,14 +245,27 @@ public class BasicEnnemy : MonoBehaviour {
             int count = 0;
             foreach (CombinationHandler.Button currentButton in CombinationPlayer.GetCurrentCombination())
             {
-                ButtonsEnemy[count].GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+                ButtonsEnemy[count].GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.2f);
                 count++;
             }
+
+            if (CurrentCombo < count)
+                DoParticle();
+
+            CurrentCombo = count;
         }
         else
         {
+            CurrentCombo = 0;
             for (int i = 0; i < ButtonsEnemy.Count; i++)
                 ButtonsEnemy[i].GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
         }
+    }
+
+    public void DoParticle()
+    {
+        GameObject particle = Instantiate(ParticleSystem, transform.position, Quaternion.identity);
+        particle.transform.parent = transform;
+        Destroy(particle, 1.0f);
     }
 }

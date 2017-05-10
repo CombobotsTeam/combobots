@@ -26,7 +26,10 @@ public class WaveManager : MonoBehaviour {
     bool canSummon = true;
 
 	// Update is called once per frame
-	void Update () {}
+	void Update () {
+        if (WaveLeft.Count == 0 && EnemiesForCurrentWave.Count == 0 && NbrEnemiesOnScreen == 0 && GameManager.instance.Life > 0)
+            GameManager.instance.LoadVictory();
+    }
 
 	// Use this for initialization
 	void Start ()
@@ -80,7 +83,7 @@ public class WaveManager : MonoBehaviour {
 		{
 			if (WaveLeft.Count > 0)
 			{
-                TimeLeft = 5;
+                TimeLeft = 1;
                 EnemiesForCurrentWave = WaveLeft [0];
 				WaveLeft.RemoveAt (0);
                 StartCoroutine("SummonLater", TimeLeft);
@@ -97,6 +100,7 @@ public class WaveManager : MonoBehaviour {
             {
                 GameManager.instance.isBoss = true;
                 randomIndex = SpawnerPositionList.Count / 2 - ((SpawnerPositionList.Count % 2 == 0) ? 1 : 0);
+                SoundManager.instance.PlayerMusic("MusicBossInGame");
             }
             else
             {

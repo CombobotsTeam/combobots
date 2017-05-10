@@ -135,6 +135,7 @@ public class BlackPawnMinon : BasicEnnemy
         GetComponent<Animator>().SetTrigger("Spawn");
         Speed = 0;
         attack = false;
+        Gm.RemoveLife(1);
         boss.notifyAttack();
     }
 
