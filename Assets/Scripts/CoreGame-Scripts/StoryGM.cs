@@ -8,7 +8,7 @@ public class StoryGM : MonoBehaviour {
 	public int SelectWave = 0;
 
 	void Start () {
-		Object.DontDestroyOnLoad (this.gameObject);
+		Application.DontDestroyOnLoad (this.gameObject);
 	}
 	public void SetInformation(int Wave)
 	{

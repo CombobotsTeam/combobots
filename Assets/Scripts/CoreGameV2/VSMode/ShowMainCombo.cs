@@ -64,13 +64,13 @@ public class ShowMainCombo : MonoBehaviour
             this.GetComponentInChildren<SpriteRenderer>().enabled = true;
         if (player1)
         {
-            if (VSHandler.GetCurrentCombinationPlayer1().Count - 1 < pos)
+            if (VSHandler.GetCurrentCombinationPlayer(1).Count - 1 < pos)
             {
                 this.GetComponentInChildren<SpriteRenderer>().enabled = false;
             }
             else
             {
-                foreach (CombinationHandler.Button x in VSHandler.GetCurrentCombinationPlayer1())
+                foreach (CombinationHandler.Button x in VSHandler.GetCurrentCombinationPlayer(1))
                 {
                     if (count == pos)
                     {
@@ -89,13 +89,13 @@ public class ShowMainCombo : MonoBehaviour
         }
         if (player2)
         {
-            if (VSHandler.GetCurrentCombinationPlayer2().Count - 1 < pos)
+            if (VSHandler.GetCurrentCombinationPlayer(2).Count - 1 < pos)
             {
                 this.GetComponentInChildren<SpriteRenderer>().enabled = false;
             }
             else
             {
-                foreach (CombinationHandler.Button x in VSHandler.GetCurrentCombinationPlayer2())
+                foreach (CombinationHandler.Button x in VSHandler.GetCurrentCombinationPlayer(2))
                 {
                     if (count == pos)
                     {

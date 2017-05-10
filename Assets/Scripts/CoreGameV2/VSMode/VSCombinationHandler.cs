@@ -15,83 +15,82 @@ public class VSCombinationHandler : MonoBehaviour {
         CurrentCombinationPlayer2.Clear();
     }
 
-    public void AddButtonToCombinatioPlayer1(Button button)
+    public void AddButtonToCombinatioPlayer(Button button, int Player)
     {
-        if (CurrentCombinationPlayer1.Count <= 10)
-            CurrentCombinationPlayer1.Add(button);
+        if (Player == 1)
+        {
+            if (CurrentCombinationPlayer1.Count <= 10)
+                CurrentCombinationPlayer1.Add(button);
+            else
+                ResetPlayer(Player);
+        }
         else
-            ResetPlayer1();
+        {
+            if (CurrentCombinationPlayer2.Count <= 10)
+                CurrentCombinationPlayer2.Add(button);
+            else
+                ResetPlayer(Player);
+        }
+
     }
 
-    public void AddButtonToCombinationPlayer2(Button button)
+    public bool CompareCombinationPlayer(List<Button> button, int Player)
     {
-        if (CurrentCombinationPlayer2.Count <= 10)
-            CurrentCombinationPlayer2.Add(button);
-        else
-            ResetPlayer2();
-    }
-
-    public bool CompareCombinationPlayer1(List<Button> button)
-    {
+        List<Button> CurrentCombination = new List<Button>();
         int i = 0;
-        foreach (Button CombinationHandler in CurrentCombinationPlayer1)
+        if (Player == 1)
         {
-            if (i > button.Count)
-                return false;
-            if (CombinationHandler != button[i])
-                return false;
-            i++;
+            CurrentCombination = CurrentCombinationPlayer1;
+            foreach (Button CombinationHandler in CurrentCombination)
+            {
+                if (i > button.Count)
+                    return false;
+                if (CombinationHandler != button[i])
+                    return false;
+                i++;
+            }
         }
-
+        else
+        {
+            i = button.Count - 1;
+            CurrentCombination = CurrentCombinationPlayer2;
+            foreach (Button CombinationHandler in CurrentCombination)
+            {
+                if (i < 0)
+                    return false;
+                if (CombinationHandler != button[i])
+                    return false;
+                i--;
+            }
+        }
         return true;
     }
 
-    public bool CompareCombinationPlayer2(List<Button> button)
+    public bool IsSameCombinationPlayer(List<Button> button, int Player)
     {
-        int i = 1;
-        foreach (Button CombinationHandler in CurrentCombinationPlayer2)
+        if (Player == 1)
         {
-            if (i > button.Count)
+            if (CurrentCombinationPlayer1.Count != button.Count)
                 return false;
-            if (CombinationHandler != button[button.Count - i])
-                return false;
-            i++;
         }
-
-        return true;
+        else
+            if (CurrentCombinationPlayer2.Count != button.Count)
+                return false;
+        return CompareCombinationPlayer(button, Player);
     }
 
-    public bool isSameCombinationPlayer1(List<Button> button)
+    public void ResetPlayer(int Player)
     {
-        if (CurrentCombinationPlayer1.Count != button.Count)
-            return false;
-        return CompareCombinationPlayer1(button);
+        if (Player == 1)
+            CurrentCombinationPlayer1.Clear();
+        else
+            CurrentCombinationPlayer2.Clear();
     }
 
-    public bool isSameCombinationPlayer2(List<Button> button)
+    public List<Button> GetCurrentCombinationPlayer(int Player)
     {
-        if (CurrentCombinationPlayer2.Count != button.Count)
-            return false;
-        return CompareCombinationPlayer2(button);
-    }
-
-    public void ResetPlayer1()
-    {
-        CurrentCombinationPlayer1.Clear();
-    }
-
-    public void ResetPlayer2()
-    {
-        CurrentCombinationPlayer2.Clear();
-    }
-
-    public List<Button> GetCurrentCombinationPlayer1()
-    {
-        return CurrentCombinationPlayer1;
-    }
-
-    public List<Button> GetCurrentCombinationPlayer2()
-    {
+        if (Player == 1)
+            return CurrentCombinationPlayer1;
         return CurrentCombinationPlayer2;
     }
 }

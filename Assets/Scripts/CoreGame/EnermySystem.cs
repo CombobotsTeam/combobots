@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class EnermySystem : MonoBehaviour {
 	public int Arraynum = 0;//combination array's number
@@ -37,7 +36,7 @@ public class EnermySystem : MonoBehaviour {
 		if (EnermyPosition.y - GetComponent<RectTransform> ().rect.height/2 <= -100) {//reach red line
 			Debug.Log ("GameOver");
 			Destroy (gameObject);
-			SceneManager.LoadScene (0);
+			Application.LoadLevel (0);
 		}
 	}
 

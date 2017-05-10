@@ -4,23 +4,36 @@ using UnityEngine.UI;
 
 public class SetPrintLife : MonoBehaviour
 {
+    public GameObject[] currentObjectLife;
+
     private GameManager GM; //GameManerger script 
-    private string PrintLife = null;//print life text in gamescene string Later it change image ofr sprite 
+    private int life = 0;
     private Text UIText;
+    private Sprite Heart;
+    private Sprite DeadHeart;
+
 
     void Start()
     {
         GM = GameManager.instance;
         UIText = GetComponent<Text>();
+        Heart = Resources.Load("Prefabs/Life/Heart") as Sprite;
+        DeadHeart = Resources.Load("Prefabs/Life/DeadHeart") as Sprite;
     }
 
     void GetPlayerCombo()//Get player's life function 
     {
-        if (GM.Life.ToString() != PrintLife)
+        if (GM.Life != life)
         {
-            PrintLife = GM.Life.ToString();//get player's life from gamemaneger And set
-            UIText.text = PrintLife;//change print text 
+            GM.Life = life;
+            UpdateLifeDisplay(life); 
         }
+    }
+
+    void UpdateLifeDisplay(int Life)
+    {
+        for (int i = 0; i < currentObjectLife.Length; i++)
+            currentObjectLife[i].GetComponent<SpriteRenderer>().sprite = (i > Life) ? DeadHeart : Heart;
     }
 
     void Update()
