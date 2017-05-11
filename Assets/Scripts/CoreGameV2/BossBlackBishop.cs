@@ -184,5 +184,7 @@ class BossBlackBishop : BasicEnnemy
             Rockets[0].Explode();
         base.Die();
         Gm.cm.BossMode = false;
+        // Remove that this is ugly as fuck
+        GameManager.instance.LoadVictory();
     }
 }

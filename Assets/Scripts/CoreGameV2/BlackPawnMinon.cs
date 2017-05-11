@@ -52,6 +52,7 @@ public class BlackPawnMinon : BasicEnnemy
     public void launchAttack()
     {
         GetComponent<Animator>().SetTrigger("Prepare");
+        r.Color = new Color(0, 0, 0);
         startAttack = 0;
     }
 
@@ -123,6 +124,7 @@ public class BlackPawnMinon : BasicEnnemy
             GetComponent<Animator>().SetTrigger("Spawn");
         else
             GetComponent<Animator>().SetTrigger("Damage");
+        r.Color = new Color(1, 1, 1);
         startAttack = -1;
         Speed = 0;
         attack = false;
@@ -133,6 +135,7 @@ public class BlackPawnMinon : BasicEnnemy
     {
         Position = RotatePosition;
         GetComponent<Animator>().SetTrigger("Spawn");
+        r.Color = new Color(1, 1, 1);
         Speed = 0;
         attack = false;
         Gm.RemoveLife(1);

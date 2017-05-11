@@ -132,7 +132,5 @@ public class BossBlackPawn : BasicEnnemy
     {
         base.Die();
         Gm.cm.BossMode = false;
-        // Remove that this is ugly as fuck
-        GameManager.instance.LoadVictory();
     }
 }
