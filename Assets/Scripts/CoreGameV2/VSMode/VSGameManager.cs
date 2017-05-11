@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class VSGameManager : MonoBehaviour {
 
@@ -101,6 +102,7 @@ public class VSGameManager : MonoBehaviour {
         {
             winCanvas.enabled = true;
             gameCanvas.enabled = false;
+            StartCoroutine("GoMenu");
         }
 
     }
@@ -111,7 +113,7 @@ public class VSGameManager : MonoBehaviour {
         if (player == 1)
         {
             player_1_life -= lifeToRemove;
-            if (player_1_life < 0)
+            if (player_1_life <= 0)
             {
                 player_1_life = 0;
                 winner = 2;
@@ -120,7 +122,7 @@ public class VSGameManager : MonoBehaviour {
         if (player == 2)
         {
             player_2_life -= lifeToRemove;
-            if (player_2_life < 0)
+            if (player_2_life <= 0)
             {
                 player_2_life = 0;
                 winner = 1;
@@ -173,5 +175,11 @@ public class VSGameManager : MonoBehaviour {
     public int GetStartTime()
     {
         return (6 - (int)(Time.time - startTime))/2;
+    }
+
+    IEnumerator GoMenu()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("MainMenu");
     }
 }

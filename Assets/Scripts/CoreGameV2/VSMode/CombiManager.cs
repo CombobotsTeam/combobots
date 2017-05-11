@@ -23,7 +23,7 @@ public class CombiManager : MonoBehaviour {
         int color = 0;
         for (int i = 0; i < Size; i++)
         {
-            color = Random.Range(0, 3);
+            color = Random.Range(0, 4);
             if (color == 0)
                 CurrentCombination.Add(VSCombinationHandler.Button.RED);
             if (color == 1)
