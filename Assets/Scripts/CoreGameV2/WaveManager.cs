@@ -168,13 +168,21 @@ public class WaveManager : MonoBehaviour {
 		// Implement it later
 	}
 
+    IEnumerator Victory(float time)
+    {
+        yield return new WaitForSeconds(time);
+        GameManager.instance.LoadVictory();
+    }
+
 	// The GameManager must call this function each time an enemy die
 	public void EnemyDie(GameObject enemyObj)
 	{
 		// Use enemyObj for BossPart enemy
 
 		NbrEnemiesOnScreen--;
-	}
+        if (NbrEnemiesOnScreen == 0 && EnemiesForCurrentWave.Count == 0 && WaveLeft.Count == 0)
+            StartCoroutine("Victory", 2);
+    }
 
     public void Spawn(ConfigurationEnemy enemy)
     {
