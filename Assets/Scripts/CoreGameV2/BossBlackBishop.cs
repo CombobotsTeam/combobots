@@ -163,13 +163,7 @@ class BossBlackBishop : BasicEnnemy
     protected IEnumerator LaunchAttack(float delay)
     {
         spawn += 1;
-        float TimeUntilSummon = delay;
-
-        while (TimeUntilSummon > 0)
-        {
-            TimeUntilSummon -= Time.deltaTime;
-            yield return null;
-        }
+        yield return Gm.WaitFor(delay);
         if (IsInvisible)
         {
             spawn -= 1;

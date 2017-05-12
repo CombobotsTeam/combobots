@@ -146,18 +146,12 @@ public class WaveManager : MonoBehaviour {
 
 	IEnumerator SummonLater(float delay)
 	{
-		float TimeUntilSummon = delay;
-
         canSummon = false;
         NbrEnemiesOnScreen++;
 
-		while (TimeUntilSummon > 0)
-		{
-			TimeUntilSummon -= Time.deltaTime;
-			yield return null;
-		}
+        yield return GameManager.instance.WaitFor(delay);
 
-		NbrEnemiesOnScreen--;
+        NbrEnemiesOnScreen--;
 
         canSummon = true;
 		Summon ();

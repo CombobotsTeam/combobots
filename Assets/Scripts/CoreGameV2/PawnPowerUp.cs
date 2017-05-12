@@ -25,13 +25,7 @@ public class PawnPowerUp : MonoBehaviour, IPowerUp
 
     protected IEnumerator desactivate(float delay)
     {
-        float TimeUntilSummon = delay;
-
-        while (TimeUntilSummon > 0)
-        {
-            TimeUntilSummon -= Time.deltaTime;
-            yield return null;
-        }
+        yield return gm.WaitFor(delay);
 
         foreach (GameObject g in gm.EnemiesOnScreen)
         {

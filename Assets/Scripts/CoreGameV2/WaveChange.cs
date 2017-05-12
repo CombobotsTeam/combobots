@@ -9,7 +9,7 @@ public class WaveChange : MonoBehaviour {
     string newText;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         t = GetComponent<Text>();
         gameObject.SetActive(false);
     }
@@ -24,11 +24,7 @@ public class WaveChange : MonoBehaviour {
     protected IEnumerator change(float delay)
     {
         t.text = newText;
-        while (delay >= 0)
-        {
-            delay -= Time.deltaTime;
-            yield return null;
-        }
+        yield return GameManager.instance.WaitFor(delay);
         gameObject.SetActive(false);
     }
 }

@@ -38,12 +38,7 @@ class Rocket : BasicEnnemy
         Rend.enabled = false;
         float spd = Speed;
         Speed = 0;
-        float TimeUntilSummon = 1.0f;
-        while (TimeUntilSummon > 0)
-        {
-            TimeUntilSummon -= Time.deltaTime;
-            yield return null;
-        }
+        yield return Gm.WaitFor(1.0f);
         Speed = spd;
         foreach (GameObject b in ButtonsEnemy)
         {

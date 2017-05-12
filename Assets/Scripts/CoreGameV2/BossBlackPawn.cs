@@ -71,13 +71,7 @@ public class BossBlackPawn : BasicEnnemy
 
     protected IEnumerator chooseAttack(float delay)
     {
-        float TimeUntilSummon = delay;
-
-        while (TimeUntilSummon > 0)
-        {
-            TimeUntilSummon -= Time.deltaTime;
-            yield return null;
-        }
+        yield return Gm.WaitFor(delay);
 
         foreach (BlackPawnMinon m in minions)
         {

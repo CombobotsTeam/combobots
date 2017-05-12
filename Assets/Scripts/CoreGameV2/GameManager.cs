@@ -39,6 +39,17 @@ public class GameManager : MonoBehaviour
 
     public Text EndMessage;
 
+    public IEnumerator WaitFor(float time)
+    {
+        GameManager gm = GameManager.instance;
+        while (time > 0)
+        {
+            if (!gm.isPaused)
+                time -= Time.deltaTime;
+            yield return null;
+        }
+    }    
+
     void Awake()
     {
         //Check if instance already exists
