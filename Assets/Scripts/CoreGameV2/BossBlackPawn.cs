@@ -89,6 +89,8 @@ public class BossBlackPawn : BasicEnnemy
 
     public override void DecreaseLifePoint(int lp)
     {
+        if (minions.Count > 0)
+            return;
         combinationGenerator.FixedSize = CombinationSize;
         Combination = combinationGenerator.GetListButton();
         ResetCombination();

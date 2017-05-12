@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     public bool isPaused = false;
 
-    public PawnPowerUp powerUp;
+    public IPowerUp powerUp;
     public bool isBoss = false;
     public int Score = 0;//score of player
     public int Life = 3;//life of player
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
 
         Combination = GetComponent<CombinationHandler>();
         WaveManager = GetComponent<WaveManager>();
-        powerUp = GetComponent<PawnPowerUp>();
+        powerUp = GetComponent<IPowerUp>();
         cm = GetComponent<ComboManager>();
     }
 
@@ -171,6 +171,8 @@ public class GameManager : MonoBehaviour
                     }
                 }*/
         cm.checkCombo();
+        if (Input.GetKeyDown("space"))
+            powerUp.activate();
     }
 
     void SetLife()

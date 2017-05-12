@@ -56,6 +56,8 @@ class BossBlackBishop : BasicEnnemy
 
     public override void DecreaseLifePoint(int lp)
     {
+        if (IsInvisible)
+            return;
         combinationGenerator.FixedSize = CombinationSize;
         Combination = combinationGenerator.GetListButton();
         ResetCombination();

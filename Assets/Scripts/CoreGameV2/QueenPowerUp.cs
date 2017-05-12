@@ -34,7 +34,7 @@ class QueenPowerUp : MonoBehaviour, IPowerUp
         foreach (GameObject g in gm.EnemiesOnScreen)
         {
             BasicEnnemy e = g.GetComponent<BasicEnnemy>();
-            e.Life -= Level > 1 ? 3 : 1;
+            e.DecreaseLifePoint(Level > 1 ? 3 : 1);
             if (e.Died)
                 gm.ComboCount += 1;
         }
