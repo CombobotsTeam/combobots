@@ -73,15 +73,18 @@ public class BossBlackPawn : BasicEnnemy
     {
         yield return Gm.WaitFor(delay);
 
-        foreach (BlackPawnMinon m in minions)
+        while (true)
         {
-            if (m.Position.y < Position.y)
+            foreach (BlackPawnMinon m in minions)
             {
-                m.launchAttack();
-                yield break;
+                if (m.Position.y < Position.y)
+                {
+                    m.launchAttack();
+                    yield break;
+                }
             }
+            yield return Gm.WaitFor(0.2f);
         }
-        yield return null;
     }
 
     public override void DecreaseLifePoint(int lp)
