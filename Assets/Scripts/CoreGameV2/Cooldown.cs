@@ -5,29 +5,34 @@ using UnityEngine.UI;
 
 public class Cooldown : MonoBehaviour
 {
-    private Sprite cooldown;
-    public bool coolingDown;
-    public float waitTime = 30.0f;
+    private Material cooldown;
+    private GameManager gameManager;
+    public bool enabledPower = true;
+    private float currentStatus = 0f;
+    private float status = 0f;
     private Vector3 originalPosition;
+    
 
     void Start()
     {
-        cooldown = GetComponent<SpriteRenderer>().sprite;
+        cooldown = GetComponent<SpriteRenderer>().material;
+        gameManager = GameManager.instance;
         originalPosition = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (coolingDown == true)
+        if (enabledPower)
         {
-            //Reduce fill amount over 30 seconds
-            // cooldown.fillAmount -= 1.0f / waitTime * Time.deltaTime;
-            //cooldown;
-            Vector3 t = transform.localScale;
-            t.x += 0.1f;
-            transform.localScale = t;
-            transform.position = originalPosition;
+            if (transform.position != originalPosition)
+                transform.position = originalPosition;
+            status = (float)gameManager.powerUp.Charge / (float)gameManager.powerUp.ChargeMax;
+            if (currentStatus < status)
+                currentStatus += Time.deltaTime;
+            if (currentStatus > status)
+                currentStatus = status;
+            cooldown.SetFloat("_Fill", currentStatus);
         }
     }
 }
