@@ -21,7 +21,7 @@ public class WaveManager : MonoBehaviour {
     List<ConfigurationEnemy>			EnemiesForCurrentWave;
 
 	float 						TimeLeft = 0;					// Min time between each enemy summon
-	float						NbrEnemiesOnScreen = 0;		// Actual number of enemies 
+	public float						NbrEnemiesOnScreen = 0;		// Actual number of enemies 
 
 	List<Vector3>				SpawnerPositionList;
 
@@ -85,22 +85,6 @@ public class WaveManager : MonoBehaviour {
 
 	void Summon()
 	{
-		// New wave
-		if (EnemiesForCurrentWave.Count <= 0 && NbrEnemiesOnScreen == 0)
-		{
-            if (WaveLeft.Count > 0)
-            {
-                EnemiesForCurrentWave = WaveLeft[0];
-                TimeLeft = TimeTransitionLeft[0];
-                wc.changeWave(TimeTransitionLeft[0], TransitionLeft[0]);
-                TransitionLeft.RemoveAt(0);
-                TimeTransitionLeft.RemoveAt(0);
-                WaveLeft.RemoveAt (0);
-                StartCoroutine("SummonLater", TimeLeft);
-                return;
-            }
-		}
-
 		// The wave continue
 		if (EnemiesForCurrentWave.Count >= 1)
 		{
@@ -141,7 +125,7 @@ public class WaveManager : MonoBehaviour {
 				TimeLeft = EnemiesForCurrentWave [1].SpawnCoolDown;
 
 			EnemiesForCurrentWave.RemoveAt(0);
-		}
+        }
 	}
 
 	IEnumerator SummonLater(float delay)
@@ -174,8 +158,22 @@ public class WaveManager : MonoBehaviour {
 		// Use enemyObj for BossPart enemy
 
 		NbrEnemiesOnScreen--;
-        if (NbrEnemiesOnScreen == 0 && EnemiesForCurrentWave.Count == 0 && WaveLeft.Count == 0)
-            StartCoroutine("Victory", 2);
+        if (NbrEnemiesOnScreen == 0 && EnemiesForCurrentWave.Count == 0)
+        {
+            if (WaveLeft.Count == 0)
+                StartCoroutine("Victory", 2);
+            else
+            {
+                EnemiesForCurrentWave = WaveLeft[0];
+                TimeLeft = TimeTransitionLeft[0];
+                wc.changeWave(TimeTransitionLeft[0], TransitionLeft[0]);
+                TransitionLeft.RemoveAt(0);
+                TimeTransitionLeft.RemoveAt(0);
+                WaveLeft.RemoveAt(0);
+                StartCoroutine("SummonLater", TimeLeft);
+            }
+        }
+
     }
 
     public void Spawn(ConfigurationEnemy enemy)
@@ -193,12 +191,11 @@ public class WaveManager : MonoBehaviour {
 				TimeLeft -= Time.deltaTime;
 			}
 
-			if (NbrEnemiesOnScreen < EnemyMax)
+			if (NbrEnemiesOnScreen < EnemyMax && EnemiesForCurrentWave.Count > 0)
 			{
-				if (TimeLeft == 0) {
+				if (TimeLeft <= 0 && canSummon) {
 					Summon ();
 				}
-
 				else {
                     if (canSummon)
     					StartCoroutine ("SummonLater", TimeLeft);

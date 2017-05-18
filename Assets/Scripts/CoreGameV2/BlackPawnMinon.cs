@@ -69,11 +69,11 @@ public class BlackPawnMinon : BasicEnnemy
                     boss.Spawn();
                 }
                 if (startAttack != -1)
-                    startAttack += verticalSpeed;
+                    startAttack += verticalSpeed * (reverse ? -1 : 1);
                 if (angle > 360)
                     angle -= 360;
-                RotatePosition.y -= Mathf.Sin(Mathf.Deg2Rad * angle) * rotateConst;
-                RotatePosition.x -= Mathf.Cos(Mathf.Deg2Rad * angle) * rotateConst;
+                RotatePosition.y -= Mathf.Sin(Mathf.Deg2Rad * angle) * rotateConst * (reverse ? -1 : 1);
+                RotatePosition.x -= Mathf.Cos(Mathf.Deg2Rad * angle) * rotateConst * (reverse ? -1 : 1);
             }
             else
             {

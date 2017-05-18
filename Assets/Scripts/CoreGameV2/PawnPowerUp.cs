@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class PawnPowerUp : IPowerUp
 {
-
     protected void Start()
     {
         gm = GameManager.instance;
@@ -23,7 +22,7 @@ public class PawnPowerUp : IPowerUp
             BasicEnnemy e = g.GetComponent<BasicEnnemy>();
             e.IsMoving = true;
             if (Level >= 4)
-                e.Speed *= 0.75f;
+                e.slow *= 0.75f;
         }
     }
 

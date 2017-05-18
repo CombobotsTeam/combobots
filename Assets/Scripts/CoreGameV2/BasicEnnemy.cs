@@ -13,8 +13,11 @@ public class BasicEnnemy : MonoBehaviour {
     public float Speed = 0.1f;
     public bool IsMoving = true;
     public int NbrGold = 0;
+    public float slow = 1;
     [HideInInspector]
     public Vector3 Position;
+    [HideInInspector]
+    public bool reverse = false;
     public float SpawnCooldown = 1000.0f;
     public bool Died = false;
     
@@ -97,7 +100,7 @@ public class BasicEnnemy : MonoBehaviour {
     {
         if (IsMoving)
         {
-            Position.y -= Speed;
+            Position.y -= (Speed * slow) * (reverse ? -1 : 1);
             GetComponent<Transform>().position = new Vector3(Position.x, Position.y, Position.z);
         }
     }

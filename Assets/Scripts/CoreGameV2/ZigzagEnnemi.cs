@@ -15,10 +15,10 @@ namespace Assets.Scripts.CoreGameV2
         {
             if (IsMoving)
             {
-                angle += verticalSpeed;
+                angle += verticalSpeed * slow;
                 if (angle > 360)
                     angle -= 360;
-                Position.x += Mathf.Cos(angle * Mathf.Deg2Rad) * 0.2f;
+                Position.x += Mathf.Cos(angle * Mathf.Deg2Rad) * 0.2f * (reverse ? -1 : 1);
                 base.Move();
             }
         }
