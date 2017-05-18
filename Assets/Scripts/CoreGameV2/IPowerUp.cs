@@ -9,11 +9,18 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public interface IPowerUp
+abstract public class IPowerUp : MonoBehaviour
 {
+    public int Level = 0;
+    public int Charge = 0;
+    public int ChargeMax = 100;
+    protected GameManager gm;
 
-    void ChargePowerUp(int charge);
+    public void ChargePowerUp(int charge)
+    {
+        Charge += charge;
+    }
 
-    void activate();
+    abstract public void activate();
 }
 

@@ -9,6 +9,7 @@ public class ButtonUI : MonoBehaviour {
     public bool top = false;
     public bool middle = false;
     public int percentofsizeheight = 25;
+    public int VerticalOffset = 0;
 
 	private Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);//value of setting position
     private ButtonScript button;
@@ -17,6 +18,7 @@ public class ButtonUI : MonoBehaviour {
         button = GetComponent<ButtonScript>();
 
 		GetComponent<RectTransform> ().sizeDelta = new Vector2(Screen.width / 4, Screen.height * percentofsizeheight / 100);
+        int VerticalOffsetPixel = Screen.height * VerticalOffset / 100;
 
         if (top)
         {
@@ -27,13 +29,13 @@ public class ButtonUI : MonoBehaviour {
         if (bottom)
         {
             Position.x = Screen.width / 4 * (int)button.Type - Screen.width / 2;
-            Position.y = 0 - Screen.height / 2;
+            Position.y = 0 - Screen.height / 2 + VerticalOffsetPixel;
         }
 
         if (middle)
         {
-            Position.x = Screen.width / 2.5f - Screen.width / 2;
-            Position.y = 0 -  Screen.height / 2 + Screen.height * 15 / 100;
+            Position.x = -Screen.width / 8f;// - Screen.width / 2;
+            Position.y = 0 -  Screen.height / 2 + VerticalOffsetPixel;
         }
 
 

@@ -1,28 +1,41 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-class KnightPowerUp : MonoBehaviour, IPowerUp
-{
-    public int Level = 0;
-    public int Charge = 0;
-    public int ChargeMax = 100;
-    protected GameManager gm;
-
+class KnightPowerUp : IPowerUp
+{ 
     protected void Start()
     {
         gm = GameManager.instance;
         ChargeMax = Level >= 3 ? 50 : Level >= 1 ? 75 : 100;
     }
 
-    public void ChargePowerUp(int charge)
+    protected IEnumerator desactivateReverse(float delay)
     {
-        Charge += charge;
+        yield return gm.WaitFor(delay);
+
+        foreach (GameObject g in gm.EnemiesOnScreen)
+        {
+            BasicEnnemy e = g.GetComponent<BasicEnnemy>();
+            e.reverse = false;
+        }
     }
 
-    public void activate()
+    protected IEnumerator desactivate(float delay)
+    {
+        yield return gm.WaitFor(delay);
+
+        foreach (GameObject g in gm.EnemiesOnScreen)
+        {
+            BasicEnnemy e = g.GetComponent<BasicEnnemy>();
+            e.reverse = false;
+        }
+    }
+
+    override public void activate()
     {
         if (Charge < ChargeMax)
         {
@@ -31,5 +44,15 @@ class KnightPowerUp : MonoBehaviour, IPowerUp
         }
         Debug.Log("Activate");
         Charge = 0;
+        foreach (GameObject g in gm.EnemiesOnScreen)
+        {
+            BasicEnnemy e = g.GetComponent<BasicEnnemy>();
+            if (Level >= 4)
+                e.reverse = true;
+            e.slow *= Level >= 2 ? 0.3f : 0.6f;
+        }
+        if (Level >= 4)
+            desactivateReverse(2);
+        desactivate(5);
     }
 }

@@ -37,6 +37,7 @@ public class ComboManager : MonoBehaviour
         gm.AddComboPoint(1);
         gm.Combination.Reset();
         enemy.FeedBackCombination(gm.Combination, true);
+        gm.powerUp.ChargePowerUp(20);
     }
 
     protected void incompleteCombination(BasicEnnemy enemy)
