@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
 
     private GameObject HeartEmpty;
     private GameObject HeartFull;
+	private GameObject Coin;
+	private Text CoinText;
+	private Text ScoreText;
 
     private Dictionary<int, GameObject> heartList;
     bool LateInit = true;
@@ -82,6 +85,8 @@ public class GameManager : MonoBehaviour
         if (LateInit)
         {
             SetLife();
+			SetCoin();
+			SetScore();
             LateInit = false;
         }
 
@@ -106,27 +111,101 @@ public class GameManager : MonoBehaviour
             powerUp.activate();
     }
 
-    void SetLife()
-    {
-        Debug.Log("setLife");
-        RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+	void SetScore()
+	{
+		ScoreText = GameObject.Find("Score").GetComponent<Text>();
 
-        HeartFull = Resources.Load("Prefabs/Life/FullHeart") as GameObject;
-        HeartEmpty = Resources.Load("Prefabs/Life/DeadHeart") as GameObject;
+		AddScore (0);
+	}
 
-        Vector3 upperRightPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 1));
-        float xheartSize = HeartFull.GetComponent<SpriteRenderer>().sprite.bounds.size.x * HeartFull.transform.localScale.x;
-        float yheartSize = HeartFull.GetComponent<SpriteRenderer>().sprite.bounds.size.y * HeartFull.transform.localScale.y;
+	void SetCoin()
+	{
+		Coin = Resources.Load("Prefabs/Coins") as GameObject;
 
-        heartList = new Dictionary<int, GameObject>();
+		RectTransform toprect = GameObject.Find("TopBackground").GetComponent<RectTransform>();
 
-        GameObject heart = Instantiate(HeartFull, new Vector3(upperRightPos.x - (xheartSize / 2), upperRightPos.y - (yheartSize / 2), 1), Quaternion.identity);
-        heartList.Add(1, heart);
-        heart = Instantiate(HeartFull, new Vector3(upperRightPos.x - (xheartSize / 2) - xheartSize, upperRightPos.y - (yheartSize / 2), 1), Quaternion.identity);
-        heartList.Add(2, heart);
-        heart = Instantiate(HeartFull, new Vector3(upperRightPos.x - (xheartSize / 2) - (xheartSize * 2), upperRightPos.y - (yheartSize / 2), 1), Quaternion.identity);
-        heartList.Add(3, heart);
-    }
+		Vector3[] toprectEdges = new Vector3[4];
+		toprect.GetWorldCorners (toprectEdges);
+
+		float toprectWidth = toprectEdges [2].x - toprectEdges [0].x;
+		float toprectHeight = toprectEdges [1].y - toprectEdges [0].y;
+
+		float marginWidth = 2 * (toprectWidth / 100);
+		float marginHeight = 5.5f * (toprectHeight / 100);
+
+		// SCALE
+		float actualScale = Coin.transform.localScale.y;
+		float actualLenght = Coin.GetComponent<SpriteRenderer>().sprite.bounds.size.y * Coin.transform.localScale.y;
+
+		float expectedLenght = (toprectHeight / 2) - (marginHeight * 1.5f); // 8
+		float expectedScale = (actualScale * expectedLenght) / actualLenght;
+
+		Vector3 coinScale = new Vector3 (expectedScale, expectedScale, 1);
+
+		float xcoinSize = Coin.GetComponent<SpriteRenderer> ().sprite.bounds.size.x * expectedScale;
+		float ycoinSize = Coin.GetComponent<SpriteRenderer> ().sprite.bounds.size.y * expectedScale;
+
+		GameObject coins;
+		coins = Instantiate (Coin, new Vector3 (toprectEdges[2].x - (xcoinSize / 2) - marginWidth, toprectEdges[2].y - (ycoinSize / 2) - marginHeight, 1), Quaternion.identity);
+		coins.transform.localScale = coinScale;
+
+		///////////////
+
+		CoinText = GameObject.Find("Gold").GetComponent<Text>();
+
+		CoinText.text = Gold.ToString();
+
+		/*Vector3 cointextPosition = new Vector3(1, 1, 1);
+
+		cointextPosition.x = toprectEdges[2].x - (xcoinSize) - (marginWidth * 2);
+		cointextPosition.y = toprectEdges[0].y - marginHeight;
+
+		Debug.Log (cointextPosition.x);
+
+		CoinText.rectTransform.localPosition = cointextPosition;*/
+	}
+
+	void SetLife()
+	{
+		RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+		RectTransform toprect = GameObject.Find("TopBackground").GetComponent<RectTransform>();
+
+		Vector3[] toprectEdges = new Vector3[4];
+		toprect.GetWorldCorners (toprectEdges);
+
+		Vector3 toprectMiddle = new Vector3 (toprectEdges [0].x + ((toprectEdges [2].x - toprectEdges [0].x) / 2), toprectEdges [0].y + ((toprectEdges [1].y - toprectEdges [0].y) / 2),0);
+
+		float toprectWidth = toprectEdges [2].x - toprectEdges [0].x;
+		float toprectHeight = toprectEdges [1].y - toprectEdges [0].y;
+
+		float marginWidth = 2 * (toprectWidth / 100);
+		float marginHeight = 5 * (toprectHeight / 100);
+
+		HeartFull = Resources.Load("Prefabs/Life/FullHeart") as GameObject;
+		HeartEmpty = Resources.Load("Prefabs/Life/DeadHeart") as GameObject;
+
+		// SCALE
+		float actualScale = HeartFull.transform.localScale.y; // 20
+		float actualLenght = HeartFull.GetComponent<SpriteRenderer>().sprite.bounds.size.y * HeartFull.transform.localScale.y; // 12
+
+		float expectedLenght = (toprectHeight / 2) - (marginHeight * 1.5f); // 8
+		float expectedScale = (actualScale * expectedLenght) / actualLenght;
+
+		Vector3 heartScale = new Vector3 (expectedScale, expectedScale, 1);
+
+		float xheartSize = HeartFull.GetComponent<SpriteRenderer> ().sprite.bounds.size.x * expectedScale;
+		float yheartSize = HeartFull.GetComponent<SpriteRenderer>().sprite.bounds.size.y * expectedScale;
+
+		heartList = new Dictionary<int, GameObject>();
+		GameObject heart;
+
+		for (int i = 0; i < 3; i++)
+		{
+			heart = Instantiate (HeartFull, new Vector3 (toprectEdges[0].x + (xheartSize / 2) + (xheartSize * i) + marginWidth, toprectEdges[2].y - (yheartSize / 2) - marginHeight, 1), Quaternion.identity);
+			heart.transform.localScale = heartScale;
+			heartList.Add (i + 1, heart);
+		}
+	}
 
     public List<GameObject> GetEnemiesOnScreen()
     {
@@ -136,7 +215,18 @@ public class GameManager : MonoBehaviour
     //add player's score that i want score(example player score is 0 and AddScore(10) => player score is 10)
     public void AddScore(int addscore)
     {
-        Score += addscore * ComboCount;
+		Score += addscore * ComboCount;
+		ScoreText.text = "";
+
+		ScoreText.text += "<color=#808080ff>";
+
+		for (int i = 10000; i > 1; i = i / 10) {
+			if (i > Score)
+				ScoreText.text += "0";
+		}
+
+
+		ScoreText.text += "</color><color=#c0c0c0ff>" + Score.ToString() + "</color><color=#808080ff> pts</color>";
     }
 
     //player's combocount up (example 1 => 2)
@@ -158,25 +248,27 @@ public class GameManager : MonoBehaviour
         Life += additionalLife;
     }
 
-    //player's Life down(example life 3 => 2)
-    public void RemoveLife(int lifeToRemove)
-    {
-        GameObject oldHeart = heartList[Life];
-        GameObject heart = Instantiate(HeartEmpty, oldHeart.transform.position, Quaternion.identity);
-        heartList[Life] = heart;
-        Destroy(oldHeart);
+	//player's Life down(example life 3 => 2)
+	public void RemoveLife(int lifeToRemove)
+	{
+		GameObject oldHeart = heartList[Life];
+		GameObject heart = Instantiate(HeartEmpty, oldHeart.transform.position, Quaternion.identity);
+		heart.transform.localScale = oldHeart.transform.localScale;
+		heartList[Life] = heart;
+		Destroy(oldHeart);
 
-        Life -= lifeToRemove;
+		Life -= lifeToRemove;
 
-        if (Life < 0)
-            Life = 0;
-        if (Life == 0) LoadDefeat();
-    }
+		if (Life < 0)
+			Life = 0;
+		if (Life == 0) LoadDefeat();
+	}
 
     // Will add the amount of Gold
     public void AddGold(int amount)
     {
         Gold += amount;
+		CoinText.text = Gold.ToString();
     }
 
     // Get the type of button pressed and update the Combination Handler
