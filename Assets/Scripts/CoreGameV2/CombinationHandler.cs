@@ -14,6 +14,8 @@ public class CombinationHandler : MonoBehaviour {
 
     public void AddButtonToCombination(Button button)
     {
+        if (button == Button.POWER_UP)
+            return;
         if (CurrentCombination.Count <= 10)
             CurrentCombination.Add(button);
         else

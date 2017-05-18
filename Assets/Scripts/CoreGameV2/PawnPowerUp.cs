@@ -5,22 +5,13 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class PawnPowerUp : MonoBehaviour, IPowerUp
+public class PawnPowerUp : IPowerUp
 {
-    public int Level = 0;
-    public int Charge = 0;
-    public int ChargeMax = 100;
-    protected GameManager gm;
 
     protected void Start()
     {
         gm = GameManager.instance;
         ChargeMax = Level >= 3 ? 50 : Level >= 1 ? 75 : 100;
-    }
-
-    public void ChargePowerUp(int charge)
-    {
-        Charge += charge;
     }
 
     protected IEnumerator desactivate(float delay)
@@ -36,7 +27,7 @@ public class PawnPowerUp : MonoBehaviour, IPowerUp
         }
     }
 
-    public void activate()
+    override public void activate()
     {
         if (Charge < ChargeMax)
         {

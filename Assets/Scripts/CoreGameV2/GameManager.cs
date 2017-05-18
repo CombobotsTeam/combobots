@@ -101,75 +101,6 @@ public class GameManager : MonoBehaviour
             WaveManager.launch();
             launch = false;
         }
-        /*        if (Combination.GetCurrentCombination().Count > 0)
-                {
-                    if (!isBoss)
-                    {
-                        if (lockEnnemy == null)
-                        {
-                            foreach (GameObject enemy in EnemiesOnScreen)
-                            {
-                                if (lockEnnemy == null || lockEnnemy.transform.localPosition.y > enemy.transform.localPosition.y)
-                                    lockEnnemy = enemy;
-                            }
-                        }
-                        if (lockEnnemy != null)
-                        {
-                            BasicEnnemy e = lockEnnemy.GetComponent<BasicEnnemy>();
-                            if (Combination.CompareCombination(e.Combination))
-                            {
-                                e.FeedBackCombination(Combination);
-                                if (Combination.isSameCombination(e.Combination))
-                                {
-                                    e.DecreaseLifePoint(1);
-                                    Score += 10 * ComboCount;
-                                    ComboCount++;
-                                    Combination.Reset();
-                                    e.FeedBackCombination(Combination, true);
-                                }
-                            }
-                            else
-                            {
-                                e.FeedBackCombination(Combination, true);
-                                ResetComboPoint();
-                                Combination.Reset();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        bool combinationExist = false;
-                        foreach (GameObject enemy in EnemiesOnScreen)
-                        {
-                            BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
-                            if (e.getCombination().Count == 0)
-                                continue;
-                            if (Combination.CompareCombination(e.Combination))
-                            {
-                                combinationExist = true;
-                                e.FeedBackCombination(Combination);
-                                if (Combination.isSameCombination(e.Combination))
-                                {
-                                    e.DecreaseLifePoint(1);
-                                    Score += 10 * (ComboCount == 0 ? 1 : ComboCount);
-                                    ComboCount++;
-                                    e.FeedBackCombination(Combination, true);
-                                    Combination.Reset();
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                e.FeedBackCombination(Combination, true);
-                            }
-                        }
-                        if (!combinationExist)
-                        {
-                            ComboCount = 0;
-                            Combination.Reset();
-                        }
-                    }
-                }*/
         cm.checkCombo();
         if (Input.GetKeyDown("space"))
             powerUp.activate();
@@ -254,7 +185,6 @@ public class GameManager : MonoBehaviour
         if (button != CombinationHandler.Button.POWER_UP)
         {
             Combination.AddButtonToCombination(button);
-            powerUp.ChargePowerUp(5);
         }
         else
             powerUp.activate();
