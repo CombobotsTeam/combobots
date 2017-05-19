@@ -17,12 +17,16 @@ public class GameManager : MonoBehaviour
     public int Score = 0;//score of player
     public int Life = 3;//life of player
     public int ComboCount = 1;//player's combo count
+	private int ComboMult = 1;//score multiplication
     public int Gold = 0;
     bool launch = true;
 
     private GameObject HeartEmpty;
     private GameObject HeartFull;
 	private GameObject Coin;
+	private GameObject ComboGood;
+	private GameObject ComboSuper;
+	private GameObject ComboAmazing;
 	private Text CoinText;
 	private Text ScoreText;
 
@@ -87,6 +91,7 @@ public class GameManager : MonoBehaviour
             SetLife();
 			SetCoin();
 			SetScore();
+			SetCombo();
             LateInit = false;
         }
 
@@ -110,6 +115,13 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown("space"))
             powerUp.activate();
     }
+
+	void SetCombo()
+	{
+		ComboGood = Resources.Load("Prefabs/Combo/ComboGood") as GameObject;
+		ComboSuper = Resources.Load("Prefabs/Combo/ComboSuper") as GameObject;
+		ComboAmazing = Resources.Load("Prefabs/Combo/ComboAmazing") as GameObject;
+	}
 
 	void SetScore()
 	{
@@ -167,13 +179,13 @@ public class GameManager : MonoBehaviour
 
 	void SetLife()
 	{
-		RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+		//RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
 		RectTransform toprect = GameObject.Find("TopBackground").GetComponent<RectTransform>();
 
 		Vector3[] toprectEdges = new Vector3[4];
 		toprect.GetWorldCorners (toprectEdges);
 
-		Vector3 toprectMiddle = new Vector3 (toprectEdges [0].x + ((toprectEdges [2].x - toprectEdges [0].x) / 2), toprectEdges [0].y + ((toprectEdges [1].y - toprectEdges [0].y) / 2),0);
+		//Vector3 toprectMiddle = new Vector3 (toprectEdges [0].x + ((toprectEdges [2].x - toprectEdges [0].x) / 2), toprectEdges [0].y + ((toprectEdges [1].y - toprectEdges [0].y) / 2),0);
 
 		float toprectWidth = toprectEdges [2].x - toprectEdges [0].x;
 		float toprectHeight = toprectEdges [1].y - toprectEdges [0].y;
@@ -215,7 +227,7 @@ public class GameManager : MonoBehaviour
     //add player's score that i want score(example player score is 0 and AddScore(10) => player score is 10)
     public void AddScore(int addscore)
     {
-		Score += addscore * ComboCount;
+		Score += addscore * ComboMult;
 		ScoreText.text = "";
 
 		ScoreText.text += "<color=#808080ff>";
@@ -224,15 +236,32 @@ public class GameManager : MonoBehaviour
 			if (i > Score)
 				ScoreText.text += "0";
 		}
-
-
+			
 		ScoreText.text += "</color><color=#c0c0c0ff>" + Score.ToString() + "</color><color=#808080ff> pts</color>";
     }
 
     //player's combocount up (example 1 => 2)
-    public void AddComboPoint(int comboPoint)
+	public void AddComboPoint(int comboPoint, Vector3 position)
     {
         ComboCount += comboPoint;
+
+		if (ComboCount == 3) {
+			position.z = 0;
+			ComboMult = 2;
+			Instantiate (ComboGood, position, Quaternion.identity);
+		}
+
+		if (ComboCount == 6) {
+			position.z = 0;
+			ComboMult = 3;
+			Instantiate (ComboSuper, position, Quaternion.identity);
+		}
+
+		if (ComboCount == 9) {
+			position.z = 0;
+			ComboMult = 4;
+			Instantiate (ComboAmazing, position, Quaternion.identity);
+		}
     }
 
     //set player's combocount zero(example 3 => 1)

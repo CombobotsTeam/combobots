@@ -8,7 +8,7 @@ public class SetPrintLife : MonoBehaviour
 
     private GameManager GM; //GameManerger script 
     private int life = 0;
-    private Text UIText;
+    //private Text UIText;
     private Sprite Heart;
     private Sprite DeadHeart;
 
@@ -16,7 +16,7 @@ public class SetPrintLife : MonoBehaviour
     void Start()
     {
         GM = GameManager.instance;
-        UIText = GetComponent<Text>();
+        //UIText = GetComponent<Text>();
         Heart = Resources.Load("Prefabs/Life/Heart") as Sprite;
         DeadHeart = Resources.Load("Prefabs/Life/DeadHeart") as Sprite;
     }

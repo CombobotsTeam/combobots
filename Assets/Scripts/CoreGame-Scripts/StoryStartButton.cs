@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StoryStartButton : MonoBehaviour {
 
@@ -9,7 +10,8 @@ public class StoryStartButton : MonoBehaviour {
 	}
 	public void Onclick()
 	{
-		Application.LoadLevel (1);
+		SceneManager.LoadScene (1);
+		//Application.LoadLevel (1);
 	}
 	// Update is called once per frame
 	void Update () {

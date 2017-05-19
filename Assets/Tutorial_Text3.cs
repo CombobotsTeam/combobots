@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Tutorial_Text3 : MonoBehaviour {
     public string Text1 = "This is Enemy. That will attack you If you want to kill it. Click the same color button";
     private Tutorial_GameManager GM;//Get GameManeger from main camera's GameManeger script
-    private string PrintText = null;//print score text in gamescene string
+    //private string PrintText = null;//print score text in gamescene string
     public Vector3 Position = Vector3.zero;
     void Start () {
         GM = Tutorial_GameManager.instance;

@@ -34,7 +34,7 @@ public class ComboManager : MonoBehaviour
         enemy.DecreaseLifePoint(1);
         soundManager.Play("RightCombo", false);
         gm.AddScore(10);
-        gm.AddComboPoint(1);
+		gm.AddComboPoint(1, enemy.transform.position);
         gm.Combination.Reset();
         enemy.FeedBackCombination(gm.Combination, true);
         gm.powerUp.ChargePowerUp(20);
