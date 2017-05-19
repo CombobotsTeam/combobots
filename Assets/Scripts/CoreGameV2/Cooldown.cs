@@ -11,13 +11,17 @@ public class Cooldown : MonoBehaviour
     private float currentStatus = 0f;
     private float status = 0f;
     private Vector3 originalPosition;
-    
+
+
+    private void Awake()
+    {
+        originalPosition = transform.position;
+    }
 
     void Start()
     {
         cooldown = GetComponent<SpriteRenderer>().material;
         gameManager = GameManager.instance;
-        originalPosition = transform.position;
     }
 
     // Update is called once per frame

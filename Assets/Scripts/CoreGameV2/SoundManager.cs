@@ -55,6 +55,11 @@ public class SoundManager : MonoBehaviour {
         sounds.Add("MusicBossInGame", Resources.Load<AudioClip>(PathToSounds + "MusicBossInGame"));
         sounds.Add("MusicMenu", Resources.Load<AudioClip>(PathToSounds + "MusicMenu"));
         sounds.Add("Cutscene", Resources.Load<AudioClip>(PathToSounds + "Cutscene"));
+        sounds.Add("FurtherMenu1", Resources.Load<AudioClip>(PathToSounds + "phaseJump1"));
+        sounds.Add("FurtherMenu2", Resources.Load<AudioClip>(PathToSounds + "phaseJump2"));
+        sounds.Add("FurtherMenu3", Resources.Load<AudioClip>(PathToSounds + "phaseJump3"));
+        sounds.Add("BackMenu1", Resources.Load<AudioClip>(PathToSounds + "phaserDown2"));
+        sounds.Add("BackMenu2", Resources.Load<AudioClip>(PathToSounds + "phaserDown3"));
 
         foreach (KeyValuePair<string, AudioClip> sound in sounds)
         {

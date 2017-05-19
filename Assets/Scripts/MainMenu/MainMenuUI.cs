@@ -29,7 +29,7 @@ public class MainMenuUI : MonoBehaviour
         {
             // Set GUIAnimSystemFREE.Instance.m_AutoAnimation to false in Awake() will let you control all GUI Animator elements in the scene via scripts.
             GUIAnimSystemFREE.Instance.m_AutoAnimation = false;
-        }
+        }  
     }
 
     void Start()
@@ -40,6 +40,7 @@ public class MainMenuUI : MonoBehaviour
 
         // Disable all scene switch buttons
         //GUIAnimSystemFREE.Instance.SetGraphicRaycasterEnable(m_Canvas, false);
+        SoundManager.instance.PlayerMusic("MusicMenu");
     }
 
     void Update()
@@ -121,6 +122,7 @@ public class MainMenuUI : MonoBehaviour
     #region ActionsButton
     public void On_ButtonSolo()
     {
+        SoundManager.instance.Play("FurtherMenu1", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
         GUIAnimSystemFREE.Instance.LoadLevel("SoloMenu", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
@@ -128,6 +130,7 @@ public class MainMenuUI : MonoBehaviour
 
     public void On_ButtonMulti()
     {
+        SoundManager.instance.Play("FurtherMenu1", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
         GUIAnimSystemFREE.Instance.LoadLevel("MultiMenu", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
@@ -135,6 +138,7 @@ public class MainMenuUI : MonoBehaviour
 
     public void On_ButtonSettings()
     {
+        SoundManager.instance.Play("FurtherMenu1", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
         GUIAnimSystemFREE.Instance.LoadLevel("MultiMenu", 1.1f);
         gameObject.SendMessage("HideAllGUIs");

@@ -113,6 +113,7 @@ public class MultiMenuUI : MonoBehaviour {
     #region ActionsButton
     public void On_Versus()
     {
+        SoundManager.instance.Play("FurtherMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
         GUIAnimSystemFREE.Instance.LoadLevel("prototype_versus_mode", 1f);
         gameObject.SendMessage("HideAllGUIs");
@@ -120,6 +121,7 @@ public class MultiMenuUI : MonoBehaviour {
 
     public void On_Coop()
     {
+        SoundManager.instance.Play("FurtherMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
         //GUIAnimSystemFREE.Instance.LoadLevel("CoopLevel", 1f);
         gameObject.SendMessage("HideAllGUIs");
@@ -127,6 +129,7 @@ public class MultiMenuUI : MonoBehaviour {
 
     public void On_ButtonBack()
     {
+        SoundManager.instance.Play("BackMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
         GUIAnimSystemFREE.Instance.LoadLevel("MainMenu", 1f);
         gameObject.SendMessage("HideAllGUIs");

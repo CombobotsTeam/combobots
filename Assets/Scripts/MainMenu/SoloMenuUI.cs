@@ -18,6 +18,7 @@ public class SoloMenuUI : MonoBehaviour
     public GUIAnimFREE m_StoryButton;
     public GUIAnimFREE m_ArcadeButton;
     public GUIAnimFREE m_SurvivalButton;
+    public GUIAnimFREE m_PowerUp;
     public GUIAnimFREE m_BackButton;
 
     #endregion // Variables
@@ -58,6 +59,7 @@ public class SoloMenuUI : MonoBehaviour
         m_StoryButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
         m_ArcadeButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
         m_SurvivalButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
+        m_PowerUp.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
         m_BackButton.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
     }
 
@@ -70,6 +72,7 @@ public class SoloMenuUI : MonoBehaviour
         m_StoryButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
         m_ArcadeButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
         m_SurvivalButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
+        m_PowerUp.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
         m_BackButton.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
     }
 
@@ -116,29 +119,41 @@ public class SoloMenuUI : MonoBehaviour
     #region ActionsButton
     public void On_ButtonStory()
     {
+        SoundManager.instance.Play("FurtherMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        GUIAnimSystemFREE.Instance.LoadLevel("SelectionMenuChapterOne", 1.1f);
+        GUIAnimSystemFREE.Instance.LoadLevel("SelectionMenuChapterOne", 1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
     public void On_ButtonArcade()
     {
+        SoundManager.instance.Play("FurtherMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        GUIAnimSystemFREE.Instance.LoadLevel("prototype", 1.1f);
+        GUIAnimSystemFREE.Instance.LoadLevel("prototype", 1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
     public void On_ButtonSurvival()
     {
+        SoundManager.instance.Play("FurtherMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
         //GUIAnimSystemFREE.Instance.LoadLevel("SurvivalMenu", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
+    public void On_ButtonPowerUp()
+    {
+        SoundManager.instance.Play("FurtherMenu2", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        GUIAnimSystemFREE.Instance.LoadLevel("AbilitiesMenu", 1f);
+        gameObject.SendMessage("HideAllGUIs");
+    }
+
     public void On_ButtonBack()
     {
+        SoundManager.instance.Play("BackMenu1", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        GUIAnimSystemFREE.Instance.LoadLevel("MainMenu", 1.1f);
+        GUIAnimSystemFREE.Instance.LoadLevel("MainMenu", 1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 

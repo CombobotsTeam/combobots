@@ -207,8 +207,9 @@ public class AbilityMenuUI : MonoBehaviour
 
     public void On_ButtonBack()
     {
+        SoundManager.instance.Play("BackMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        GUIAnimSystemFREE.Instance.LoadLevel("MainMenu", 0.5f);
+        GUIAnimSystemFREE.Instance.LoadLevel("SoloMenu", 0.5f);
         gameObject.SendMessage("HideAllGUIs");
     }
 

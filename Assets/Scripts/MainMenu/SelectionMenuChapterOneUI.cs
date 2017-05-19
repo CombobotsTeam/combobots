@@ -144,7 +144,8 @@ public class SelectionMenuChapterOneUI : MonoBehaviour
 	#region ActionsButton
 	public void On_Lvl1()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		scenesInfos.currentScene = "Scene01";
 		GUIAnimSystemFREE.Instance.LoadLevel("CutScene", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
@@ -152,35 +153,40 @@ public class SelectionMenuChapterOneUI : MonoBehaviour
 
 	public void On_Lvl2()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		GUIAnimSystemFREE.Instance.LoadLevel("prototype", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
 	}
 
 	public void On_Lvl3()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		GUIAnimSystemFREE.Instance.LoadLevel("prototype", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
 	}
 
 	public void On_Lvl4()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		GUIAnimSystemFREE.Instance.LoadLevel("prototype", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
 	}
 
 	public void On_Lvl5()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		GUIAnimSystemFREE.Instance.LoadLevel("prototype", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
 	}
 
 	public void On_Lvl6()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		scenesInfos.currentScene = "Scene02";
 		GUIAnimSystemFREE.Instance.LoadLevel("CutScene", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
@@ -188,14 +194,16 @@ public class SelectionMenuChapterOneUI : MonoBehaviour
 
 	public void On_NextChapter()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		GUIAnimSystemFREE.Instance.LoadLevel("SelectionMenuChapterTwo", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
 	}
 
 	public void On_Introduction()
 	{
-		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+        SoundManager.instance.Play("FurtherMenu3", false);
+        GUIAnimSystemFREE.Instance.EnableAllButtons(false);
 		scenesInfos.currentScene = "Intro";
 		GUIAnimSystemFREE.Instance.LoadLevel("CutScene", 1.1f);
 		gameObject.SendMessage("HideAllGUIs");
