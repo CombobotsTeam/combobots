@@ -95,17 +95,17 @@ public class DialogScript : MonoBehaviour {
 	void Update (){
 		int nbTouches = Input.touchCount;
 
-        if (Input.GetMouseButtonDown (0)) {
+        /*if (Input.GetMouseButtonDown (0)) {
 			i++;
 			if (dialogs [i, 0] == "end") {
 				if (scenesInfos.currentScene == "Intro") {
 					scenesInfos.currentScene = "Intro_2";
 					SceneManager.LoadScene ("CutScene");
 				} else if (scenesInfos.currentScene == "Intro_2") {
-					//SceneManager.LoadScene ("MainMenu");
+					SceneManager.LoadScene ("SelectionMenuChapterOne");
 				} else {
 					//remplacer par le nom de la scene ou le combat a lieu
-					SceneManager.LoadScene ("Game");
+					SceneManager.LoadScene ("prototype");
 				}
 			} else {
 				if (dialogs [i, 0] == "Finn")
@@ -118,7 +118,7 @@ public class DialogScript : MonoBehaviour {
 				textDialog.text = dialogs [i, 1];
 			}
 
-		} else {
+		} else*/ {
 		if (nbTouches > 0 && touchScreen == true) {
 			print (nbTouches + " touch(es) detected");
 
@@ -135,10 +135,10 @@ public class DialogScript : MonoBehaviour {
 					scenesInfos.currentScene = "Intro_2";
 					SceneManager.LoadScene ("CutScene");
 				} else if (scenesInfos.currentScene == "Intro_2") {
-					//SceneManager.LoadScene ("MainMenu");
+					SceneManager.LoadScene ("SelectionMenuChapterOne");
 				} else {
 					//Remplacer par le nom de la scene ou le combat a lieu
-					SceneManager.LoadScene ("Game");
+					SceneManager.LoadScene ("prototype");
 				}
 			} else {
 				if (dialogs [i, 0] == "Finn")

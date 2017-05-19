@@ -117,7 +117,7 @@ public class SoloMenuUI : MonoBehaviour
     public void On_ButtonStory()
     {
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        //GUIAnimSystemFREE.Instance.LoadLevel("StoryMenu", 1.1f);
+        GUIAnimSystemFREE.Instance.LoadLevel("SelectionMenuChapterOne", 1.1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
