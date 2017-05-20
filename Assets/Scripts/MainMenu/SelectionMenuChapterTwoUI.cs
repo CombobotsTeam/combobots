@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class SelectionMenuChapterTwoUI : MonoBehaviour
@@ -24,6 +25,7 @@ public class SelectionMenuChapterTwoUI : MonoBehaviour
 	public GUIAnimFREE m_Lvl6;
 	public GUIAnimFREE m_NextChapter;
 	public GUIAnimFREE m_PreviousChapter;
+	public GUIAnimFREE m_Back;
 	private ScenesInfos scenesInfos;
 
 	//
@@ -50,6 +52,8 @@ public class SelectionMenuChapterTwoUI : MonoBehaviour
 
 		gameObjectOnScene = GameObject.Find("SceneInfos");
 		scenesInfos = gameObjectOnScene.GetComponent<ScenesInfos> ();
+
+		check_save ();
 
 		// Disable all scene switch buttons
 		//GUIAnimSystemFREE.Instance.SetGraphicRaycasterEnable(m_Canvas, false);
@@ -78,6 +82,7 @@ public class SelectionMenuChapterTwoUI : MonoBehaviour
 		m_Lvl4.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
 		m_Lvl5.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
 		m_Lvl6.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
+		m_Back.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
 		m_NextChapter.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
 		m_PreviousChapter.MoveIn(GUIAnimSystemFREE.eGUIMove.Self);
 
@@ -97,6 +102,7 @@ public class SelectionMenuChapterTwoUI : MonoBehaviour
 		m_Lvl4.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
 		m_Lvl5.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
 		m_Lvl6.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
+		m_Back.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
 		m_NextChapter.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
 		m_PreviousChapter.MoveOut(GUIAnimSystemFREE.eGUIMove.Self);
 	}
@@ -208,5 +214,59 @@ public class SelectionMenuChapterTwoUI : MonoBehaviour
 		gameObject.SendMessage("HideAllGUIs");
 	}
 
+	public void On_Back()
+	{
+		SoundManager.instance.Play("FurtherMenu3", false);
+		GUIAnimSystemFREE.Instance.EnableAllButtons(false);
+		GUIAnimSystemFREE.Instance.LoadLevel("MainMenu", 1.1f);
+		gameObject.SendMessage("HideAllGUIs");
+	}
+
 	#endregion
+
+	private void check_save()
+	{
+		GameData d = PersistantData.instance.data;
+
+		GameObject lvl1;
+		GameObject lvl2;
+		GameObject lvl3;
+		GameObject lvl4;
+		GameObject lvl5;
+		GameObject lvl6;
+		GameObject nextChapter;
+
+		int progression = d.Story;
+
+		lvl1 = GameObject.Find ("Lvl1");
+		lvl2 = GameObject.Find ("Lvl2");
+		lvl3 = GameObject.Find ("Lvl3");
+		lvl4 = GameObject.Find ("Lvl4");
+		lvl5 = GameObject.Find ("Lvl5");
+		lvl6 = GameObject.Find ("Lvl6");
+		nextChapter = GameObject.Find ("Chapter3");
+
+		lvl1.GetComponent<Button>().interactable = false;
+		lvl2.GetComponent<Button>().interactable = false;
+		lvl3.GetComponent<Button>().interactable = false;
+		lvl4.GetComponent<Button>().interactable = false;
+		lvl5.GetComponent<Button>().interactable = false;
+		lvl6.GetComponent<Button>().interactable = false;
+		nextChapter.GetComponent<Button>().interactable = false;
+
+		if (progression >= 7)
+			lvl1.GetComponent<Button>().interactable = true;
+		if (progression >= 8)
+			lvl2.GetComponent<Button>().interactable = true;
+		if (progression >= 9)
+			lvl3.GetComponent<Button>().interactable = true;
+		if (progression >= 10)
+			lvl4.GetComponent<Button>().interactable = true;
+		if (progression >= 11)
+			lvl5.GetComponent<Button>().interactable = true;
+		if (progression >= 12)
+			lvl6.GetComponent<Button> ().interactable = true;
+		if (progression >= 13)
+			nextChapter.GetComponent<Button> ().interactable = true;
+	}
 }
