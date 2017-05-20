@@ -18,6 +18,7 @@ public class DialogScript : MonoBehaviour {
 	private UnityEngine.UI.Image bubble;
 	private GameObject gameObjectOnScene;
 	private ScenesInfos scenesInfos;
+	private PersistantData persistantData;
 	private string[,] dialogs;
 	private string[,] sprites;
 	private ConfigurationFile config;
@@ -35,6 +36,7 @@ public class DialogScript : MonoBehaviour {
 		dialogs = config.cutscenesDialog;
 		sprites = config.cutscenesSprite;
 
+		SoundManager.instance.PlayerMusic("Cutscene");
 		gameObjectOnScene = GameObject.Find ("SceneInfos");
 		scenesInfos = gameObjectOnScene.GetComponent<ScenesInfos>();
 
@@ -95,13 +97,15 @@ public class DialogScript : MonoBehaviour {
 	void Update (){
 		int nbTouches = Input.touchCount;
 
-        /*if (Input.GetMouseButtonDown (0)) {
+        if (Input.GetMouseButtonDown (0)) {
 			i++;
 			if (dialogs [i, 0] == "end") {
 				if (scenesInfos.currentScene == "Intro") {
 					scenesInfos.currentScene = "Intro_2";
 					SceneManager.LoadScene ("CutScene");
 				} else if (scenesInfos.currentScene == "Intro_2") {
+					SoundManager.instance.PlayerMusic("MusicMenu");
+					levelUp ();
 					SceneManager.LoadScene ("SelectionMenuChapterOne");
 				} else {
 					//remplacer par le nom de la scene ou le combat a lieu
@@ -118,7 +122,7 @@ public class DialogScript : MonoBehaviour {
 				textDialog.text = dialogs [i, 1];
 			}
 
-		} else*/ {
+		} else {
 		if (nbTouches > 0 && touchScreen == true) {
 			print (nbTouches + " touch(es) detected");
 
@@ -135,6 +139,8 @@ public class DialogScript : MonoBehaviour {
 					scenesInfos.currentScene = "Intro_2";
 					SceneManager.LoadScene ("CutScene");
 				} else if (scenesInfos.currentScene == "Intro_2") {
+						levelUp ();
+						SoundManager.instance.PlayerMusic("MusicMenu");
 					SceneManager.LoadScene ("SelectionMenuChapterOne");
 				} else {
 					//Remplacer par le nom de la scene ou le combat a lieu
@@ -156,6 +162,17 @@ public class DialogScript : MonoBehaviour {
 			touchScreen = true;
 			nextDialog = false;
 		}
+		}
+	}
+
+	private void levelUp(){
+		GameData d = PersistantData.instance.data;
+
+		if (d.Story == 0) {
+			d.Story = 1;
+			gameObjectOnScene = GameObject.Find ("PersistantData");
+			persistantData = gameObjectOnScene.GetComponent<PersistantData>();
+			persistantData.Save ();
 		}
 	}
 }
