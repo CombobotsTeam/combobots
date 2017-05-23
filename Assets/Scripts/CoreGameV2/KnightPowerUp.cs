@@ -31,7 +31,7 @@ class KnightPowerUp : IPowerUp
         foreach (GameObject g in gm.EnemiesOnScreen)
         {
             BasicEnnemy e = g.GetComponent<BasicEnnemy>();
-            e.reverse = false;
+            e.slow = 1;
         }
     }
 
