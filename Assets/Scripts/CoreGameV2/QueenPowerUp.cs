@@ -19,7 +19,6 @@ class QueenPowerUp : IPowerUp
             Debug.Log("Not full");
             return;
         }*/
-        Debug.Log("Activate");
         Charge = 0;
         foreach (GameObject g in gm.EnemiesOnScreen)
         {

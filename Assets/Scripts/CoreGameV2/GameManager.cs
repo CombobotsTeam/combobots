@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
 	private GameObject ComboSuper;
 	private GameObject ComboAmazing;
 	private GameObject FloatingPoints;
+	private GameObject FloatingCoins;
 	private Text CoinText;
 	private Text ScoreText;
 	private TextMeshPro FloatingPointsText;
@@ -139,6 +140,7 @@ public class GameManager : MonoBehaviour
 	void SetCoin()
 	{
 		Coin = Resources.Load("Prefabs/Coins") as GameObject;
+		FloatingCoins = Resources.Load("Prefabs/FloatingCoins") as GameObject;
 
 		RectTransform toprect = GameObject.Find("TopBackground").GetComponent<RectTransform>();
 
@@ -225,7 +227,7 @@ public class GameManager : MonoBehaviour
 		if (addscore != 0) {
 			FloatingPointsText.text = "<color=#808080ff>+</color><color=#c0c0c0ff>" + (addscore * ComboMult).ToString() + "</color>";
 			position.y += FloatingPointsText.rectTransform.rect.size.y / 2;
-			GameObject pts = Instantiate (FloatingPoints, position, Quaternion.identity);
+			Instantiate (FloatingPoints, position, Quaternion.identity);
 		}
 
 		// Update the score
@@ -320,13 +322,26 @@ public class GameManager : MonoBehaviour
     public void NotifyDie(GameObject enemy)
     {
         BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
-        if (e.NbrGold > 0)
-            Gold += e.NbrGold;
+		/*if (e.NbrGold > 0) {
+			AddGold(e.NbrGold);
+		}*/
         e.Died = true;
 
         soundManager.Play("DeathEnemy", false);
         if (e == cm.lockEnemy)
             cm.lockEnemy = null;
+
+		// GOLD
+		Vector3 randomPos = new Vector3();
+		GameObject c;
+		float delay;
+		for (int i = 1; i <= (e.NbrGold / 5); i++)
+		{
+			randomPos = Random.insideUnitCircle * 7;
+			c = Instantiate(FloatingCoins, enemy.transform.position + randomPos, Quaternion.identity);
+			delay = (float)i / 10.0f;
+			c.GetComponent<CoinAnimation> ().Play(delay);
+		}
 
         WaveManager.EnemyDie(enemy);
     }

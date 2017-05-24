@@ -10,7 +10,6 @@ namespace Unlimited
 
         private GameManager GM; //GameManerger script 
         private int life = 0;
-        private Text UIText;
         private Sprite Heart;
         private Sprite DeadHeart;
 
@@ -18,7 +17,6 @@ namespace Unlimited
         void Start()
         {
             GM = GameManager.instance;
-            UIText = GetComponent<Text>();
             Heart = Resources.Load("Prefabs/Life/Heart") as Sprite;
             DeadHeart = Resources.Load("Prefabs/Life/DeadHeart") as Sprite;
         }

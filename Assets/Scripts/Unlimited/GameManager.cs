@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     public int Life = 1;//life of player
     public int ComboCount = 1;//player's combo count
     public int Gold = 0;
-    bool launch = true;
 
     // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
     public List<GameObject> EnemiesOnScreen = new List<GameObject>();
