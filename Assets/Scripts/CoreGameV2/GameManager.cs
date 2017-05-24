@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,8 +28,10 @@ public class GameManager : MonoBehaviour
 	private GameObject ComboGood;
 	private GameObject ComboSuper;
 	private GameObject ComboAmazing;
+	private GameObject FloatingPoints;
 	private Text CoinText;
 	private Text ScoreText;
+	private TextMeshPro FloatingPointsText;
 
     private Dictionary<int, GameObject> heartList;
     bool LateInit = true;
@@ -125,9 +128,12 @@ public class GameManager : MonoBehaviour
 
 	void SetScore()
 	{
+		FloatingPoints = Resources.Load("Prefabs/FloatingPoints") as GameObject;
+		FloatingPointsText = FloatingPoints.GetComponent<TextMeshPro> ();
+
 		ScoreText = GameObject.Find("Score").GetComponent<Text>();
 
-		AddScore (0);
+		AddScore (0, new Vector3());
 	}
 
 	void SetCoin()
@@ -166,26 +172,14 @@ public class GameManager : MonoBehaviour
 		CoinText = GameObject.Find("Gold").GetComponent<Text>();
 
 		CoinText.text = Gold.ToString();
-
-		/*Vector3 cointextPosition = new Vector3(1, 1, 1);
-
-		cointextPosition.x = toprectEdges[2].x - (xcoinSize) - (marginWidth * 2);
-		cointextPosition.y = toprectEdges[0].y - marginHeight;
-
-		Debug.Log (cointextPosition.x);
-
-		CoinText.rectTransform.localPosition = cointextPosition;*/
 	}
 
 	void SetLife()
 	{
-		//RectTransform canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
 		RectTransform toprect = GameObject.Find("TopBackground").GetComponent<RectTransform>();
 
 		Vector3[] toprectEdges = new Vector3[4];
 		toprect.GetWorldCorners (toprectEdges);
-
-		//Vector3 toprectMiddle = new Vector3 (toprectEdges [0].x + ((toprectEdges [2].x - toprectEdges [0].x) / 2), toprectEdges [0].y + ((toprectEdges [1].y - toprectEdges [0].y) / 2),0);
 
 		float toprectWidth = toprectEdges [2].x - toprectEdges [0].x;
 		float toprectHeight = toprectEdges [1].y - toprectEdges [0].y;
@@ -225,11 +219,20 @@ public class GameManager : MonoBehaviour
     }
 
     //add player's score that i want score(example player score is 0 and AddScore(10) => player score is 10)
-    public void AddScore(int addscore)
+	public void AddScore(int addscore, Vector3 position)
     {
-		Score += addscore * ComboMult;
-		ScoreText.text = "";
+		// Display the floating number of point
+		if (addscore != 0) {
+			FloatingPointsText.text = "<color=#808080ff>+</color><color=#c0c0c0ff>" + (addscore * ComboMult).ToString() + "</color>";
+			position.y += FloatingPointsText.rectTransform.rect.size.y / 2;
+			GameObject pts = Instantiate (FloatingPoints, position, Quaternion.identity);
+		}
 
+		// Update the score
+		Score += addscore * ComboMult;
+
+		// Display the total number of point of the player
+		ScoreText.text = "";
 		ScoreText.text += "<color=#808080ff>";
 
 		for (int i = 10000; i > 1; i = i / 10) {
@@ -245,18 +248,21 @@ public class GameManager : MonoBehaviour
     {
         ComboCount += comboPoint;
 
+		// Display the "GOOD !" combo message
 		if (ComboCount == 3) {
 			position.z = 0;
 			ComboMult = 2;
 			Instantiate (ComboGood, position, Quaternion.identity);
 		}
 
+		// Display the "SUPER !!" combo message
 		if (ComboCount == 6) {
 			position.z = 0;
 			ComboMult = 3;
 			Instantiate (ComboSuper, position, Quaternion.identity);
 		}
 
+		// Display the "AMAZING !!" combo message
 		if (ComboCount == 9) {
 			position.z = 0;
 			ComboMult = 4;
@@ -321,6 +327,7 @@ public class GameManager : MonoBehaviour
         soundManager.Play("DeathEnemy", false);
         if (e == cm.lockEnemy)
             cm.lockEnemy = null;
+
         WaveManager.EnemyDie(enemy);
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class comboAnimation : MonoBehaviour {
+public class JumpAndFallAnimation : MonoBehaviour {
 
 	public float minAngle = 65;
 	public float maxAngle = 115;

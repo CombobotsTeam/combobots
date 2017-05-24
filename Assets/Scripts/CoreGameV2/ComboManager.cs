@@ -33,7 +33,14 @@ public class ComboManager : MonoBehaviour
     {
         enemy.DecreaseLifePoint(1);
         soundManager.Play("RightCombo", false);
-        gm.AddScore(10);
+
+		// Add score
+		float y = enemy.gameObject.GetComponent<BoxCollider>().size.y * enemy.gameObject.transform.localScale.y;
+		Vector3 enemyTopPosition = enemy.gameObject.transform.position;
+		enemyTopPosition.y += (y / 2);
+
+		gm.AddScore(10, enemyTopPosition);
+
 		gm.AddComboPoint(1, enemy.transform.position);
         gm.Combination.Reset();
         enemy.FeedBackCombination(gm.Combination, true);
