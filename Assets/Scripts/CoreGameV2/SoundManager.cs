@@ -60,6 +60,7 @@ public class SoundManager : MonoBehaviour {
         sounds.Add("FurtherMenu3", Resources.Load<AudioClip>(PathToSounds + "phaseJump3"));
         sounds.Add("BackMenu1", Resources.Load<AudioClip>(PathToSounds + "phaserDown2"));
         sounds.Add("BackMenu2", Resources.Load<AudioClip>(PathToSounds + "phaserDown3"));
+		sounds.Add("CollectCoin", Resources.Load<AudioClip>(PathToSounds + "collect_coin"));
 
         foreach (KeyValuePair<string, AudioClip> sound in sounds)
         {

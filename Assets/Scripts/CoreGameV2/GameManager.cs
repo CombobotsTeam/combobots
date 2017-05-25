@@ -305,6 +305,7 @@ public class GameManager : MonoBehaviour
     public void AddGold(int amount)
     {
         Gold += amount;
+		soundManager.Play ("CollectCoin", false);
 		CoinText.text = Gold.ToString();
     }
 
