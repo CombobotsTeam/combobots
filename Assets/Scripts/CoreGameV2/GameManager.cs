@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
         {
             if (EnemiesOnScreen[i].GetComponent<BasicEnnemy>().Died == true)
             {
-                Destroy(EnemiesOnScreen[i], 0.8f);
+				Destroy(EnemiesOnScreen[i], EnemiesOnScreen[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
                 EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
             }
             else
@@ -320,7 +320,7 @@ public class GameManager : MonoBehaviour
             powerUp.activate();
     }
 
-    public void NotifyDie(GameObject enemy)
+	public void NotifyDie(GameObject enemy, bool killedByPlayer)
     {
         BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
 		/*if (e.NbrGold > 0) {
@@ -333,15 +333,18 @@ public class GameManager : MonoBehaviour
             cm.lockEnemy = null;
 
 		// GOLD
-		Vector3 randomPos = new Vector3();
-		GameObject c;
-		float delay;
-		for (int i = 1; i <= (e.NbrGold / 5); i++)
+		if (killedByPlayer)
 		{
-			randomPos = Random.insideUnitCircle * 7;
-			c = Instantiate(FloatingCoins, enemy.transform.position + randomPos, Quaternion.identity);
-			delay = (float)i / 10.0f;
-			c.GetComponent<CoinAnimation> ().Play(delay);
+			Vector3 randomPos = new Vector3 ();
+			GameObject c;
+			float delay;
+
+			for (int i = 1; i <= (e.NbrGold / 5); i++) {
+				randomPos = Random.insideUnitCircle * 7;
+				c = Instantiate (FloatingCoins, enemy.transform.position + randomPos, Quaternion.identity);
+				delay = (float)i / 10.0f;
+				c.GetComponent<CoinAnimation> ().Play (delay);
+			}
 		}
 
         WaveManager.EnemyDie(enemy);
