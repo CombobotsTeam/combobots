@@ -12,7 +12,9 @@ public class VSGameManager : MonoBehaviour {
     public Canvas gameCanvas;
     public Canvas winCanvas;
     public Canvas startCanvas;
+    public Canvas delayCanvas;
 
+    private SoundManager soundManager;
     private int player_1_life;
     private int player_2_life;
     private string test;
@@ -27,6 +29,8 @@ public class VSGameManager : MonoBehaviour {
 
     private void Start()
     {
+        soundManager = SoundManager.instance;
+        soundManager.PlayerMusic("MusicInGame");
     }
 
     void Awake()
@@ -35,6 +39,7 @@ public class VSGameManager : MonoBehaviour {
         startCanvas.enabled = true;
         gameCanvas.enabled = false;
         winCanvas.enabled = false;
+        delayCanvas.enabled = false;
         //Check if instance already exists
         if (instance == null)
             //if not, set instance to this
@@ -63,6 +68,14 @@ public class VSGameManager : MonoBehaviour {
             }
             return;
         }
+        else
+        {
+            if (Time.time - startTime > 3F)
+            {
+                delayCanvas.enabled = false;
+                gameCanvas.enabled = true;
+            }
+        }
         if (Combinations.GetCurrentCombinationPlayer(1).Count > 0)
         {
             bool PlayerHIt = false;
@@ -73,10 +86,7 @@ public class VSGameManager : MonoBehaviour {
             }
             if (PlayerHIt)
             {
-                RemoveLife(Damage, 2);
-                combination.CreateCombination();
-                Combinations.ResetPlayer(1);
-                Combinations.ResetPlayer(2);
+                PlayerHit(2);
             }
         }
 
@@ -91,10 +101,7 @@ public class VSGameManager : MonoBehaviour {
             }
             if (PlayerHIt)
             {
-                RemoveLife(Damage, 1);
-                combination.CreateCombination();
-                Combinations.ResetPlayer(1);
-                Combinations.ResetPlayer(2);
+                PlayerHit(1);
             }
         }
 
@@ -105,6 +112,23 @@ public class VSGameManager : MonoBehaviour {
             StartCoroutine("GoMenu");
         }
 
+    }
+
+    private void PlayerHit(int player)
+    {
+        soundManager.Play("RightCombo", false);
+        RemoveLife(Damage, player);
+        combination.CreateCombination();
+        Combinations.ResetPlayer(1);
+        Combinations.ResetPlayer(2);
+        Delay();
+    }
+
+    private void Delay()
+    {
+        startTime = Time.time;
+        delayCanvas.enabled = true;
+        gameCanvas.enabled = false;
     }
 
     //player's Life down(example life 3 => 2)
@@ -133,27 +157,14 @@ public class VSGameManager : MonoBehaviour {
     // Get the type of button pressed and update the Combination Handler
     public void ButtonPressed(VSCombinationHandler.Button button, int player)
     {
-        test = "";
         if (player == 1)
         {
             Combinations.AddButtonToCombinatioPlayer(button,1);
-            List<VSCombinationHandler.Button> player1 = Combinations.GetCurrentCombinationPlayer(1);
-            foreach(CombinationHandler.Button x in player1)
-            {
-                test = test + " " + x;
-            }
-            Debug.Log("Player 1 =" + test);
         }
 
         if (player == 2)
         {
             Combinations.AddButtonToCombinatioPlayer(button,2);
-            List<VSCombinationHandler.Button> player2 = Combinations.GetCurrentCombinationPlayer(2);
-            foreach (CombinationHandler.Button x in player2)
-            {
-                test = test + " " + x;
-            }
-            Debug.Log("Player 2 =" + test);
         }
     }
 
@@ -174,7 +185,10 @@ public class VSGameManager : MonoBehaviour {
 
     public int GetStartTime()
     {
-        return (6 - (int)(Time.time - startTime))/2;
+        if (!start)
+            return (6 - (int)(Time.time - startTime))/2;
+        else
+            return (3 - (int)(Time.time - startTime));
     }
 
     IEnumerator GoMenu()

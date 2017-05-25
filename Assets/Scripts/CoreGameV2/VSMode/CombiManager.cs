@@ -13,8 +13,12 @@ public class CombiManager : MonoBehaviour {
     public Sprite red;
     public Sprite yellow;
 
+    private SoundManager soundManager;
+
     // Use this for initialization
     void Start () {
+        soundManager = SoundManager.instance;
+        soundManager.PlayerMusic("MusicInGame");
     }
 	
     public void CreateCombination()
@@ -33,15 +37,6 @@ public class CombiManager : MonoBehaviour {
             if (color == 3)
                 CurrentCombination.Add(VSCombinationHandler.Button.YELLOW);
         }
-
-        string test = "";
-
-        foreach (CombinationHandler.Button x in CurrentCombination)
-        {
-            test = test + " " + x;
-        }
-        Debug.Log("CurrentCombination =" + test);
-        Debug.Log("CurrentCombination SIZE =" + CurrentCombination.Count);
     }
 
     public List<VSCombinationHandler.Button> GetCombination()
