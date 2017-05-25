@@ -81,7 +81,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         soundManager = SoundManager.instance;
-        soundManager.PlayerMusic("MusicInGame");
         EndMessage.enabled = false;
     }
 
@@ -96,6 +95,7 @@ public class GameManager : MonoBehaviour
 			SetCoin();
 			SetScore();
 			SetCombo();
+			soundManager.PlayerMusic("MusicInGame");
             LateInit = false;
         }
 

@@ -51,7 +51,6 @@ public class SoundManager : MonoBehaviour {
         sounds.Add("DeathEnemy", Resources.Load<AudioClip>(PathToSounds + "DeathEnemy"));
         sounds.Add("WrongCombo", Resources.Load<AudioClip>(PathToSounds + "WrongCombo"));
         sounds.Add("RightCombo", Resources.Load<AudioClip>(PathToSounds + "RightCombo"));
-        sounds.Add("MusicInGame", Resources.Load<AudioClip>(PathToSounds + "MusicInGame"));
         sounds.Add("MusicBossInGame", Resources.Load<AudioClip>(PathToSounds + "MusicBossInGame"));
         sounds.Add("MusicMenu", Resources.Load<AudioClip>(PathToSounds + "MusicMenu"));
         sounds.Add("Cutscene", Resources.Load<AudioClip>(PathToSounds + "Cutscene"));
@@ -60,6 +59,7 @@ public class SoundManager : MonoBehaviour {
         sounds.Add("FurtherMenu3", Resources.Load<AudioClip>(PathToSounds + "phaseJump3"));
         sounds.Add("BackMenu1", Resources.Load<AudioClip>(PathToSounds + "phaserDown2"));
         sounds.Add("BackMenu2", Resources.Load<AudioClip>(PathToSounds + "phaserDown3"));
+		sounds.Add("MusicInGame", Resources.Load<AudioClip>(PathToSounds + "MusicInGame"));
 		sounds.Add("CollectCoin", Resources.Load<AudioClip>(PathToSounds + "collect_coin"));
 
         foreach (KeyValuePair<string, AudioClip> sound in sounds)

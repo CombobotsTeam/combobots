@@ -5,27 +5,27 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour {
 
     [HideInInspector]
-    public List<GameObject> Waves = new List<GameObject>(); // GameObject must be an empty GameObject with BasicEnemies as children
+    public List<GameObject> 	Waves = new List<GameObject>(); // GameObject must be an empty GameObject with BasicEnemies as children
 	public bool 				RandomWave;
 	public int 					EnemyMax;					// Maximum number of enemies display
 
-    public int nbrOfSpawn = 5;
+    public int 					nbrOfSpawn = 5;
 
-    private ConfigurationGame config;
-    private CombinationGenerator combinationGenerator = new CombinationGenerator();
+    private ConfigurationGame 		config;
+    private CombinationGenerator 	combinationGenerator = new CombinationGenerator();
 
 
-    List<List<ConfigurationEnemy>> WaveLeft = new List<List<ConfigurationEnemy>>();
-    List<string> TransitionLeft = new List<string>();
-    List<float> TimeTransitionLeft = new List<float>();
-    List<ConfigurationEnemy>			EnemiesForCurrentWave;
+    List<List<ConfigurationEnemy>>	WaveLeft = new List<List<ConfigurationEnemy>>();
+    List<string> 					TransitionLeft = new List<string>();
+    List<float> 					TimeTransitionLeft = new List<float>();
+    List<ConfigurationEnemy>		EnemiesForCurrentWave;
 
-	float 						TimeLeft = 0;					// Min time between each enemy summon
-	public float						NbrEnemiesOnScreen = 0;		// Actual number of enemies 
+	float 							TimeLeft = 0;				// Min time between each enemy summon
+	public float					NbrEnemiesOnScreen = 0;		// Actual number of enemies 
 
-	List<Vector3>				SpawnerPositionList;
+	List<Vector3>					SpawnerPositionList;
 
-    public WaveChange wc = new WaveChange();
+	public WaveChange wc;
 
     bool canSummon = true;
 
@@ -71,7 +71,7 @@ public class WaveManager : MonoBehaviour {
 
             // SET EnemiesForCurrentWave
             EnemiesForCurrentWave = WaveLeft [0];
-            wc.changeWave(1, TransitionLeft[0]);
+			wc.changeWave(TimeTransitionLeft[0], TransitionLeft[0]);
             TransitionLeft.RemoveAt(0);
             TimeLeft = TimeTransitionLeft[0];
             TimeTransitionLeft.RemoveAt(0);
