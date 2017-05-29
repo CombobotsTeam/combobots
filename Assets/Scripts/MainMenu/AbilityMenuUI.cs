@@ -31,6 +31,11 @@ public class AbilityMenuUI : MonoBehaviour
 
     public GameObject[] f_LvlText;
 
+    public Text gold;
+
+    public Color SelectedColor;
+    public Color NormalColor;
+
     public int[] UpgradeLevel = new int[3] {250, 750, 1000};
 
     #endregion // Variables
@@ -55,6 +60,9 @@ public class AbilityMenuUI : MonoBehaviour
     void UpdateButtonStatus(int index)
     {
         GameData d = PersistantData.instance.data;
+
+        gold.text = d.Gold.ToString();
+
         if (d.CurrentPowerUp[index] >= 2) {
             Text t = f_Upgradebutton[index].transform.FindChild("Text").gameObject.GetComponent<Text>();
             t.text = "MAX";
@@ -66,8 +74,7 @@ public class AbilityMenuUI : MonoBehaviour
                 f_LvlText[index].GetComponent<Text>().text = "Lvl." + d.CurrentPowerUp[index].ToString();
             else
             {
-                f_LvlText[index].GetComponent<Text>().text = "Lvl. 0";
-                
+                f_LvlText[index].GetComponent<Text>().text = "Lvl. 0"; 
             }
         }
 
@@ -80,18 +87,21 @@ public class AbilityMenuUI : MonoBehaviour
         {
             f_UseButton[index].GetComponent<Button>().interactable = false;
             Text t = f_UseButton[index].transform.FindChild("Text").gameObject.GetComponent<Text>();
+            f_UseButton[index].GetComponent<Image>().color = SelectedColor;
             t.text = "Selected";
         }
         else if (d.CurrentPowerUp[index] == 0)
         {
             f_UseButton[index].GetComponent<Button>().interactable = false;
             Text e = f_UseButton[index].transform.FindChild("Text").gameObject.GetComponent<Text>();
+            f_UseButton[index].GetComponent<Image>().color = NormalColor;
             e.text = "Unavailable";
         }
         else
         {
             f_UseButton[index].GetComponent<Button>().interactable = true;
             Text t = f_UseButton[index].transform.FindChild("Text").gameObject.GetComponent<Text>();
+            f_UseButton[index].GetComponent<Image>().color = NormalColor;
             t.text = "Use";
         }
 
