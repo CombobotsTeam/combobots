@@ -21,7 +21,9 @@ public class PersistantData : MonoBehaviour {
         }
         else if (instance != null)
             Destroy(this);
+        DestroySave();
         Load();
+        data.Gold = 500;
     }
 
     public void Save()
@@ -64,13 +66,15 @@ public class GameData
     public int Gold = 0;
     public int[] CurrentPowerUp = new int[6] {0, 0, 0, 0, 0, 0 };
     public int Story = 0;
+    public PowerUp PowerUpUsing = PowerUp.NONE;
 
     public enum PowerUp {
         PAWN = 0,
         BISHOP,
         KNIGHT,
         ROOK,
+        KING,
         QUEEN,
-        KING
+        NONE
     }
 }
