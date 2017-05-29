@@ -9,6 +9,7 @@ public class ComboManager : MonoBehaviour
     GameManager gm;
     public bool BossMode = false;
     public BasicEnnemy lockEnemy = null;
+    public int ChargeByCombo = 20;
 
     private SoundManager soundManager;
     protected enum Result
@@ -44,7 +45,7 @@ public class ComboManager : MonoBehaviour
 		gm.AddComboPoint(1, enemy.transform.position);
         gm.Combination.Reset();
         enemy.FeedBackCombination(gm.Combination, true);
-        gm.powerUp.ChargePowerUp(20);
+        gm.powerUp.ChargePowerUp(ChargeByCombo);
     }
 
     protected void incompleteCombination(BasicEnnemy enemy)
