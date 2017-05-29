@@ -76,16 +76,22 @@ public class ComboManager : MonoBehaviour
         return ret;
     }
 
+    public BasicEnnemy getNearestEnnemy()
+    {
+        BasicEnnemy Ennemy = gm.EnemiesOnScreen[0].GetComponent<BasicEnnemy>();
+        foreach (GameObject e in gm.EnemiesOnScreen)
+        {
+            if (Ennemy.transform.position.y > e.transform.position.y)
+                Ennemy = e.GetComponent<BasicEnnemy>();
+        }
+        return Ennemy;
+    }
+
     protected void checkComboNormal()
     {
         if (lockEnemy == null)
         {
-            lockEnemy = gm.EnemiesOnScreen[0].GetComponent<BasicEnnemy>();
-            foreach (GameObject enemy in gm.EnemiesOnScreen)
-            {
-                if (lockEnemy.transform.position.y > enemy.transform.position.y)
-                    lockEnemy = enemy.GetComponent<BasicEnnemy>();
-            }
+            lockEnemy = getNearestEnnemy();
         }
         if (checkCombination(lockEnemy) == Result.Failed)
         {

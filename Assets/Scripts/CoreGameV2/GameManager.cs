@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
 	private TextMeshPro FloatingPointsText;
 
     private Dictionary<int, GameObject> heartList;
-    bool LateInit = true;
+    protected bool LateInit = true;
 
     // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
     public List<GameObject> EnemiesOnScreen = new List<GameObject>();
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     public WaveManager WaveManager;
     public ComboManager cm;
 
-    private SoundManager soundManager;
+    protected SoundManager soundManager;
 
     public Text EndMessage;
 
@@ -71,7 +71,11 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
+        init();
+    }
 
+    protected virtual void init()
+    {
         Combination = GetComponent<CombinationHandler>();
         WaveManager = GetComponent<WaveManager>();
         powerUp = GetComponent<IPowerUp>();
@@ -81,11 +85,25 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         soundManager = SoundManager.instance;
-        soundManager.PlayerMusic("MusicInGame");
         EndMessage.enabled = false;
     }
 
-    void Update()
+    protected void checkDeath()
+    {
+        int i = 0;
+        while (i < EnemiesOnScreen.Count)
+        {
+            if (EnemiesOnScreen[i].GetComponent<BasicEnnemy>().Died == true)
+            {
+                Destroy(EnemiesOnScreen[i], EnemiesOnScreen[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+                EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
+            }
+            else
+                i++;
+        }
+    }
+
+    protected virtual void Update()
     {
         if (isPaused)
             return;
@@ -96,20 +114,10 @@ public class GameManager : MonoBehaviour
 			SetCoin();
 			SetScore();
 			SetCombo();
+			soundManager.PlayerMusic("MusicInGame");
             LateInit = false;
         }
-
-        int i = 0;
-        while (i < EnemiesOnScreen.Count)
-        {
-            if (EnemiesOnScreen[i].GetComponent<BasicEnnemy>().Died == true)
-            {
-                Destroy(EnemiesOnScreen[i], 0.8f);
-                EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
-            }
-            else
-                i++;
-        }
+        checkDeath();
         if (launch)
         {
             WaveManager.launch();
@@ -120,14 +128,14 @@ public class GameManager : MonoBehaviour
             powerUp.activate();
     }
 
-	void SetCombo()
+	protected void SetCombo()
 	{
 		ComboGood = Resources.Load("Prefabs/Combo/ComboGood") as GameObject;
 		ComboSuper = Resources.Load("Prefabs/Combo/ComboSuper") as GameObject;
 		ComboAmazing = Resources.Load("Prefabs/Combo/ComboAmazing") as GameObject;
 	}
 
-	void SetScore()
+    protected void SetScore()
 	{
 		FloatingPoints = Resources.Load("Prefabs/FloatingPoints") as GameObject;
 		FloatingPointsText = FloatingPoints.GetComponent<TextMeshPro> ();
@@ -137,7 +145,7 @@ public class GameManager : MonoBehaviour
 		AddScore (0, new Vector3());
 	}
 
-	void SetCoin()
+    protected void SetCoin()
 	{
 		Coin = Resources.Load("Prefabs/Coins") as GameObject;
 		FloatingCoins = Resources.Load("Prefabs/FloatingCoins") as GameObject;
@@ -176,7 +184,7 @@ public class GameManager : MonoBehaviour
 		CoinText.text = Gold.ToString();
 	}
 
-	void SetLife()
+    protected void SetLife()
 	{
 		RectTransform toprect = GameObject.Find("TopBackground").GetComponent<RectTransform>();
 
@@ -320,7 +328,7 @@ public class GameManager : MonoBehaviour
             powerUp.activate();
     }
 
-    public void NotifyDie(GameObject enemy)
+	public void NotifyDie(GameObject enemy, bool killedByPlayer)
     {
         BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
 		/*if (e.NbrGold > 0) {
@@ -333,18 +341,22 @@ public class GameManager : MonoBehaviour
             cm.lockEnemy = null;
 
 		// GOLD
-		Vector3 randomPos = new Vector3();
-		GameObject c;
-		float delay;
-		for (int i = 1; i <= (e.NbrGold / 5); i++)
+		if (killedByPlayer)
 		{
-			randomPos = Random.insideUnitCircle * 7;
-			c = Instantiate(FloatingCoins, enemy.transform.position + randomPos, Quaternion.identity);
-			delay = (float)i / 10.0f;
-			c.GetComponent<CoinAnimation> ().Play(delay);
+			Vector3 randomPos = new Vector3 ();
+			GameObject c;
+			float delay;
+
+			for (int i = 1; i <= (e.NbrGold / 5); i++) {
+				randomPos = Random.insideUnitCircle * 7;
+				c = Instantiate (FloatingCoins, enemy.transform.position + randomPos, Quaternion.identity);
+				delay = (float)i / 10.0f;
+				c.GetComponent<CoinAnimation> ().Play (delay);
+			}
 		}
 
-        WaveManager.EnemyDie(enemy);
+        if (WaveManager)
+            WaveManager.EnemyDie(enemy);
     }
 
     public void LoadVictory()

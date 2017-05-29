@@ -70,8 +70,8 @@ public class BasicEnnemy : MonoBehaviour {
 
         Gm.RemoveLife(1);
 
-        GetComponent<Animator>().SetTrigger("Attack");
-        Gm.NotifyDie(gameObject);
+		GetComponent<Animator> ().SetTrigger("Attack");
+		Gm.NotifyDie(gameObject, false);
     }
 
     public virtual void Die()
@@ -82,8 +82,9 @@ public class BasicEnnemy : MonoBehaviour {
         }
         EnemyLifeObj.SetActive(false);
         IsMoving = false;
-        GetComponent<Animator>().SetTrigger("Die");
-        Gm.NotifyDie(gameObject);
+
+		GetComponent<Animator> ().SetTrigger("Die");
+		Gm.NotifyDie(gameObject, true);
     }
     
 	public virtual void DecreaseLifePoint(int lp)
