@@ -161,9 +161,9 @@ public class GameManager : MonoBehaviour
 
         ParticleSystemAbility.SetActive(isActive);
         if (isActive)
-            AbilityButton.SetTrigger("Ready");
+            AbilityButton.SetBool("Ready", true);
         else
-            AbilityButton.ResetTrigger("Ready");
+            AbilityButton.SetBool("Ready", false);
         isPowerActivated = false;
 ;    }
 

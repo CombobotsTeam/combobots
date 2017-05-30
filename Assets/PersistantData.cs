@@ -21,7 +21,9 @@ public class PersistantData : MonoBehaviour {
         }
         else if (instance != null)
             Destroy(this);
+        DestroySave();
         Load();
+        data.Gold = 5650;
     }
 
     public void Save()

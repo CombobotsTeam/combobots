@@ -68,10 +68,12 @@ public class JumpAndFallAnimation : MonoBehaviour {
 			DestroyImmediate(gameObject);
 
 		// Fade out animation
-		time += Time.deltaTime / duration;
-		text.alpha = Mathf.Lerp (1, 0, time);
+		time += Time.deltaTime;
 
-		if (time >= 1) {
+        text.alpha = Mathf.Lerp(1, 0, time / duration);
+
+
+        if (time / duration >= 1) {
 			DestroyImmediate(gameObject);
 		}
 	}
