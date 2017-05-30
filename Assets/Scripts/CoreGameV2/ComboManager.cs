@@ -12,6 +12,7 @@ public class ComboManager : MonoBehaviour
     public bool immunity = false;
     int error = 1;
     List<CombinationHandler.Button> oldCombi = null;
+    public int ChargeByCombo = 20;
 
     private SoundManager soundManager;
     protected enum Result
@@ -49,7 +50,7 @@ public class ComboManager : MonoBehaviour
 		gm.AddComboPoint(1, enemy.transform.position);
         gm.Combination.Reset();
         enemy.FeedBackCombination(gm.Combination, true);
-        gm.powerUp.ChargePowerUp(20);
+        gm.powerUp.ChargePowerUp(ChargeByCombo);
     }
 
     protected void incompleteCombination(BasicEnnemy enemy)

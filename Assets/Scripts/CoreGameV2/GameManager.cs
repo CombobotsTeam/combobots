@@ -36,6 +36,10 @@ public class GameManager : MonoBehaviour
 	private Text ScoreText;
 	private TextMeshPro FloatingPointsText;
 
+    private Animator AbilityButton;
+    private GameObject ParticleSystemAbility;
+    private bool isPowerActivated = false;
+
     private Dictionary<int, GameObject> heartList;
     protected bool LateInit = true;
 
@@ -88,6 +92,10 @@ public class GameManager : MonoBehaviour
     {
         soundManager = SoundManager.instance;
         EndMessage.enabled = false;
+        GameObject tmp = GameObject.Find("AbilityButton");
+        ParticleSystemAbility = tmp.transform.FindChild("ButtonEntity").FindChild("ReadyParticle").gameObject;
+        AbilityButton = tmp.gameObject.GetComponentInChildren<Animator>();
+        ParticleSystemAbility.gameObject.SetActive(false);
     }
 
     protected void checkDeath()
@@ -120,14 +128,15 @@ public class GameManager : MonoBehaviour
             LateInit = false;
         }
         checkDeath();
+        if (powerUp.Charge >= powerUp.ChargeMax)
+            SetAbilityActive(true);
+
         if (launch)
         {
             WaveManager.launch();
             launch = false;
         }
         cm.checkCombo();
-        if (Input.GetKeyDown("space"))
-            powerUp.activate();
     }
 
 	protected void SetCombo()
@@ -146,6 +155,19 @@ public class GameManager : MonoBehaviour
 
 		AddScore (0, new Vector3());
 	}
+
+    protected void SetAbilityActive(bool isActive)
+    {
+        if (isPowerActivated && isActive)
+            return;
+
+        ParticleSystemAbility.SetActive(isActive);
+        if (isActive)
+            AbilityButton.SetBool("Ready", true);
+        else
+            AbilityButton.SetBool("Ready", false);
+        isPowerActivated = false;
+;    }
 
     protected void SetCoin()
 	{
@@ -339,7 +361,10 @@ public class GameManager : MonoBehaviour
             Combination.AddButtonToCombination(button);
         }
         else
+        {
             powerUp.activate();
+            SetAbilityActive(false);
+        }
     }
 
 	public void NotifyDie(GameObject enemy, bool killedByPlayer)
