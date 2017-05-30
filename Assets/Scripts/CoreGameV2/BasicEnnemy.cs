@@ -87,15 +87,22 @@ public class BasicEnnemy : MonoBehaviour {
 		Gm.NotifyDie(gameObject, true);
     }
     
-	public virtual void DecreaseLifePoint(int lp)
+	public virtual int DecreaseLifePoint(int lp)
 	{
-		Life -= lp;
-		EnemyLifeObj.GetComponent<TextMesh> ().text = Life.ToString();
-        DoParticle();
-        if (Life <= 0) {
-			Die ();
-		}
-	}
+        int ret = 0;
+        if (lp > 0)
+        {
+            ret = Life > lp ? lp : Life;
+            Life = Life > lp ? Life - lp : 0;
+            EnemyLifeObj.GetComponent<TextMesh>().text = Life.ToString();
+            DoParticle();
+            if (Life <= 0)
+            {
+                Die();
+            }
+        }
+        return ret;
+    }
 
     protected virtual void Move()
     {

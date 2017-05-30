@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
 	private int ComboMult = 1;//score multiplication
     public int Gold = 0;
     bool launch = true;
+    public bool immunity = false;
 
     private GameObject HeartEmpty;
     private GameObject HeartFull;
@@ -290,24 +292,36 @@ public class GameManager : MonoBehaviour
     //player's life up(example life 2 => 3)
     public void AddLife(int additionalLife)
     {
-        Life += additionalLife;
+
+        if (Life < heartList.Count)
+        {
+            Life = Math.Min(heartList.Count, Life + additionalLife);
+            GameObject oldHeart = heartList[Life];
+            GameObject heart = Instantiate(HeartFull, oldHeart.transform.position, Quaternion.identity);
+            heart.transform.localScale = oldHeart.transform.localScale;
+            heartList[Life] = heart;
+            Destroy(oldHeart);
+        }
     }
 
 	//player's Life down(example life 3 => 2)
 	public void RemoveLife(int lifeToRemove)
 	{
-		GameObject oldHeart = heartList[Life];
-		GameObject heart = Instantiate(HeartEmpty, oldHeart.transform.position, Quaternion.identity);
-		heart.transform.localScale = oldHeart.transform.localScale;
-		heartList[Life] = heart;
-		Destroy(oldHeart);
+        if (!immunity)
+        {
+            GameObject oldHeart = heartList[Life];
+            GameObject heart = Instantiate(HeartEmpty, oldHeart.transform.position, Quaternion.identity);
+            heart.transform.localScale = oldHeart.transform.localScale;
+            heartList[Life] = heart;
+            Destroy(oldHeart);
 
-		Life -= lifeToRemove;
+            Life -= lifeToRemove;
 
-		if (Life < 0)
-			Life = 0;
-		if (Life == 0) LoadDefeat();
-	}
+            if (Life < 0)
+                Life = 0;
+            if (Life == 0) LoadDefeat();
+        }
+    }
 
     // Will add the amount of Gold
     public void AddGold(int amount)
@@ -348,7 +362,7 @@ public class GameManager : MonoBehaviour
 			float delay;
 
 			for (int i = 1; i <= (e.NbrGold / 5); i++) {
-				randomPos = Random.insideUnitCircle * 7;
+				randomPos = UnityEngine.Random.insideUnitCircle * 7;
 				c = Instantiate (FloatingCoins, enemy.transform.position + randomPos, Quaternion.identity);
 				delay = (float)i / 10.0f;
 				c.GetComponent<CoinAnimation> ().Play (delay);

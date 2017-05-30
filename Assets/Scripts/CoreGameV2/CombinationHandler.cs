@@ -47,7 +47,12 @@ public class CombinationHandler : MonoBehaviour {
     public void Reset()
     {
         CurrentCombination.Clear();
-    }   
+    }
+
+    public void PopButton()
+    {
+        CurrentCombination.Remove(CurrentCombination[CurrentCombination.Count - 1]);
+    }
 
     public List<Button> GetCurrentCombination()
     {

@@ -9,6 +9,9 @@ public class ComboManager : MonoBehaviour
     GameManager gm;
     public bool BossMode = false;
     public BasicEnnemy lockEnemy = null;
+    public bool immunity = false;
+    int error = 1;
+    List<CombinationHandler.Button> oldCombi = null;
 
     private SoundManager soundManager;
     protected enum Result
@@ -26,12 +29,14 @@ public class ComboManager : MonoBehaviour
 
     protected void failCombination(BasicEnnemy enemy)
     {
-        enemy.FeedBackCombination(gm.Combination, true);
+        if (!immunity || error == 0)
+            enemy.FeedBackCombination(gm.Combination, true);
     }
 
     protected void successCombination(BasicEnnemy enemy)
     {
         enemy.DecreaseLifePoint(1);
+        error = 1;
         soundManager.Play("RightCombo", false);
 
 		// Add score
@@ -87,6 +92,17 @@ public class ComboManager : MonoBehaviour
         return Ennemy;
     }
 
+    public List<BasicEnnemy> getNearestEnnemy(int nb)
+    {
+        List<BasicEnnemy> l = new List<BasicEnnemy>();
+        foreach (GameObject e in gm.EnemiesOnScreen)
+        {
+            l.Add(e.GetComponent<BasicEnnemy>());
+        }
+        l = l.OrderBy(BasicEnnemy => BasicEnnemy.Position.y).ToList();
+        return l.GetRange(0, nb > l.Count ? l.Count : nb);
+    }
+
     protected void checkComboNormal()
     {
         if (lockEnemy == null)
@@ -96,8 +112,17 @@ public class ComboManager : MonoBehaviour
         if (checkCombination(lockEnemy) == Result.Failed)
         {
             soundManager.Play("WrongCombo", false);
-            gm.Combination.Reset();
-            gm.ResetComboPoint();
+            if (immunity && error != 0)
+            {
+                error -= 1;
+                gm.Combination.PopButton();
+            }
+            else
+            {
+                error = 1;
+                gm.Combination.Reset();
+                gm.ResetComboPoint();
+            }
         }
     }
 
@@ -132,8 +157,17 @@ public class ComboManager : MonoBehaviour
         if (!isUsed)
         {
             soundManager.Play("WrongCombo", false);
-            gm.Combination.Reset();
-            gm.ResetComboPoint();
+            if (immunity && error != 0)
+            {
+                error -= 1;
+                gm.Combination.PopButton();
+            }
+            else
+            {
+                error = 1;
+                gm.Combination.Reset();
+                gm.ResetComboPoint();
+            }
         }
     }
 
@@ -141,6 +175,9 @@ public class ComboManager : MonoBehaviour
     {
         if (gm.EnemiesOnScreen.Count > 0 && gm.Combination.GetCurrentCombination().Count > 0)
         {
+            if (oldCombi != null && oldCombi.SequenceEqual(gm.Combination.GetCurrentCombination()))
+                return;
+            oldCombi = new List<CombinationHandler.Button>(gm.Combination.GetCurrentCombination());
             if (BossMode)
             {
                 checkComboBoss();

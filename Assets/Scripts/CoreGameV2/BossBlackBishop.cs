@@ -54,18 +54,19 @@ class BossBlackBishop : BasicEnnemy
         }
     }
 
-    public override void DecreaseLifePoint(int lp)
+    public override int DecreaseLifePoint(int lp)
     {
         if (IsInvisible)
-            return;
+            return 0;
         combinationGenerator.FixedSize = CombinationSize;
         Combination = combinationGenerator.GetListButton();
         ResetCombination();
-        base.DecreaseLifePoint(lp);
+        int ret = base.DecreaseLifePoint(lp);
         if (Life == LifeMax / 3)
             StartInvisible(1, 3);
         else if (Life == LifeMax / 3 * 2)
             StartInvisible(2, 1);
+        return ret;
     }
 
     protected void StartInvisible(int Size, int RLife)

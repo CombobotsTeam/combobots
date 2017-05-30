@@ -37,7 +37,7 @@ class KnightPowerUp : IPowerUp
 
     override public void activate()
     {
-        if (Charge < ChargeMax)
+       if (Charge < ChargeMax)
         {
             Debug.Log("Not full");
             return;
@@ -52,7 +52,7 @@ class KnightPowerUp : IPowerUp
             e.slow *= Level >= 2 ? 0.3f : 0.6f;
         }
         if (Level >= 4)
-            desactivateReverse(2);
-        desactivate(5);
+            StartCoroutine(desactivateReverse(2));
+        StartCoroutine(desactivate(5));
     }
 }
