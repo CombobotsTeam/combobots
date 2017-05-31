@@ -20,30 +20,25 @@ public class VSPlayerLife : MonoBehaviour {
 
     void GetPlayersLife()//Get player's life function 
     {
-        if (!delay)
+        if (this.tag == "Player1")
         {
-            if (this.tag == "Player1")
-                PrintLife = GM.GetLifePlayer1().ToString();//get player's life from gamemaneger And set
-            if (this.tag == "Player2")
+            PrintLife = GM.GetLifePlayer1().ToString();//get player's life from gamemaneger And set
+            if (GM.GetLifePlayer1() != prevLife)
             {
-                PrintLife = GM.GetLifePlayer2().ToString();//get player's life from gamemaneger And set
-                if (GM.GetLifePlayer2() != prevLife)
-                {
-                    DoParticle();
-                    prevLife = GM.GetLifePlayer2();
-                }
+                DoParticle();
+                prevLife = GM.GetLifePlayer1();
             }
-            GetComponent<Text>().text = PrintLife;//change print text 
         }
-        else
+        if (this.tag == "Player2")
         {
-            if (this.tag == "Player1")
-                PrintLife = GM.GetLifePlayer1().ToString();//get player's life from gamemaneger And set
-            if (this.tag == "Player2")
-                PrintLife = GM.GetLifePlayer2().ToString();//get player's life from gamemaneger And set
-            GetComponent<Text>().text = PrintLife;//change print text 
+            PrintLife = GM.GetLifePlayer2().ToString();//get player's life from gamemaneger And set
+            if (GM.GetLifePlayer2() != prevLife)
+            {
+                DoParticle();
+                prevLife = GM.GetLifePlayer2();
+            }
         }
-
+        GetComponent<Text>().text = PrintLife;//change print text
     }
 
     void Update()
