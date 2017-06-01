@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class VSPlayerLife : MonoBehaviour {
 
     public bool delay;
-    public GameObject ParticleSystem;
+    public ParticleSystem ParticleSystem;
 
     private VSGameManager GM; //GameManerger script 
     private string PrintLife = null;//print life text in gamescene string Later it change image ofr sprite
@@ -14,7 +14,6 @@ public class VSPlayerLife : MonoBehaviour {
     void Start()
     {
         GM = VSGameManager.instance;
-        ParticleSystem = Resources.Load<GameObject>("Prefabs/ButtonsEnemy/ParticleSystem");
         prevLife = GM.Life;
     }
 
@@ -48,9 +47,6 @@ public class VSPlayerLife : MonoBehaviour {
 
     public void DoParticle()
     {
-        GameObject particle = Instantiate(ParticleSystem, transform.position, Quaternion.identity, transform);
-        particle.transform.parent = transform;
-        Debug.Log("pos = " + particle.transform.position.ToString());
-        Destroy(particle, 1.0f);
+        ParticleSystem.Play();
     }
 }
