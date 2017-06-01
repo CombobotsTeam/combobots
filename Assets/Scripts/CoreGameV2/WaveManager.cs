@@ -33,7 +33,22 @@ public class WaveManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		config = ConfigurationGame.instance;
+		//Instanciate config gameobject
+
+		#if UNITY_EDITOR
+			GameObject configGO = Resources.Load ("Prefabs/Waves/ConfigurationWaveForTesting") as GameObject;
+
+			config = Instantiate (configGO, new Vector3 (), Quaternion.identity).GetComponent<ConfigurationGame>();
+			config.gameObject.name = "ConfigurationWaveForTesting";
+		#else
+			GameObject scGO = GameObject.Find("SceneInfos");
+			ScenesInfos sc = scGO.GetComponent<ScenesInfos> ();
+
+			GameObject configGO = Resources.Load ("Prefabs/Waves/ConfigurationWave" + sc.actualChapter + "-" + sc.actualLevel) as GameObject;
+
+			config = Instantiate (configGO, new Vector3 (), Quaternion.identity).GetComponent<ConfigurationGame>();//ConfigurationGame.instance;
+			config.gameObject.name = "ConfigurationWave" + sc.actualChapter + "-" + sc.actualLevel;
+		#endif
 
 		// Generate random waves
 		if (RandomWave)
