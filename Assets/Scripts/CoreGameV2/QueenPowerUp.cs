@@ -9,7 +9,7 @@ class QueenPowerUp : IPowerUp
     protected void Start()
     {
         gm = GameManager.instance;
-        ChargeMax = Level >= 3 ? 50 : Level >= 2 ? 75 : 100;
+        ChargeMax = Level >= 3 ? 50 : Level >= 1 ? 75 : 100;
     }
 
     override public void activate()

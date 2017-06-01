@@ -49,7 +49,8 @@ public class BasicEnnemy : MonoBehaviour {
 
     protected void Start()
     {
-        Gm = GameManager.instance;  
+        Gm = GameManager.instance;
+        Init();
     }
 
     void Start (List<CombinationHandler.Button> combination, int nbrGold, Vector3 position) {
@@ -57,6 +58,11 @@ public class BasicEnnemy : MonoBehaviour {
         NbrGold = nbrGold;
         Position = position;
         Gm = GameManager.instance;
+    }
+
+    protected virtual void Init()
+    {
+
     }
 
     protected virtual void Attack()

@@ -10,13 +10,6 @@ public class Cooldown : MonoBehaviour
     public bool enabledPower = true;
     private float currentStatus = 0f;
     private float status = 0f;
-    private Vector3 originalPosition;
-
-
-    private void Awake()
-    {
-        originalPosition = transform.position;
-    }
 
     void Start()
     {
@@ -38,7 +31,7 @@ public class Cooldown : MonoBehaviour
     {
         /*if (transform.position != originalPosition)
             transform.position = originalPosition;*/
-        if (enabledPower)
+        if (enabledPower && gameManager.powerUp)
         {
             status = (float)gameManager.powerUp.Charge / (float)gameManager.powerUp.ChargeMax;
 

@@ -36,7 +36,7 @@ public class AbilityMenuUI : MonoBehaviour
     public Color SelectedColor;
     public Color NormalColor;
 
-    public int[] UpgradeLevel = new int[3] {250, 750, 1000};
+    public int[] UpgradeLevel = new int[4] {250, 750, 1000, 1500};
 
     #endregion // Variables
 
@@ -63,7 +63,7 @@ public class AbilityMenuUI : MonoBehaviour
 
         gold.text = d.Gold.ToString();
 
-        if (d.CurrentPowerUp[index] >= 2) {
+        if (d.CurrentPowerUp[index] >= 4) {
             Text t = f_Upgradebutton[index].transform.FindChild("Text").gameObject.GetComponent<Text>();
             t.text = "MAX";
         } else
@@ -78,7 +78,7 @@ public class AbilityMenuUI : MonoBehaviour
             }
         }
 
-        if (d.CurrentPowerUp[index] >= 2 || UpgradeLevel[d.CurrentPowerUp[index]] > d.Gold)
+        if (d.CurrentPowerUp[index] >= 4 || UpgradeLevel[d.CurrentPowerUp[index]] > d.Gold)
         {
             f_Upgradebutton[index].GetComponent<Button>().interactable = false;
         }
@@ -215,7 +215,7 @@ public class AbilityMenuUI : MonoBehaviour
     {
         GameData d = PersistantData.instance.data;
         // Max Level
-        if (d.CurrentPowerUp[i] == 2)
+        if (d.CurrentPowerUp[i] == 4)
         {
             Debug.Log("Max level for " + i);
             return;

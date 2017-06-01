@@ -8,7 +8,6 @@ using System.IO;
 public class PersistantData : MonoBehaviour {
 
     public static PersistantData instance;
-
     public GameData data = new GameData();
 
     public void Awake()
@@ -17,13 +16,14 @@ public class PersistantData : MonoBehaviour {
         {
             instance = this;
             DontDestroyOnLoad(this);
-            data.CurrentPowerUp = new int[6] { 0, 0, 0, 0, 0, 0 };
         }
         else if (instance != null)
             Destroy(this);
-        DestroySave();
-        Load();
-        data.Gold = 5650;
+
+        if (!Application.isEditor)
+        {
+            Load();
+        }
     }
 
     public void Save()

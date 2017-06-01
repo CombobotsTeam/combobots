@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public int Gold = 0;
     bool launch = true;
     public bool immunity = false;
+    private bool AbilityEnabled = true;
 
     private GameObject HeartEmpty;
     private GameObject HeartFull;
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour
 	private GameObject ComboSuper;
 	private GameObject ComboAmazing;
 	private GameObject FloatingPoints;
-	private GameObject FloatingCoins;
+	protected GameObject FloatingCoins;
 	private Text CoinText;
 	private Text ScoreText;
 	private TextMeshPro FloatingPointsText;
@@ -77,10 +78,10 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
-        init();
+        Init();
     }
 
-    protected virtual void init()
+    protected virtual void Init()
     {
         Combination = GetComponent<CombinationHandler>();
         WaveManager = GetComponent<WaveManager>();
@@ -128,7 +129,7 @@ public class GameManager : MonoBehaviour
             LateInit = false;
         }
         checkDeath();
-        if (powerUp.Charge >= powerUp.ChargeMax)
+        if (powerUp && AbilityEnabled && powerUp.Charge >= powerUp.ChargeMax)
             SetAbilityActive(true);
 
         if (launch)
@@ -156,6 +157,7 @@ public class GameManager : MonoBehaviour
 		AddScore (0, new Vector3());
 	}
 
+    // Make the ability ready to be used or not (Visual effect)
     protected void SetAbilityActive(bool isActive)
     {
         if (isPowerActivated && isActive)
@@ -360,14 +362,14 @@ public class GameManager : MonoBehaviour
         {
             Combination.AddButtonToCombination(button);
         }
-        else
+        else if (AbilityEnabled && powerUp)
         {
             powerUp.activate();
             SetAbilityActive(false);
         }
     }
 
-	public void NotifyDie(GameObject enemy, bool killedByPlayer)
+	public virtual void NotifyDie(GameObject enemy, bool killedByPlayer)
     {
         BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
 		/*if (e.NbrGold > 0) {
@@ -412,6 +414,12 @@ public class GameManager : MonoBehaviour
         EndMessage.text = "Defeat...";
         EndMessage.enabled = true;
         StartCoroutine("GoMenu");
+    }
+
+    // Activate or desactivate the ability
+    public void SetEnableAbility(bool state)
+    {
+        AbilityEnabled = state;
     }
 
     IEnumerator GoMenu()
