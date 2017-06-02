@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class VSGameManager : MonoBehaviour {
 
@@ -11,16 +12,19 @@ public class VSGameManager : MonoBehaviour {
     public int Life = 0;//life of player
     public Canvas gameCanvas;
     public Canvas winCanvas;
-    public Canvas startCanvas;
     public Canvas delayCanvas;
+    public ParticleSystem WrongCombo1;
+    public ParticleSystem WrongCombo2;
+    public List<GameObject> Backgrounds;
+    public List<Sprite> Background_sprites;
 
     private SoundManager soundManager;
     private int player_1_life;
     private int player_2_life;
-    private string test;
     private int winner = 0;
-    private bool start = false;
     private float startTime;
+    private int round;
+    private Sprite background;
     // Contain the current combination of button pressed
     VSCombinationHandler Combinations;
 
@@ -35,46 +39,33 @@ public class VSGameManager : MonoBehaviour {
 
     void Awake()
     {
+        round = 1;
+        background = Background_sprites[Random.Range(0, Background_sprites.Count)];
+        foreach(GameObject Background in Backgrounds)
+        {
+            Background.GetComponent<Image>().sprite = background;
+        }
         startTime = Time.time;
-        startCanvas.enabled = true;
         gameCanvas.enabled = false;
         winCanvas.enabled = false;
-        delayCanvas.enabled = false;
-        //Check if instance already exists
+        delayCanvas.enabled = true;
         if (instance == null)
-            //if not, set instance to this
             instance = this;
-        //If instance already exists and it's not this:
         else if (instance != this)
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
         Combinations = GetComponent<VSCombinationHandler>();
         combination = GetComponent<CombiManager>();
         player_1_life = Life;
         player_2_life = Life;
         combination.CreateCombination();
-        //WaveManager = GetComponent<WaveManager>();
     }
 
     void Update()
     {
-        if (!start)
+        if (Time.time - startTime > 3.5F)
         {
-            if (Time.time - startTime > 5F)
-            {
-                start = true;
-                startCanvas.enabled = false;
-                gameCanvas.enabled = true;
-            }
-            return;
-        }
-        else
-        {
-            if (Time.time - startTime > 3F)
-            {
-                delayCanvas.enabled = false;
-                gameCanvas.enabled = true;
-            }
+            delayCanvas.enabled = false;
+            gameCanvas.enabled = true;
         }
         if (Combinations.GetCurrentCombinationPlayer(1).Count > 0)
         {
@@ -82,6 +73,7 @@ public class VSGameManager : MonoBehaviour {
             PlayerHIt = Combinations.IsSameCombinationPlayer(combination.GetCombination(),1);
             if (!Combinations.CompareCombinationPlayer(combination.GetCombination(),1))
             {
+                DoParticle(WrongCombo1);
                 Combinations.ResetPlayer(1);
             }
             if (PlayerHIt)
@@ -97,6 +89,7 @@ public class VSGameManager : MonoBehaviour {
 
             if (!Combinations.CompareCombinationPlayer(combination.GetCombination(),2))
             {
+                DoParticle(WrongCombo2);
                 Combinations.ResetPlayer(2);
             }
             if (PlayerHIt)
@@ -122,6 +115,7 @@ public class VSGameManager : MonoBehaviour {
         Combinations.ResetPlayer(1);
         Combinations.ResetPlayer(2);
         Delay();
+        round++;
     }
 
     private void Delay()
@@ -183,17 +177,19 @@ public class VSGameManager : MonoBehaviour {
         return winner;
     }
 
-    public int GetStartTime()
+    public float GetStartTime()
     {
-        if (!start)
-            return (6 - (int)(Time.time - startTime))/2;
-        else
-            return (3 - (int)(Time.time - startTime));
+        return Time.time - startTime;
     }
 
     IEnumerator GoMenu()
     {
         yield return new WaitForSeconds(5f);
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void DoParticle(ParticleSystem particleSystem)
+    {
+        particleSystem.Play();
     }
 }
