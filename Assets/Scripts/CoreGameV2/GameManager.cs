@@ -101,12 +101,17 @@ public class GameManager : MonoBehaviour
 
     protected void checkDeath()
     {
+        float time = 0f;
         int i = 0;
         while (i < EnemiesOnScreen.Count)
         {
             if (EnemiesOnScreen[i].GetComponent<BasicEnnemy>().Died == true)
             {
-                Destroy(EnemiesOnScreen[i], EnemiesOnScreen[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+                time = EnemiesOnScreen[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length;
+                if (EnemiesOnScreen[i].GetComponent<Animator>().GetBool("Attack"))
+                    time += 1;
+                
+                Destroy(EnemiesOnScreen[i], time);
                 EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
             }
             else
