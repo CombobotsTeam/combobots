@@ -23,7 +23,7 @@ public class VSGameManager : MonoBehaviour {
     private int player_2_life;
     private int winner = 0;
     private float startTime;
-    private int round;
+    private int round = 1;
     private Sprite background;
     // Contain the current combination of button pressed
     VSCombinationHandler Combinations;
@@ -31,33 +31,36 @@ public class VSGameManager : MonoBehaviour {
     CombiManager combination;
     //WaveManager WaveManager;
 
-    private void Start()
+    void Start()
     {
         soundManager = SoundManager.instance;
         soundManager.PlayerMusic("MusicInGame");
+
+        gameCanvas.enabled = false;
+        winCanvas.enabled = false;
+        delayCanvas.enabled = true;
+
+        background = Background_sprites[Random.Range(0, Background_sprites.Count - 1)];
+        foreach (GameObject Background in Backgrounds)
+        {
+            Background.GetComponent<Image>().sprite = background;
+        }
+
+        combination.CreateCombination();
     }
 
     void Awake()
     {
-        round = 1;
-        background = Background_sprites[Random.Range(0, Background_sprites.Count)];
-        foreach(GameObject Background in Backgrounds)
-        {
-            Background.GetComponent<Image>().sprite = background;
-        }
-        startTime = Time.time;
-        gameCanvas.enabled = false;
-        winCanvas.enabled = false;
-        delayCanvas.enabled = true;
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
+
+        startTime = Time.time;
         Combinations = GetComponent<VSCombinationHandler>();
         combination = GetComponent<CombiManager>();
         player_1_life = Life;
         player_2_life = Life;
-        combination.CreateCombination();
     }
 
     void Update()
