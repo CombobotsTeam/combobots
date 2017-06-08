@@ -50,7 +50,7 @@ public class BasicEnnemy : MonoBehaviour {
     protected void Start()
     {
         Gm = GameManager.instance;
-        Init();
+        Init(Life,NbrGold,CombinationSize);
     }
 
     void Start (List<CombinationHandler.Button> combination, int nbrGold, Vector3 position) {
@@ -60,9 +60,11 @@ public class BasicEnnemy : MonoBehaviour {
         Gm = GameManager.instance;
     }
 
-    protected virtual void Init()
+    public virtual void Init(int nLife, int nGold, int nConbinationCount)
     {
-
+        this.Life = nLife;
+        this.NbrGold = nGold;
+        this.CombinationSize = nConbinationCount;
     }
 
     protected virtual void Attack()

@@ -8,7 +8,6 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-
     // Instance to turn GameManager into Singleton
     public static GameManager instance = null;
 
@@ -23,7 +22,7 @@ public class GameManager : MonoBehaviour
     public int Gold = 0;
     bool launch = true;
     public bool immunity = false;
-    private bool AbilityEnabled = true;
+    protected bool AbilityEnabled = true;
 
     private GameObject HeartEmpty;
     private GameObject HeartFull;
@@ -110,7 +109,7 @@ public class GameManager : MonoBehaviour
                 time = EnemiesOnScreen[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length;
                 if (EnemiesOnScreen[i].GetComponent<Animator>().GetBool("Attack"))
                     time += 1;
-                
+                Debug.Log("Time is " + time);
                 Destroy(EnemiesOnScreen[i], time);
                 EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
             }
@@ -121,6 +120,7 @@ public class GameManager : MonoBehaviour
 
     protected virtual void Update()
     {
+        checkDeath();
         if (isPaused)
             return;
 
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
 			soundManager.PlayerMusic("MusicInGame");
             LateInit = false;
         }
-        checkDeath();
+        
         if (powerUp && AbilityEnabled && powerUp.Charge >= powerUp.ChargeMax)
             SetAbilityActive(true);
 
