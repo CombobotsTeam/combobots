@@ -78,6 +78,7 @@ public class VSGameManager : MonoBehaviour {
             {
                 DoParticle(WrongCombo1);
                 Combinations.ResetPlayer(1);
+                soundManager.Play("WrongCombo", false);
             }
             if (PlayerHIt)
             {
@@ -94,6 +95,7 @@ public class VSGameManager : MonoBehaviour {
             {
                 DoParticle(WrongCombo2);
                 Combinations.ResetPlayer(2);
+                soundManager.Play("WrongCombo", false);
             }
             if (PlayerHIt)
             {

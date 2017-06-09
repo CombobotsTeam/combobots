@@ -21,28 +21,28 @@ public class ShowMainCombo : MonoBehaviour
         combiManager = gameManager.GetComponent<CombiManager>();
         VSHandler = gameManager.GetComponent<VSCombinationHandler>();
 
-        if (main)
-        {
-            GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / combiManager.Size, Screen.width / combiManager.Size);
-            Position.x = Screen.width / combiManager.Size * pos - Screen.width / 2;
-            Position.y = 0 - (Screen.width / combiManager.Size) / 2;
-        }
+        //if (main)
+        //{
+        //    GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / combiManager.Size, Screen.width / combiManager.Size);
+        //    Position.x = Screen.width / combiManager.Size * pos - Screen.width / 2;
+        //    Position.y = 0 - (Screen.width / combiManager.Size) / 2;
+        //}
 
-        if (player1)
-        {
-            GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / combiManager.Size / 2, Screen.width / combiManager.Size / 2);
-            Position.x = Screen.width / combiManager.Size * pos - Screen.width / 2 + (Screen.width / combiManager.Size / 4);
-            Position.y = 0 - (Screen.width / combiManager.Size);
-        }
+        //if (player1)
+        //{
+        //    GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / combiManager.Size / 2, Screen.width / combiManager.Size / 2);
+        //    Position.x = Screen.width / combiManager.Size * pos - Screen.width / 2 + (Screen.width / combiManager.Size / 4);
+        //    Position.y = 0 - (Screen.width / combiManager.Size);
+        //}
 
-        if (player2)
-        {
-            GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / combiManager.Size / 2, Screen.width / combiManager.Size / 2);
-            Position.x = Screen.width / combiManager.Size * (combiManager.Size - 1 - pos) - Screen.width / 2 + (Screen.width / combiManager.Size / 4);
-            Position.y = 0 + (Screen.width / combiManager.Size) / 2;
-        }
+        //if (player2)
+        //{
+        //    GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / combiManager.Size / 2, Screen.width / combiManager.Size / 2);
+        //    Position.x = Screen.width / combiManager.Size * (combiManager.Size - 1 - pos) - Screen.width / 2 + (Screen.width / combiManager.Size / 4);
+        //    Position.y = 0 + (Screen.width / combiManager.Size) / 2;
+        //}
 
-        GetComponent<RectTransform>().localPosition = Position;
+        //GetComponent<RectTransform>().localPosition = Position;
     }
 
     private void Update()
