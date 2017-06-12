@@ -137,7 +137,7 @@ public class SoloMenuUI : MonoBehaviour
     {
         SoundManager.instance.Play("FurtherMenu2", false);
         GUIAnimSystemFREE.Instance.EnableAllButtons(false);
-        //GUIAnimSystemFREE.Instance.LoadLevel("SurvivalMenu", 1.1f);
+        GUIAnimSystemFREE.Instance.LoadLevel("Unlimited", 1f);
         gameObject.SendMessage("HideAllGUIs");
     }
 
