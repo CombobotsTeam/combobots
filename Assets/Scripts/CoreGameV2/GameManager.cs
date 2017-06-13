@@ -247,7 +247,7 @@ public class GameManager : MonoBehaviour
 		heartList = new Dictionary<int, GameObject>();
 		GameObject heart;
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < Life; i++)
 		{
 			heart = Instantiate (HeartFull, new Vector3 (toprectEdges[0].x + (xheartSize / 2) + (xheartSize * i) + marginWidth, toprectEdges[2].y - (yheartSize / 2) - marginHeight, 1), Quaternion.identity);
 			heart.transform.localScale = heartScale;

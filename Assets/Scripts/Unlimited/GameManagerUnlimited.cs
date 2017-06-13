@@ -24,7 +24,7 @@ public class GameManagerUnlimited : GameManager
     //public WaveManager WaveManager;
     //public ComboManager cm;
 
-    public int nbrOfSpawn = 5;
+    public int nbrOfSpawn = 3;
     List<Vector3> SpawnerPositionList;
     float NbrEnemiesOnScreen = 0;		// Actual number of enemies 
     private CombinationGenerator combinationGenerator = new CombinationGenerator();
@@ -86,7 +86,7 @@ public class GameManagerUnlimited : GameManager
         {
             string PathToEnemiesPrefab = "Prefabs/UnlimitedEnemies/";
             string type = "Robot01";
-            switch (Random.Range(0, 5))
+            switch (Random.Range(0, 3))
             {
                 case 0:
                     type = "Robot01";
@@ -100,13 +100,10 @@ public class GameManagerUnlimited : GameManager
                     type = "Robot03";
                     break;
 
-                case 3:
-                    type = "Robot04";
-                    break;
-
                 default:
                     break;
             }
+
             GameObject BasicEnemy = Resources.Load<GameObject>(PathToEnemiesPrefab + type);
 
             if (!BasicEnemy)
@@ -123,21 +120,23 @@ public class GameManagerUnlimited : GameManager
             float yscale = BasicEnemy.GetComponent<Transform>().localScale.y;
             pos.y -= (ysize * (yscale / 2)) + (ycenter * yscale);
 
-
             BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
-            enemy.Init(Random.Range(2, 5), 1, Random.Range(1, 4));
+
+			int nbGold = Random.Range (0, 2) * 5;
+
+            enemy.Init(Random.Range(2, 5), nbGold, Random.Range(1, 4));
             if (!enemy)
                 Debug.LogError("[WaveManager]Can't instanciate the enemy !");
 
 
             combinationGenerator.FixedSize = enemy.CombinationSize;
             enemy.Combination = combinationGenerator.GetListButton();
-            enemy.Speed = 1;
+            enemy.Speed = 0.3f;
             enemy.Setup();
             NbrEnemiesOnScreen++;
             GameManager.instance.EnemiesOnScreen.Add(enemy.gameObject);
 
-            CheckBossEnergy += 10;
+            CheckBossEnergy += 5;
 
             if(CheckBossEnergy > 100)
             {
@@ -174,12 +173,10 @@ public class GameManagerUnlimited : GameManager
         float yscale = BasicEnemy.GetComponent<Transform>().localScale.y;
         pos.y -= (ysize * (yscale / 2)) + (ycenter * yscale);
 
-
         BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
         enemy.GetComponent<BasicEnnemy>().Init(Random.Range(2, 5), 1, Random.Range(1, 4));
         if (!enemy)
             Debug.LogError("[WaveManager]Can't instanciate the enemy !");
-
 
         combinationGenerator.FixedSize = enemy.CombinationSize;
         enemy.Combination = combinationGenerator.GetListButton();
@@ -195,6 +192,7 @@ public class GameManagerUnlimited : GameManager
     protected override void Update()
     {
         checkDeath();
+
         if (isPaused)
             return;
 
@@ -228,7 +226,7 @@ public class GameManagerUnlimited : GameManager
         {
             MakeEnemy();
             checktime = 0.0f;
-            respowntime = Random.Range(1.0f, 5.0f);
+            respowntime = Random.Range(2.0f, 5.0f);
         }
 
         if (Life < 0)
