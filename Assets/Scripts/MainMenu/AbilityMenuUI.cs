@@ -63,22 +63,18 @@ public class AbilityMenuUI : MonoBehaviour
 
         gold.text = d.Gold.ToString();
 
-        if (d.CurrentPowerUp[index] >= 4) {
+        if (d.CurrentPowerUp[index] >= 3) {
             Text t = f_Upgradebutton[index].transform.FindChild("Text").gameObject.GetComponent<Text>();
             t.text = "MAX";
         } else
         {
             Text t = f_Upgradebutton[index].transform.FindChild("Text").gameObject.GetComponent<Text>();
             t.text = UpgradeLevel[d.CurrentPowerUp[index]].ToString();
-            if (d.CurrentPowerUp[index] > 0)
-                f_LvlText[index].GetComponent<Text>().text = "Lvl." + d.CurrentPowerUp[index].ToString();
-            else
-            {
-                f_LvlText[index].GetComponent<Text>().text = "Lvl. 0"; 
-            }
         }
 
-        if (d.CurrentPowerUp[index] >= 4 || UpgradeLevel[d.CurrentPowerUp[index]] > d.Gold)
+        f_LvlText[index].GetComponent<Text>().text = "Lvl." + d.CurrentPowerUp[index].ToString();
+
+        if (d.CurrentPowerUp[index] >= 3 || UpgradeLevel[d.CurrentPowerUp[index]] > d.Gold || unavailableDueToStory(index))
         {
             f_Upgradebutton[index].GetComponent<Button>().interactable = false;
         }
@@ -106,6 +102,14 @@ public class AbilityMenuUI : MonoBehaviour
         }
 
         //TODO Disable when story is not advanced enought
+    }
+
+    bool unavailableDueToStory(int index)
+    {
+        GameData d = PersistantData.instance.data;
+        if (((d.Story - 1) / 6)  <= index)
+            return true;
+        return false;
     }
 
     void UpdateButtonStatusAll()
@@ -215,7 +219,7 @@ public class AbilityMenuUI : MonoBehaviour
     {
         GameData d = PersistantData.instance.data;
         // Max Level
-        if (d.CurrentPowerUp[i] == 4)
+        if (d.CurrentPowerUp[i] == 3)
         {
             Debug.Log("Max level for " + i);
             return;
