@@ -108,8 +108,9 @@ public class GameManager : MonoBehaviour
             {
                 time = EnemiesOnScreen[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length;
                 if (EnemiesOnScreen[i].GetComponent<Animator>().GetBool("Attack"))
-                    time += 1;
-                Debug.Log("Time is " + time);
+                    time += 1f;
+                time -= 0.05f; 
+                //Debug.Log("Time is " + time);
                 Destroy(EnemiesOnScreen[i], time);
                 EnemiesOnScreen.Remove(EnemiesOnScreen[i]);
             }
