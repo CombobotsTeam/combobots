@@ -117,7 +117,7 @@ public class WaveManager : MonoBehaviour
 				GameManager.instance.isBoss = false;
 
 			// Instanciate a basic enemy
-			//randomIndex = AdjustSpawn (randomIndex, BasicEnemy.gameObject); 			////////// ADJUST SPAWN
+			randomIndex = AdjustSpawn (randomIndex, BasicEnemy.gameObject); 			////////// ADJUST SPAWN
 			Vector3 pos = SpawnerPositionList [randomIndex];
 
 			float ysize = BasicEnemy.GetComponent<BoxCollider> ().size.y;
@@ -163,9 +163,6 @@ public class WaveManager : MonoBehaviour
 				return newIndex;
 			}
 
-			Debug.Log ("Il y a deja un index");
-			Debug.Log ("Ancien index : " + index);
-
 			int bestIndex = newIndex;
 			float bestDistance = 0;
 
@@ -185,16 +182,13 @@ public class WaveManager : MonoBehaviour
 				float yscaleNewEnemy = newEnemy.GetComponent<Transform> ().localScale.y;
 
 				// Distance calculation
-				float minDistance = ysizeNewEnemy;
+				float minDistance = ysizeNewEnemy * yscaleNewEnemy;
 
-				float begining = SpawnerPositionList [index].y - (ysizeNewEnemy * (yscaleNewEnemy));
-				float ending = enemy.transform.position.y + (ysizeEnemy * (yscaleEnemy / 2));
-
-				Debug.Log ("BEGINING : " + begining);
-				Debug.Log ("ENDING : " + ending);
+				float begining = SpawnerPositionList [index].y;
+				float ending = enemy.transform.position.y + (ysizeEnemy * (yscaleEnemy));
 
 				// 2 enemy want to spawn in the same time
-				if (begining - ending > 0)
+				if (begining - ending == minDistance)
 					newIndex++;
 
 				// Can't use this line, the distance is too short
@@ -213,13 +207,11 @@ public class WaveManager : MonoBehaviour
 				}
 				else
 				{ // Can use this line, even if there is already an enemy
-					Debug.Log("1 - Nouvel index : " + newIndex);
 					return newIndex;
 				}
 			}
 
 			// All lines are too busy, so we just use the best one
-			Debug.Log("Bestindex");
 			return bestIndex;
 			
 		}
@@ -297,12 +289,14 @@ public class WaveManager : MonoBehaviour
 			// Summon enemies
 			if (NbrEnemiesOnScreen < EnemyMax && EnemiesForCurrentWave.Count > 0)
 			{
-				if (TimeLeft <= 0 && canSummon)
+				if (TimeLeft <= 0 && canSummon) {
 					Summon ();
+				}
 				else
 				{
-					if (canSummon)
+					if (canSummon) {
 						StartCoroutine ("SummonLater", TimeLeft);
+					}
 				}
 			}
 
