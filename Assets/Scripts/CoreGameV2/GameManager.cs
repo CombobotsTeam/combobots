@@ -411,6 +411,14 @@ public class GameManager : MonoBehaviour
         isPaused = true;
         EndMessage.text = "Victory !";
         EndMessage.enabled = true;
+        GameObject scGO = GameObject.Find("SceneInfos");
+        if (scGO)
+        {
+            ScenesInfos sc = scGO.GetComponent<ScenesInfos>();
+
+            if (sc.actualLevel >= PersistantData.instance.data.Story)
+                PersistantData.instance.data.Story = sc.actualLevel + 1;
+        }
         StartCoroutine("GoMenu");
     }
 
