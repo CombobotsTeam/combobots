@@ -28,6 +28,10 @@ public class DialogScript : MonoBehaviour {
 	private UnityEngine.Color FinnColor;
 	private UnityEngine.Color WhitePawnColor;
 	private UnityEngine.Color BlackPawnColor;
+	private UnityEngine.Color BlackRookColor;
+	private UnityEngine.Color BlackKnightColor;
+	private UnityEngine.Color BlackBishopColor;
+
 	private Sprite sprite;
 	private bool nextDialog = false;
 
@@ -46,12 +50,21 @@ public class DialogScript : MonoBehaviour {
 		FinnColor = new Color (51.0f/255.0f, 0.0f/255.0f, 255.0f/255.0f);
 		WhitePawnColor = new Color (1.0f, 1.0f, 1.0f);
 		BlackPawnColor = new Color (0.0f, 0.0f, 0.0f);
+		BlackBishopColor = new Color (0.0f, 0.0f, 0.0f);
+		BlackRookColor = new Color (0.0f, 0.0f, 0.0f);
+		BlackKnightColor = new Color (0.0f, 0.0f, 0.0f);
 		if (dialogs [i, 0] == "Finn")
 			textName.color = FinnColor;
 		else if (dialogs [i, 0] == "WhitePawn")
 			textName.color = WhitePawnColor;
 		else if (dialogs[i, 0] == "BlackPawn")
 			textName.color = BlackPawnColor;
+		else if (dialogs[i, 0] == "BlackBishop")
+			textName.color = BlackBishopColor;
+		else if (dialogs[i, 0] == "BlackRook")
+			textName.color = BlackRookColor;
+		else if (dialogs[i, 0] == "BlackKnight")
+			textName.color = BlackKnightColor;
 		if (dialogs [i, 0] == "") {
 			textDialog.color = new Color (1.0f, 1.0f, 1.0f);
 		}
@@ -78,6 +91,15 @@ public class DialogScript : MonoBehaviour {
 		} else if (sprites [j, 1] == "BlackPawn") {
 			leftSpriteSize.sizeDelta = new Vector2 (347, 347);
 			leftSpriteSize.anchoredPosition = new Vector3 (115, 100, 0);
+		} else if (sprites [j, 1] == "BlackBishop") {
+			leftSpriteSize.sizeDelta = new Vector2 (234, 369);
+			leftSpriteSize.anchoredPosition = new Vector3 (115, 100, 0);
+		} else if (sprites [j, 1] == "BlackRook") {
+			leftSpriteSize.sizeDelta = new Vector2 (319, 404);
+			leftSpriteSize.anchoredPosition = new Vector3 (115, 100, 0);
+		} else if (sprites [j, 1] == "BlackKnight") {
+			leftSpriteSize.sizeDelta = new Vector2 (498, 369);
+			leftSpriteSize.anchoredPosition = new Vector3 (115, 100, 0);
 		}
 		sprite = Resources.Load<Sprite>("Sprites/CutScenes/" + sprites[j, 2]);
 		rightSprite.sprite = sprite;
@@ -89,6 +111,15 @@ public class DialogScript : MonoBehaviour {
 			rightSpriteSize.anchoredPosition = new Vector3 (-115, 150, 0);
 		} else if (sprites [j, 2] == "BlackPawn") {
 			rightSpriteSize.sizeDelta = new Vector2 (347, 347);
+			rightSpriteSize.anchoredPosition = new Vector3 (-115, 100, 0);
+		} else if (sprites [j, 2] == "BlackBishop") {
+			rightSpriteSize.sizeDelta = new Vector2 (234, 369);
+			rightSpriteSize.anchoredPosition = new Vector3 (-115, 100, 0);
+		} else if (sprites [j, 2] == "BlackRook") {
+			rightSpriteSize.sizeDelta = new Vector2 (319, 404);
+			rightSpriteSize.anchoredPosition = new Vector3 (-115, 100, 0);
+		} else if (sprites [j, 2] == "BlackKnight") {
+			rightSpriteSize.sizeDelta = new Vector2 (498, 369);
 			rightSpriteSize.anchoredPosition = new Vector3 (-115, 100, 0);
 		}
 	}
@@ -118,6 +149,12 @@ public class DialogScript : MonoBehaviour {
 					textName.color = WhitePawnColor;
 				else if (dialogs[i, 0] == "BlackPawn")
 					textName.color = BlackPawnColor;
+				else if (dialogs[i, 0] == "BlackBishop")
+					textName.color = BlackBishopColor;
+				else if (dialogs[i, 0] == "BlackRook")
+					textName.color = BlackRookColor;
+				else if (dialogs[i, 0] == "BlackKnight")
+					textName.color = BlackKnightColor;
 				textName.text = dialogs [i, 0];
 				textDialog.text = dialogs [i, 1];
 			}
@@ -153,6 +190,12 @@ public class DialogScript : MonoBehaviour {
 					textName.color = WhitePawnColor;
 				else if (dialogs[i, 0] == "BlackPawn")
 					textName.color = BlackPawnColor;
+				else if (dialogs[i, 0] == "BlackBishop")
+					textName.color = BlackBishopColor;
+				else if (dialogs[i, 0] == "BlackRook")
+					textName.color = BlackRookColor;
+				else if (dialogs[i, 0] == "BlackKnight")
+					textName.color = BlackKnightColor;
 				textName.text = dialogs [i, 0];
 				textDialog.text = dialogs [i, 1];
 			}
