@@ -364,15 +364,34 @@ public class GameManager : MonoBehaviour
     // Get the type of button pressed and update the Combination Handler
     public void ButtonPressed(CombinationHandler.Button button)
     {
+		#if UNITY_EDITOR
         if (button != CombinationHandler.Button.POWER_UP)
         {
             Combination.AddButtonToCombination(button);
         }
-        else if (AbilityEnabled && powerUp)
+        else
         {
-            powerUp.activate();
-            SetAbilityActive(false);
+			foreach (GameObject g in EnemiesOnScreen)
+			{
+				BasicEnnemy e = g.GetComponent<BasicEnnemy>();
+				e.DecreaseLifePoint(1);
+				if (e.Died)
+					ComboCount += 1;
+			}
+			// You can change this if you don t like this behaviour or for testing abilities.
+			Debug.Log("I changed the ability behaviour in Unity editor. You press the ability to kill every enemy (better for debugging). - Victor -");
         }
+		#else
+		if (button != CombinationHandler.Button.POWER_UP)
+		{
+			Combination.AddButtonToCombination(button);
+		}
+		else if (AbilityEnabled && powerUp)
+		{
+			powerUp.activate();
+			SetAbilityActive(false);
+		}
+		#endif
     }
 
 	public virtual void NotifyDie(GameObject enemy, bool killedByPlayer)

@@ -171,6 +171,12 @@ public class WaveManager : MonoBehaviour
 				if (!SpawnLineInfo.ContainsKey (newIndex))
 					return (newIndex);
 
+				if (SpawnLineInfo [newIndex] == null)
+				{
+					SpawnLineInfo.Remove (newIndex);
+					return newIndex;
+				}
+
 				// Information about the enemy on the line
 				GameObject enemy = SpawnLineInfo [newIndex];
 
