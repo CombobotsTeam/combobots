@@ -62,7 +62,7 @@ public class BasicEnnemyUnlimited : BasicEnnemy
     //    this.CombinationSize = nConbinationCount;
     //}
 
-    protected virtual void Attack()
+    protected override void Attack()
     {
         foreach (GameObject b in ButtonsEnemy)
         {
@@ -208,10 +208,10 @@ public class BasicEnnemyUnlimited : BasicEnnemy
     //}
 
     // Update is called once per frame
-    protected override void Update()
-    {
-        Move();
-    }
+    //protected override void Update()
+    //{
+    //    Move();
+    //}
 
     //public void UpdateWithConfig(ConfigurationEnemy setting)
     //{

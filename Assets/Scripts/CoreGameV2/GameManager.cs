@@ -11,50 +11,69 @@ public class GameManager : MonoBehaviour
     // Instance to turn GameManager into Singleton
     public static GameManager instance = null;
 
-    public bool isPaused = false;
+	// Basic player informations /////////////
+    public IPowerUp 	powerUp;				// Current power UP
+    public int 			Life = 3;				// Life of player
 
-    public IPowerUp powerUp;
-    public bool isBoss = false;
-    public int Score = 0;//score of player
-    public int Life = 3;//life of player
-    public int ComboCount = 1;//player's combo count
-	private int ComboMult = 1;//score multiplication
-    public int Gold = 0;
-    bool launch = true;
-    public bool immunity = false;
-    protected bool AbilityEnabled = true;
+	[HideInInspector]
+	public int 			Score = 0;				// Score of player
+	[HideInInspector]
+	public int 			Gold = 0;				// Amount of player's gold
+	[HideInInspector]
+	public int 			ComboCount = 1;			// Player's combo count
 
-    private GameObject HeartEmpty;
-    private GameObject HeartFull;
-	private GameObject Coin;
-	private GameObject ComboGood;
-	private GameObject ComboSuper;
-	private GameObject ComboAmazing;
-	private GameObject FloatingPoints;
-	protected GameObject FloatingCoins;
-	private Text CoinText;
-	private Text ScoreText;
-	private TextMeshPro FloatingPointsText;
+	private int 		ComboMult = 1;			// Score multiplication (used to multiply points)
 
-    private Animator AbilityButton;
-    private GameObject ParticleSystemAbility;
-    private bool isPowerActivated = false;
+	// UI Informations ///////////////////////
+	public Text 			EndMessage;
 
-    private Dictionary<int, GameObject> heartList;
-    protected bool LateInit = true;
+    private GameObject 		HeartEmpty;				// Empty heart used for instancing
+	private GameObject 		HeartFull;				// Full heart used for instancing
+	private Dictionary<int, GameObject> heartList;	// Contain the current heart list used to display life
 
-    // Will contain all the enemies on the screen (Not the enemies that will be instanciate)
-    public List<GameObject> EnemiesOnScreen = new List<GameObject>();
+	private GameObject 		Coin;					// Coin used for instancing
+	private Text 			CoinText;
 
-    // Contain the current combination of button pressed
-    public CombinationHandler Combination;
-    [HideInInspector]
-    public WaveManager WaveManager;
-    public ComboManager cm;
+	private GameObject 		ComboGood;				// Combo used for instancing
+	private GameObject 		ComboSuper;				// Combo used for instancing
+	private GameObject 		ComboAmazing;			// Combo used for instancing
 
-    protected SoundManager soundManager;
+	private GameObject 		FloatingPoints;			// Floating point throw after each enemy death (used only for instancing)
+	private Text 			ScoreText;				// Score display in the UI (Top Left)
+	private TextMeshPro 	FloatingPointsText;		
 
-    public Text EndMessage;
+	private Animator 		AbilityButton;
+	private GameObject 		ParticleSystemAbility;
+
+	protected GameObject 	FloatingCoins;			// Coins used for instancing the gold droped by an enemy
+
+	// Scripts ///////////////////////////////
+	[HideInInspector]
+	public WaveManager 			WaveManager;
+	[HideInInspector]
+	public ComboManager 		cm;
+	[HideInInspector]
+	public CombinationHandler 	Combination; 		// Contain the current combination of button pressed
+
+	protected SoundManager 		soundManager;
+
+	// Internal game logic ///////////////////
+	[HideInInspector]
+	public bool 			immunity = false;
+	[HideInInspector]
+	public bool 			isBoss = false;			// True if the current wave is a boss
+	[HideInInspector]
+	public bool 			isPaused = false;		// True if the game is in pause mode
+	[HideInInspector]
+	public List<GameObject> EnemiesOnScreen = new List<GameObject>();// Will contain all the enemies on the screen (Not the enemies that will be instanciate)
+
+	protected bool 			LateInit = true;		// Used to init variables in the "Update" function
+	protected bool 			AbilityEnabled = true;
+
+	private bool 			isPowerActivated = false;
+	private bool 			launch = true;			// Used to init the wave manager
+
+	// Functions ////////////////////////////////////
 
     public IEnumerator WaitFor(float time)
     {
@@ -122,6 +141,7 @@ public class GameManager : MonoBehaviour
     protected virtual void Update()
     {
         checkDeath();
+
         if (isPaused)
             return;
 
@@ -349,7 +369,8 @@ public class GameManager : MonoBehaviour
 
             if (Life < 0)
                 Life = 0;
-            if (Life == 0) LoadDefeat();
+            if (Life == 0)
+				LoadDefeat();
         }
     }
 
@@ -397,9 +418,7 @@ public class GameManager : MonoBehaviour
 	public virtual void NotifyDie(GameObject enemy, bool killedByPlayer)
     {
         BasicEnnemy e = enemy.GetComponent<BasicEnnemy>();
-		/*if (e.NbrGold > 0) {
-			AddGold(e.NbrGold);
-		}*/
+
         e.Died = true;
 
         soundManager.Play("DeathEnemy", false);

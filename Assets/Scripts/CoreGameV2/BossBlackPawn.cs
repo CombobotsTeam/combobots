@@ -21,8 +21,10 @@ public class BossBlackPawn : BasicEnnemy
         RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
         RectTransform BottomPos = GameObject.Find("Canvas/ButtonBackground").GetComponent<RectTransform>();
         stopPosition = TopPos.position.y + BottomPos.position.y / 2 - boxCollider.size.y * 0.9f;
-        if (Gm.WaveManager.EnemyMax < 5)
-            Gm.WaveManager.EnemyMax = 5;
+			
+		if (Gm.WaveManager.EnemyMax < 5)
+			Gm.WaveManager.EnemyMax = 5;
+
         foreach (GameObject b in ButtonsEnemy)
         {
             b.SetActive(false);

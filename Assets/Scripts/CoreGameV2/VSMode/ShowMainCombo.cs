@@ -11,7 +11,7 @@ public class ShowMainCombo : MonoBehaviour
     public bool main;
     public bool player2;
     public GameObject gameManager;
-    private Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);//value of setting position
+    //private Vector3 Position = new Vector3(0.0f, 0.0f, 0.0f);//value of setting position
 
     private CombiManager combiManager = null;
     private VSCombinationHandler VSHandler = null;

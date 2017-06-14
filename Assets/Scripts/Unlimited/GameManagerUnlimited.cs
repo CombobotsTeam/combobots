@@ -5,64 +5,68 @@ using UnityEngine.UI;
 
 public class GameManagerUnlimited : GameManager
 {
-    // Instance to turn GameManager into Singleton
-    //public static GameManager instance = null;
+    public int 						nbrOfSpawn = 3;				// Number of enemy spawn
 
-    //public PawnPowerUp powerUp;
-    //public bool isBoss = false;
-    //public int Score = 0;//score of player
-    //public int Life = 1;//life of player
-    //public int ComboCount = 1;//player's combo count
-    //public int Gold = 0;
+	// /!\ BOSS NOT AVAILABLE
+	private bool 					CheckBoss;					// If true, the next enemy will be a boss
+	private int 					CheckBossEnergy;			// If reach 100, checkBoss will become true
 
-    //// Will contain all the enemies on the screen (Not the enemies that will be instanciate)
-    //public List<GameObject> EnemiesOnScreen = new List<GameObject>();
+	private float 					NbrEnemiesOnScreen = 0;		// Number of enemies curently display on the screen
 
-    //// Contain the current combination of button pressed
-    //public CombinationHandler Combination;
-    //[HideInInspector]
-    //public WaveManager WaveManager;
-    //public ComboManager cm;
+	private float 					respawntime;				// Enemy cooldown respawn time (randomly generated)
+	private float 					checktime;					// Time counter using to get the timelapse between each respawn
 
-    public int nbrOfSpawn = 3;
-    List<Vector3> SpawnerPositionList;
-    float NbrEnemiesOnScreen = 0;		// Actual number of enemies 
-    private CombinationGenerator combinationGenerator = new CombinationGenerator();
-    ConfigurationEnemy newconfigurationEnemy;
-    float respowntime;
-    float checktime;
-    public bool CheckBoss;
-    public int CheckBossEnergy;
+    private List<Vector3> 			SpawnerPositionList;		// Actual number of enemies 
+
+	private CombinationGenerator	combinationGenerator = new CombinationGenerator();
+	private ConfigurationEnemy		newconfigurationEnemy;
+
+	private int						NumberOfEnemiesDestroyed = 0;
+	private int 					DifficultyLevel = 1;
+
+	/// Difficulty Informations /////////////////////////////
+	/// 
+	/// +----------------------------------------------+
+	/// | Difficulty |  Life  | Buttons | respawn time |
+	/// +------------+--------+---------+--------------+
+	/// |     1      | 1 - 2  |  2 - 3  |     2 - 3    |
+	/// |     2      | 2 - 3  |    3    |     3 - 4    |
+	/// |     3      | 2 - 3  |  3 - 4  |     5 - 6    |
+	/// |     4      | 3 - 4  |    4    |     6 - 7    |
+	/// |     5      | 3 - 4  |  4 - 5  |     6 - 7    |
+	/// +------------+--------+---------+--------------+
+	/// 
+	/////////////////////////////////////////////////////////
 
     protected override void Init()
-    {
-        Life = 1;
-
+	{
         //Check if instance already exists
         if (instance == null)
-            //if not, set instance to this
+           	//if not, set instance to this
             instance = this;
         //If instance already exists and it's not this:
         else if (instance != this)
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
 
+		// Init scripts
         base.Combination = GetComponent<CombinationHandler>();
         base.WaveManager = GetComponent<WaveManager>();
         base.powerUp = GetComponent<PawnPowerUp>();
         base.cm = GetComponent<ComboManager>();
 
-
+		// Init spawn informations ///////////////////////////
         SpawnerPositionList = new List<Vector3>();
+
         RectTransform Pos = GameObject.Find("Canvas").GetComponent<RectTransform>();
         RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
 
         Vector3 tmpPos = Pos.localPosition;
 
-        // Y AXIS
+        // Set spawn position for Y AXIS
         tmpPos.y = TopPos.position.y;
 
-        // X AXIS
+		// Set spawn position for X AXIS
         Vector2 topRightCorner = new Vector2(1, 1);
         Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
         edgeVector *= 2;
@@ -74,7 +78,8 @@ public class GameManagerUnlimited : GameManager
             SpawnerPositionList.Add(tmpPos);
         }
 
-        respowntime = 0.0f;
+		// Set spawn informations values
+        respawntime = 0.0f;
         checktime = 0.0f;
         CheckBoss = false;
         CheckBossEnergy = 0;
@@ -82,8 +87,10 @@ public class GameManagerUnlimited : GameManager
 
     void MakeEnemy()
     {
+		// Instanciate a basic enemy
         if (!CheckBoss)
         {
+			// Find a random kind of enemy
             string PathToEnemiesPrefab = "Prefabs/UnlimitedEnemies/";
             string type = "Robot01";
             switch (Random.Range(0, 3))
@@ -104,45 +111,78 @@ public class GameManagerUnlimited : GameManager
                     break;
             }
 
+			// Get enemy prefab
             GameObject BasicEnemy = Resources.Load<GameObject>(PathToEnemiesPrefab + type);
 
             if (!BasicEnemy)
                 Debug.LogError("Impossible to instantiate " + type + " (Path: " + PathToEnemiesPrefab + type + ")");
 
+			// Get enemy spawn position (random)
             int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
 
             RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
 
             Vector3 pos = SpawnerPositionList[randomIndex];
             pos.y = TopPos.position.y;
-            float ysize = BasicEnemy.GetComponent<BoxCollider>().size.y;
+            
+			float ysize = BasicEnemy.GetComponent<BoxCollider>().size.y;
             float ycenter = BasicEnemy.GetComponent<BoxCollider>().center.y;
             float yscale = BasicEnemy.GetComponent<Transform>().localScale.y;
             pos.y -= (ysize * (yscale / 2)) + (ycenter * yscale);
 
+			// Instanciate the enemy
             BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
 
+			// Set up enemy data (random)
 			int nbGold = Random.Range (0, 2) * 5;
 
-            enemy.Init(Random.Range(2, 5), nbGold, Random.Range(1, 4));
+			int nbLife;
+			int nbButton;
+
+			if (DifficultyLevel == 1) {
+				nbLife = Random.Range (1, 3);
+				nbButton = Random.Range (2, 4);
+			} 
+			else if (DifficultyLevel == 2) {
+				nbLife = Random.Range (2, 4);
+				nbButton = 3;
+			}
+			else if (DifficultyLevel == 3) {
+				nbLife = Random.Range (2, 4);
+				nbButton = Random.Range (3, 5);
+			}
+			else if (DifficultyLevel == 4) {
+				nbLife = Random.Range (3, 5);
+				nbButton = 4;
+			}
+			else {
+				nbLife = Random.Range (3, 5);
+				nbButton = Random.Range (4, 6);
+			}
+
+            enemy.Init(nbLife, nbGold, nbButton);
             if (!enemy)
                 Debug.LogError("[WaveManager]Can't instanciate the enemy !");
 
-
             combinationGenerator.FixedSize = enemy.CombinationSize;
             enemy.Combination = combinationGenerator.GetListButton();
+
             enemy.Speed = 0.3f;
+
             enemy.Setup();
             NbrEnemiesOnScreen++;
             GameManager.instance.EnemiesOnScreen.Add(enemy.gameObject);
 
-            CheckBossEnergy += 5;
+			// Update BOSS "timer"
+            CheckBossEnergy += 0;
 
-            if(CheckBossEnergy > 100)
+            if(CheckBossEnergy >= 100)
             {
                 CheckBoss = true;
             }
         }
+
+		// Instanciate a boss
         else
         {
             if (NbrEnemiesOnScreen == 0)
@@ -157,12 +197,13 @@ public class GameManagerUnlimited : GameManager
     {
         string PathToEnemiesPrefab = "Prefabs/Enemies/";
         string type = "BlackPawn";
+
         GameObject BasicEnemy = Resources.Load<GameObject>(PathToEnemiesPrefab + type);
 
         if (!BasicEnemy)
             Debug.LogError("Impossible to instantiate " + type + " (Path: " + PathToEnemiesPrefab + type + ")");
 
-        int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
+		int randomIndex = SpawnerPositionList.Count / 2 - ((SpawnerPositionList.Count % 2 == 0) ? 1 : 0);
 
         RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
 
@@ -185,10 +226,6 @@ public class GameManagerUnlimited : GameManager
         GameManager.instance.EnemiesOnScreen.Add(enemy.gameObject);
     }
 
-    void EndGame()//set about gameover
-    {
-    }
-
     protected override void Update()
     {
         checkDeath();
@@ -205,10 +242,15 @@ public class GameManagerUnlimited : GameManager
             soundManager.PlayerMusic("MusicInGame");
             LateInit = false;
         }
-        
+
+		// Check combo
+		base.cm.checkCombo();
+
+		// Set animation for the power up
         if (powerUp && AbilityEnabled && powerUp.Charge >= powerUp.ChargeMax)
             SetAbilityActive(true);
 
+		// Delete dead enemy
         int i = 0;
         while (i < base.EnemiesOnScreen.Count)
         {
@@ -221,20 +263,24 @@ public class GameManagerUnlimited : GameManager
                 i++;
         }
 
+		// Spawn enemies
         checktime += Time.deltaTime;
-        if (respowntime < checktime)
+        if (respawntime < checktime)
         {
             MakeEnemy();
             checktime = 0.0f;
-            respowntime = Random.Range(2.0f, 5.0f);
-        }
 
-        if (Life < 0)
-        {
-            EndGame();
+			if (DifficultyLevel == 1)
+				respawntime = Random.Range(2.0f, 4.0f);
+			else if (DifficultyLevel == 2)
+				respawntime = Random.Range(3.0f, 5.0f);
+			else if (DifficultyLevel == 3)
+				respawntime = Random.Range(5.0f, 7.0f);
+			else if (DifficultyLevel == 4)
+				respawntime = Random.Range(6.0f, 8.0f);
+			else 
+				respawntime = Random.Range(6.0f, 8.0f);
         }
-
-        base.cm.checkCombo();
     }
 
     public override void NotifyDie(GameObject enemy, bool killedByPlayer)
@@ -264,6 +310,13 @@ public class GameManagerUnlimited : GameManager
         }
 
         NbrEnemiesOnScreen--;
+
+		NumberOfEnemiesDestroyed++;
+		if (NumberOfEnemiesDestroyed % 20 == 0)
+		{
+			Debug.Log ("Add difficulty");
+			DifficultyLevel++;
+		}
     }
 }
 

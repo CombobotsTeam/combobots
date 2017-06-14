@@ -106,6 +106,8 @@ public class WaveManager : MonoBehaviour
 			Transform BasicEnemy = EnemiesForCurrentWave [0].prefab.transform;
 			int randomIndex = Random.Range (0, SpawnerPositionList.Count - 1);
 
+			randomIndex = AdjustSpawn (randomIndex, BasicEnemy.gameObject);
+
 			// Summon a BOSS
 			if (EnemiesForCurrentWave [0].t == ConfigurationEnemy.Type.Boss)
 			{
@@ -117,7 +119,6 @@ public class WaveManager : MonoBehaviour
 				GameManager.instance.isBoss = false;
 
 			// Instanciate a basic enemy
-			randomIndex = AdjustSpawn (randomIndex, BasicEnemy.gameObject); 			////////// ADJUST SPAWN
 			Vector3 pos = SpawnerPositionList [randomIndex];
 
 			float ysize = BasicEnemy.GetComponent<BoxCollider> ().size.y;
