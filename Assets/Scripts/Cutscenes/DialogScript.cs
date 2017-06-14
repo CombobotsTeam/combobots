@@ -160,7 +160,7 @@ public class DialogScript : MonoBehaviour {
 			}
 
 		} else {
-		if (nbTouches > 0 && touchScreen == true) {
+			if (nbTouches > 0 && touchScreen == true && Application.isEditor) {
 			print (nbTouches + " touch(es) detected");
 
 			for (int j = 0; j < nbTouches; j++)

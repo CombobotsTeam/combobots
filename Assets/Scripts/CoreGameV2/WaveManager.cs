@@ -36,7 +36,7 @@ public class WaveManager : MonoBehaviour
 		//Instanciate config gameobject
 
 		#if UNITY_EDITOR
-			GameObject configGO = Resources.Load ("Prefabs/Waves/ConfigurationWaveForTesting") as GameObject;
+			GameObject configGO = Resources.Load ("Prefabs/Waves/ConfigurationWave1-6") as GameObject;
 
 			config = Instantiate (configGO, new Vector3 (), Quaternion.identity).GetComponent<ConfigurationGame>();
 			config.gameObject.name = "ConfigurationWaveForTesting";

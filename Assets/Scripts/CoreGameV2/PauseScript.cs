@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PauseScript : MonoBehaviour {
 
     public Sprite imgPause;
     public Sprite imgPlay;
+
+	private SoundManager 		soundManager;
 
     Image img; 
     bool pause = false;
@@ -18,6 +21,7 @@ public class PauseScript : MonoBehaviour {
         img = GetComponent<Image>();
         gm = GameManager.instance;
         timeScale = Time.timeScale;
+		soundManager = SoundManager.instance;
 	}
 	
 	// Update is called once per frame
@@ -41,4 +45,10 @@ public class PauseScript : MonoBehaviour {
 
         gm.isPaused = pause;
     }
+
+	public void ReturnToMenu()
+	{
+		SceneManager.LoadScene("SelectionMenuChapterOne");
+		soundManager.PlayerMusic("MusicMenu");
+	}
 }

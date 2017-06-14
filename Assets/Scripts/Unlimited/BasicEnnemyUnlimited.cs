@@ -72,7 +72,8 @@ public class BasicEnnemyUnlimited : BasicEnnemy
         IsMoving = false;
         GetComponent<Animator>().SetTrigger("Attack");
         Gm.NotifyDie(gameObject, false);
-        Gm.Life--;
+
+		Gm.RemoveLife(1);
     }
 
     //public virtual void Die()

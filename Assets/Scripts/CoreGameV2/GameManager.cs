@@ -477,6 +477,24 @@ public class GameManager : MonoBehaviour
     IEnumerator GoMenu()
     {
         yield return new WaitForSeconds(5f);
-        SceneManager.LoadScene("MainMenu");
+
+		#if UNITY_EDITOR
+			SceneManager.LoadScene("SelectionMenuChapterOne");
+		#else
+
+		GameObject scGO = GameObject.Find("SceneInfos");
+		ScenesInfos sc = scGO.GetComponent<ScenesInfos> ();
+
+		if (sc.actualChapter == 1)
+		SceneManager.LoadScene("SelectionMenuChapterOne");
+		else if (sc.actualChapter == 2)
+		SceneManager.LoadScene("SelectionMenuChapterTwo");
+		else if (sc.actualChapter == 3)
+		SceneManager.LoadScene("SelectionMenuChapterThree");
+		else
+		SceneManager.LoadScene("MainMenu");
+
+		#endif
+
     }
 }

@@ -17,6 +17,7 @@ public class GameManagerUnlimited : GameManager
 	private float 					checktime;					// Time counter using to get the timelapse between each respawn
 
     private List<Vector3> 			SpawnerPositionList;		// Actual number of enemies 
+	private Dictionary<int, GameObject> SpawnLineInfo = new Dictionary<int, GameObject> ();
 
 	private CombinationGenerator	combinationGenerator = new CombinationGenerator();
 	private ConfigurationEnemy		newconfigurationEnemy;
@@ -119,6 +120,7 @@ public class GameManagerUnlimited : GameManager
 
 			// Get enemy spawn position (random)
             int randomIndex = Random.Range(0, SpawnerPositionList.Count - 1);
+			randomIndex = AdjustSpawn (randomIndex, BasicEnemy.gameObject);
 
             RectTransform TopPos = GameObject.Find("Canvas/TopBackground").GetComponent<RectTransform>();
 
@@ -132,6 +134,7 @@ public class GameManagerUnlimited : GameManager
 
 			// Instanciate the enemy
             BasicEnnemy enemy = Instantiate(BasicEnemy.gameObject, pos, Quaternion.identity).GetComponent<BasicEnnemy>();
+			SpawnLineInfo [randomIndex] = enemy.gameObject;
 
 			// Set up enemy data (random)
 			int nbGold = Random.Range (0, 2) * 5;
@@ -318,5 +321,83 @@ public class GameManagerUnlimited : GameManager
 			DifficultyLevel++;
 		}
     }
+
+	int AdjustSpawn (int index, GameObject newEnemy)
+	{
+		int newIndex = index;
+
+		// There is already an enemy on this line
+		if (SpawnLineInfo.ContainsKey (newIndex))
+		{
+
+			if (SpawnLineInfo [newIndex] == null)
+			{
+				SpawnLineInfo.Remove (newIndex);
+				return newIndex;
+			}
+
+			int bestIndex = newIndex;
+			float bestDistance = 0;
+
+			for (int i = 1; i <= nbrOfSpawn; i++)
+			{
+				if (!SpawnLineInfo.ContainsKey (newIndex))
+					return (newIndex);
+
+				if (SpawnLineInfo [newIndex] == null)
+				{
+					SpawnLineInfo.Remove (newIndex);
+					return newIndex;
+				}
+
+				// Information about the enemy on the line
+				GameObject enemy = SpawnLineInfo [newIndex];
+
+				float ysizeEnemy = enemy.GetComponent<BoxCollider> ().size.y;
+				float yscaleEnemy = enemy.GetComponent<Transform> ().localScale.y;
+
+				// Information about the new enemy
+				float ysizeNewEnemy = newEnemy.GetComponent<BoxCollider> ().size.y;
+				float yscaleNewEnemy = newEnemy.GetComponent<Transform> ().localScale.y;
+
+				// Distance calculation
+				float minDistance = ysizeNewEnemy * yscaleNewEnemy;
+
+				float begining = SpawnerPositionList [index].y;
+				float ending = enemy.transform.position.y + (ysizeEnemy * (yscaleEnemy));
+
+				// 2 enemy want to spawn in the same time
+				if (begining - ending == minDistance)
+					newIndex++;
+
+				// Can't use this line, the distance is too short
+				else if (begining - ending < minDistance)
+				{
+					// Update the best index
+					if (begining - ending > bestDistance) {
+						bestDistance = begining - ending;
+						bestIndex = newIndex;
+					}
+
+					newIndex++;
+
+					if (newIndex >= nbrOfSpawn)
+						newIndex = 0;
+				}
+				else
+				{ // Can use this line, even if there is already an enemy
+					return newIndex;
+				}
+			}
+
+			// All lines are too busy, so we just use the best one
+			return bestIndex;
+
+		}
+
+		// Line empty, the ennemy can spawn
+		else
+			return newIndex;
+	}
 }
 
