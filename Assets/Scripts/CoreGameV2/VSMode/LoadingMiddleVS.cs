@@ -16,7 +16,7 @@ public class LoadingMiddleVS : MonoBehaviour {
 
     void Update()
     {
-        if (GM.GetStartTime() < 3F)
+        if (GM.GetStartTime() < 2F)
             middle.color = new Color32(255, 0, 0, 255);
         else
             middle.color = new Color32(0,255,0,255);

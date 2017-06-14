@@ -65,7 +65,7 @@ public class VSGameManager : MonoBehaviour {
 
     void Update()
     {
-        if (Time.time - startTime > 3.5F)
+        if (Time.time - startTime > 2.5F)
         {
             delayCanvas.enabled = false;
             gameCanvas.enabled = true;
