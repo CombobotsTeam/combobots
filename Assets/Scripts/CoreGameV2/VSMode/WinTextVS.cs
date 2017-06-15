@@ -15,8 +15,21 @@ public class WinTextVS : MonoBehaviour {
 
     void GetPlayersLife()//Get player's life function 
     {
-        Print = GM.GetWinner().ToString();
-        GetComponent<Text>().text = "PLAYER " + Print + " WINS";//change print text 
+        if (GM.GetWinner() == 1)
+        {
+            if (this.tag == "Player1")
+                GetComponent<Text>().text = "YOU WIN";//change print text
+            else
+                GetComponent<Text>().text = "YOU LOSE";//change print text
+        }
+        else
+        {
+            if (this.tag == "Player2")
+                GetComponent<Text>().text = "YOU WIN";//change print text
+            else
+                GetComponent<Text>().text = "YOU LOSE";//change print text
+        }
+
     }
 
     void Update()
