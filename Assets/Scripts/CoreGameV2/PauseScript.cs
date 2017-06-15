@@ -51,8 +51,6 @@ public class PauseScript : MonoBehaviour {
 
 	public void ReturnToMenu()
 	{
-		if (gm.isFinish)
-			return;
 		Time.timeScale = timeScale;
 		soundManager.PlayerMusic("MusicMenu");
 		SceneManager.LoadScene("SelectionMenuChapterOne");

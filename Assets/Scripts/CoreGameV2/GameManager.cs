@@ -491,25 +491,28 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
 
-		#if UNITY_EDITOR
+		/*#if UNITY_EDITOR
 			SceneManager.LoadScene("SelectionMenuChapterOne");
-		#else
+		#else*/
 
 		GameObject scGO = GameObject.Find("SceneInfos");
-		ScenesInfos sc = scGO.GetComponent<ScenesInfos> ();
 
-		SceneManager.LoadScene("SelectionMenuChapterOne");
+		if (scGO) {
+			ScenesInfos sc = scGO.GetComponent<ScenesInfos> ();
 
-		/*if (sc.actualChapter == 1)
-		SceneManager.LoadScene("SelectionMenuChapterOne");
-		else if (sc.actualChapter == 2)
-		SceneManager.LoadScene("SelectionMenuChapterTwo");
-		else if (sc.actualChapter == 3)
-		SceneManager.LoadScene("SelectionMenuChapterThree");
+			if (sc.actualChapter == 1)
+				SceneManager.LoadScene("SelectionMenuChapterOne");
+			else if (sc.actualChapter == 2)
+				SceneManager.LoadScene("SelectionMenuChapterTwo");
+			else if (sc.actualChapter == 3)
+				SceneManager.LoadScene("SelectionMenuChapterThree");
+			else
+				SceneManager.LoadScene("MainMenu");
+		}
 		else
-		SceneManager.LoadScene("MainMenu");*/
+			SceneManager.LoadScene("MainMenu");
 
-		#endif
+		//#endif
 
     }
 }
