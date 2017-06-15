@@ -31,6 +31,9 @@ public class PauseScript : MonoBehaviour {
 
     public void TogglePause()
     {
+		if (gm.isFinish)
+			return;
+		
         pause = !pause;
 
         if (pause)
@@ -48,7 +51,10 @@ public class PauseScript : MonoBehaviour {
 
 	public void ReturnToMenu()
 	{
-		SceneManager.LoadScene("SelectionMenuChapterOne");
+		if (gm.isFinish)
+			return;
+		Time.timeScale = timeScale;
 		soundManager.PlayerMusic("MusicMenu");
+		SceneManager.LoadScene("SelectionMenuChapterOne");
 	}
 }

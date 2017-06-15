@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
 	[HideInInspector]
 	public bool 			immunity = false;
 	[HideInInspector]
+	public bool 			isFinish = false;
+	[HideInInspector]
 	public bool 			isBoss = false;			// True if the current wave is a boss
 	[HideInInspector]
 	public bool 			isPaused = false;		// True if the game is in pause mode
@@ -378,6 +380,9 @@ public class GameManager : MonoBehaviour
     public void AddGold(int amount)
     {
         Gold += amount;
+
+		PersistantData.instance.data.Gold += amount;
+
 		soundManager.Play ("CollectCoin", false);
 		CoinText.text = Gold.ToString();
     }
@@ -446,8 +451,9 @@ public class GameManager : MonoBehaviour
 
     public void LoadVictory()
     {
+		isFinish = true;
         isPaused = true;
-        EndMessage.text = "Victory !";
+		EndMessage.text = "Victory !" + Environment.NewLine + "(you will come back to menu)";
         EndMessage.enabled = true;
         GameObject scGO = GameObject.Find("SceneInfos");
         if (scGO)
@@ -457,14 +463,21 @@ public class GameManager : MonoBehaviour
             if (sc.actualLevel >= PersistantData.instance.data.Story)
                 PersistantData.instance.data.Story = sc.actualLevel + 1;
         }
+
+		PersistantData.instance.Save ();
+
         StartCoroutine("GoMenu");
     }
 
     public void LoadDefeat()
     {
+		isFinish = true;
         isPaused = true;
-        EndMessage.text = "Defeat...";
+		EndMessage.text = "Defeat..." + Environment.NewLine + "(you will come back to menu)";
         EndMessage.enabled = true;
+
+		PersistantData.instance.Save ();
+
         StartCoroutine("GoMenu");
     }
 
