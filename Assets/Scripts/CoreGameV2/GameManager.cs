@@ -498,14 +498,16 @@ public class GameManager : MonoBehaviour
 		GameObject scGO = GameObject.Find("SceneInfos");
 		ScenesInfos sc = scGO.GetComponent<ScenesInfos> ();
 
-		if (sc.actualChapter == 1)
+		SceneManager.LoadScene("SelectionMenuChapterOne");
+
+		/*if (sc.actualChapter == 1)
 		SceneManager.LoadScene("SelectionMenuChapterOne");
 		else if (sc.actualChapter == 2)
 		SceneManager.LoadScene("SelectionMenuChapterTwo");
 		else if (sc.actualChapter == 3)
 		SceneManager.LoadScene("SelectionMenuChapterThree");
 		else
-		SceneManager.LoadScene("MainMenu");
+		SceneManager.LoadScene("MainMenu");*/
 
 		#endif
 

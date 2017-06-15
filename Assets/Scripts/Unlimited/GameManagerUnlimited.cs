@@ -274,15 +274,15 @@ public class GameManagerUnlimited : GameManager
             checktime = 0.0f;
 
 			if (DifficultyLevel == 1)
-				respawntime = Random.Range(2.0f, 4.0f);
+				respawntime = Random.Range(2.0f, 3.0f);
 			else if (DifficultyLevel == 2)
-				respawntime = Random.Range(3.0f, 5.0f);
+				respawntime = Random.Range(2.0f, 3.0f);
 			else if (DifficultyLevel == 3)
-				respawntime = Random.Range(5.0f, 7.0f);
+				respawntime = Random.Range(2.0f, 4.0f);
 			else if (DifficultyLevel == 4)
-				respawntime = Random.Range(6.0f, 8.0f);
+				respawntime = Random.Range(2.0f, 5.0f);
 			else 
-				respawntime = Random.Range(6.0f, 8.0f);
+				respawntime = Random.Range(2.0f, 5.0f);
         }
     }
 
@@ -315,7 +315,7 @@ public class GameManagerUnlimited : GameManager
         NbrEnemiesOnScreen--;
 
 		NumberOfEnemiesDestroyed++;
-		if (NumberOfEnemiesDestroyed % 20 == 0)
+		if (NumberOfEnemiesDestroyed % 8 == 0)
 		{
 			Debug.Log ("Add difficulty");
 			DifficultyLevel++;
